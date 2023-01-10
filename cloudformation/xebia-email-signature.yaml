@@ -50,3 +50,41 @@ Resources:
                   - ecr:BatchCheckLayerAvailability
                 Resource:
                   - !Sub 'arn:aws:ecr:*:${AWS::AccountId}:repository/xebia-email-signature'
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        # Aliases:
+        #   - signature.xebia.com
+        #   - signature.oblcc.com
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+            - PUT
+            - PATCH
+            - POST
+            - DELETE
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          Compress: true
+          TargetOriginId: xebiasignatureprodDistributionOrigin153FD91E6
+          ViewerProtocolPolicy: allow-all
+        Enabled: true
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+            DomainName: !GetAtt App.ServiceUrl
+            Id: xebiasignatureprodDistributionOrigin153FD91E6
+        PriceClass: PriceClass_All
+        Restrictions:
+          GeoRestriction:
+            Locations:
+              - RU
+              - CN
+            RestrictionType: blacklist
