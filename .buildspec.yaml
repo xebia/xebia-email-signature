@@ -1,0 +1,10 @@
+---
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+  build:
+    commands:
+      - aws ecr get-login-password | docker login --username AWS --password-stdin $REGISTRY_HOST
+      - make REGISTRY_HOST=$REGISTRY_HOST snapshot

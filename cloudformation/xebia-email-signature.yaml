@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Generates Xebia Email Signature
+Resources:
+  App:
+    Type: AWS::AppRunner::Service
+    Properties:
+      ServiceName: xebia-email-signature
+      SourceConfiguration:
+        ImageRepository:
+          ImageIdentifier: 444093529715.dkr.ecr.eu-west-1.amazonaws.com/xebia-email-signature:0.0.0-286cdfa
+          ImageRepositoryType: ECR
+        AutoDeploymentsEnabled: false
+        AuthenticationConfiguration:
+          AccessRoleArn: !GetAtt AppRunnerRole.Arn
+      InstanceConfiguration:
+        Cpu: '1024'
+        Memory: '2048'
+      HealthCheckConfiguration:
+        Protocol: HTTP
+        Path: /
+
+  AppRunnerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - build.apprunner.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: ECRAccessPermission
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:DescribeImages
+                  - ecr:BatchCheckLayerAvailability
+                Resource:
+                  - !Sub 'arn:aws:ecr:*:${AWS::AccountId}:repository/xebia-email-signature'

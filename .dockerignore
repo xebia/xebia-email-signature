@@ -1,3 +1,8 @@
+Dockerfile
+build
+dist
+*.egg-info
+*.swp
 .DS_Store
 .vscode/
 *.swp
