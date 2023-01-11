@@ -1,15 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Resources:
-  Certificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties: 
-      CertificateTransparencyLoggingPreference: ENABLED
-      DomainName: "signature.xebia.com"
-      DomainValidationOptions: 
-        - DomainName: "signature.xebia.com"
-          HostedZoneId: Z00797023KPYQJNK0I250
-      ValidationMethod: DNS
   CertificateSignatureXebiaCom:
     Type: AWS::CertificateManager::Certificate
     Properties: 

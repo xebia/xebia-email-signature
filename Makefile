@@ -32,3 +32,8 @@ delete-app:  ## deletes the application
 
 update-image-reference: ## updates the image reference in the deployment
 	cru  --verbose update --image-reference $(IMAGE):$(VERSION) cloudformation
+
+invalidate-cache: ## updates the image reference in the deployment
+	DISTRIBUTION_ID=$$(aws cloudfront list-distributions --query "DistributionList.Items[*].Id" --output text) && \
+		INVALIDATION_ID=$$(aws cloudfront create-invalidation --distribution-id $$DISTRIBUTION_ID --paths /\* --query "Invalidation.Id" --output text) && \
+		aws cloudfront wait invalidation-completed --distribution-id $$DISTRIBUTION_ID --id $$INVALIDATION_ID
