@@ -70,6 +70,51 @@ Resources:
                   - ecr:CompleteLayerUpload
                 Resource:
                   - !GetAtt Repository.Arn
+        - PolicyName: DeployStackPermission
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                Resource:
+                  - '*'
+              - Effect: Allow
+                Action: iam:PassRole
+                Resource:
+                  - !GetAtt CloudformationRole.Arn
+
+  CloudformationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CloudformationRole
+      Path: /
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudFormationAdministrator
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: 'apprunner:*'
+                Resource: '*'
+              - Effect: Allow
+                Action: 'iam:*'
+                Resource: '*'
+              - Effect: Allow
+                Action: 'route53:*'
+                Resource: '*'
+              - Effect: Allow
+                Action: 'cloudfront:*'
+                Resource: '*'
+              - Effect: Allow
+                Action: 'acm:*'
+                Resource: '*'
 
         - PolicyName: WriteToLogGroup
           PolicyDocument:

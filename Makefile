@@ -6,7 +6,7 @@ REGISTRY_HOST = $(AWS_ACCOUNT_ID).dkr.ecr.$(REGION).amazonaws.com
 deploy-pipeline:  ## deploys the CI/CD pipeline
 	aws cloudformation deploy \
 		--stack-name $(NAME)-pipeline \
-		--capabilities CAPABILITY_IAM \
+		--capabilities CAPABILITY_NAMED_IAM \
 		--template-file cloudformation/cicd-pipeline.yaml
 
 delete-pipeline:  ## deletes the CI/CD pipeline
@@ -17,6 +17,7 @@ delete-pipeline:  ## deletes the CI/CD pipeline
 
 deploy-app:  ## deploys the application
 	aws cloudformation deploy \
+		--role-arn arn:aws:iam::$(AWS_ACCOUNT_ID):role/CloudformationRole \
 		--stack-name $(NAME) \
 		--capabilities CAPABILITY_IAM \
 		--template-file cloudformation/$(NAME).yaml

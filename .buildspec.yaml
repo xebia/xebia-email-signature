@@ -6,5 +6,9 @@ phases:
       docker: 20
   build:
     commands:
+      - echo 'docker run -ti -v $PWD:$PWD -w $PWD ghcr.io/binxio/cru:1.0.0 "$@" > /usr/local/bin/cru && chmod +x /usr/local/bin/cru
+      - git remote -v
       - aws ecr get-login-password | docker login --username AWS --password-stdin $REGISTRY_HOST
       - make REGISTRY_HOST=$REGISTRY_HOST snapshot
+      - make REGISTRY_HOST=$REGISTRY_HOST update-image
+      - make deploy-app
