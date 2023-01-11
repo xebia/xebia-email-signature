@@ -70,6 +70,7 @@ Resources:
                   - ecr:CompleteLayerUpload
                 Resource:
                   - !GetAtt Repository.Arn
+
         - PolicyName: DeployStackPermission
           PolicyDocument:
             Statement:
@@ -82,6 +83,16 @@ Resources:
                 Action: iam:PassRole
                 Resource:
                   - !GetAtt CloudformationRole.Arn
+
+        - PolicyName: WriteToLogGroup
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/xebia-email-signature:*'
 
   CloudformationRole:
     Type: AWS::IAM::Role
@@ -115,16 +126,6 @@ Resources:
               - Effect: Allow
                 Action: 'acm:*'
                 Resource: '*'
-
-        - PolicyName: WriteToLogGroup
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource:
-                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/xebia-email-signature:*'
 
   Repository:
     Type: AWS::ECR::Repository
