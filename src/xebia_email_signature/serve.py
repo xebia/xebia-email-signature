@@ -20,7 +20,7 @@ def create_signature():
             phonenumbers.parse(data["phone"]),
             phonenumbers.PhoneNumberFormat.INTERNATIONAL,
         )
-    if data['type'] == 'Rogue signature':
+    if data["type"] == "Unofficial signature":
         return render_template("simple-signature.tpl", data=data)
     else:
         return render_template("signature.tpl", data=data)
