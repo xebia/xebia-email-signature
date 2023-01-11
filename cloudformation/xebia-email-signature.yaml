@@ -7,7 +7,7 @@ Resources:
       ServiceName: xebia-email-signature
       SourceConfiguration:
         ImageRepository:
-          ImageIdentifier: 826523574683.dkr.ecr.eu-west-1.amazonaws.com/xebia-email-signature:latest
+          ImageIdentifier: 826523574683.dkr.ecr.eu-west-1.amazonaws.com/xebia-email-signature:0.0.0-74823a9
           ImageRepositoryType: ECR
         AutoDeploymentsEnabled: false
         AuthenticationConfiguration:
