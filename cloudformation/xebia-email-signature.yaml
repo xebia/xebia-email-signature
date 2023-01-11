@@ -1,5 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Generates Xebia Email Signature
+Parameters:
+  DomainName:
+    Type: String
+    Description: the domain name under which the service is available.
+    Default: signature.xebia.com
+
 Resources:
   App:
     Type: AWS::AppRunner::Service
@@ -88,3 +94,9 @@ Resources:
               - RU
               - CN
             RestrictionType: blacklist
+
+  DNSDomain:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+
