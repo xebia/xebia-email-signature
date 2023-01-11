@@ -109,7 +109,7 @@ def validate_html(raw_html):
     pretty_html_doc, errors = tidylib.tidy_document(raw_html, tidy_options)
 
     if errors:
-        raise ValueError("Invalid HTML\n{errors}".format(errors=errors))
+        raise ValueError(f"Invalid HTML\n{errors}\n\n{raw_html}")
 
     return pretty_html_doc
 
@@ -129,7 +129,7 @@ def main():
     args = argParser.parse_args()
     if args.debug:
         employee_details = {
-            "full_name": "John Doe",
+            "full_name": "John Doe <script>",
             "email": "john.doe@xebia.com",
             "phone": "+31 6 12 34 56 78",
             "job_role": "Consultant",
