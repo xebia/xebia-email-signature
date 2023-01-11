@@ -1,10 +1,10 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Resources:
-  Certificate:
+  CertificateSignatureXebiaCom:
     Type: AWS::CertificateManager::Certificate
     Properties: 
-      CertificateTransparencyLoggingPreference: DISABLED
+      CertificateTransparencyLoggingPreference: ENABLED
       DomainName: "signature.xebia.com"
       DomainValidationOptions: 
         - DomainName: "signature.xebia.com"

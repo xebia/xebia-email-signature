@@ -8,7 +8,7 @@ Parameters:
   CertificateArn:
     Type: String
     Description: the arn of the certificate in us-east-1
-    Default: "arn:aws:acm:us-east-1:826523574683:certificate/d05125e9-b4bb-4134-8727-b3ea65be7a90"
+    Default: "arn:aws:acm:us-east-1:826523574683:certificate/cd93e64f-9ec7-4cb7-a5d7-9401f38bfe47"
 
 Resources:
   App:
