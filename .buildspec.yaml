@@ -10,5 +10,5 @@ phases:
       - git remote -v && git tag
       - aws ecr get-login-password | docker login --username AWS --password-stdin $REGISTRY_HOST
       - make REGISTRY_HOST=$REGISTRY_HOST snapshot
-      - make REGISTRY_HOST=$REGISTRY_HOST update-image
+      - make REGISTRY_HOST=$REGISTRY_HOST update-image-reference
       - make deploy-app
