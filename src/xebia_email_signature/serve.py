@@ -14,7 +14,6 @@ def generate_signature():
 @app.route("/signature", methods=["POST"])
 def create_signature():
     data = {k: v for k, v in request.form.items()}
-    print(data)
     if "phone" in data:
         data["phone"] = phonenumbers.format_number(
             phonenumbers.parse(data["phone"]),
