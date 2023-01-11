@@ -1,10 +1,11 @@
 <!doctype html>
 <html>
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
     <title>Xebia's Email Signature Generator</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: Helvetica,sans-serif;
         }
         .form-container {
             max-width: 500px;
@@ -78,8 +79,14 @@
                 return false;
             }
             let linkedin_url = document.getElementById('linkedin_url').value;
-            if   (!/https:\/\/(www\.)?linkedin.*/.test(linkedin_url)) {
+            if   (linkedin_url && !/https:\/\/(www\.)?linkedin.*/.test(linkedin_url)) {
                 document.getElementById('linkedin_url-error').innerHTML = 'Please enter your LinkedIn URL';
+                return false;
+            }
+
+            let github_url = document.getElementById('github_url').value;
+            if   (github_url && !/https:\/\/github.*/.test(github_url)) {
+                document.getElementById('github_url-error').innerHTML = 'Please enter your github URL';
                 return false;
             }
 
@@ -123,6 +130,10 @@
             <div id="job_role-error" class="error"></div>
         </div>
         <div class="form-group">
+            <label for="unit">Unit</label>
+            <input type="text" id="unit" name="unit">
+        </div>
+        <div class="form-group">
             <label for="phone">Phone</label>
             <input type="text" id="phone" name="phone">
             <div id="phone-error" class="error"></div>
@@ -132,10 +143,19 @@
             <input type="text" id="linkedin_url" name="linkedin_url">
             <div id="linkedin_url-error" class="error"></div>
         </div>
+        <div class="form-group">
+            <label for="github_url">Github URL</label>
+            <input type="text" id="github_url" name="github_url">
+            <div id="github_url-error" class="error"></div>
+        </div>
 
         <div class="form-group">
-                <input style="float: left;"  type="submit" name="type"  value="Rogue signature">
+                <input style="float: left;"  type="submit" name="type"  value="Unofficial signature">
                 <input style="float: right;" type="submit" name="type" value="Official signature">
+        </div>
+        <div style="clear: both;"/>
+        <div>
+        <a style="float: right;" href="static/design.pdf">design reference</a>
         </div>
         <div style="clear: both;"/>
     </form>

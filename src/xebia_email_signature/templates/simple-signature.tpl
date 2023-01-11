@@ -4,19 +4,17 @@
     <head>
         <title></title>
     </head>
-    <body style="overflow-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;">
-        <p class="MsoNormal" style="margin: 0cm; font-size: 10pt; font-family: sans-serif;">
-            <b>
-                <span lang="EN-US" style="font-family: sans-serif; color: rgb(108, 29, 95);" xml:lang="EN-US">{{ data['full_name'] }} | {{ data['job_role']}}</span>
-            </b>
+    <body style="font-family: Helvetica, sans-serif; font-size: 12pt; font-color: #222222; overflow-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;">
+        <p>
+            {{ data['full_name'] }} |
+            {{ data['job_role']}}
+            {% if 'unit' in data and data['unit'] %} | {{data['unit']}} {% endif %}
         </p>
-        <p class="MsoNormal" style="margin: 5px; font-size: 10pt; font-family: sans-serif;">
-        <span style="font-size: 11pt; font-family: sans-serif;">
-        <img width="155" height="55" id="Xebia" src="https://assets.oblcc.com/xebia/xebia.png" alt="Xebia" style="width: 1.6145in; height: 0.5729in;" name="Xebia" />
-        </span>
+        <p >
+        <img width="155" height="55" id="Xebia" src="https://assets.oblcc.com/xebia/xebia.png" alt="Xebia" name="Xebia" />
         </p>
-        <p class="MsoNormal" style="margin: 0cm; font-size: 10pt; font-family: sans-serif;">
-            <span lang="EN-US" style="font-family: sans-serif;" xml:lang="EN-US"><a href="https://xebia.com">xebia.com</a> | <a href="email:{{data['email']}}">{{data['email']}}</a> | <a href="tel:{{data['phone']}}">{{data['phone']}}</a></span>
+        <p>
+            <span><a style="color: #222222;" href="https://xebia.com">xebia.com</a> | <a style="color: #222222;" href="email:{{data['email']}}">{{data['email']}}</a> | <a style="color: #222222;" href="tel:{{data['phone'].replace(' ', '')}}">{{data['phone']}}</a></span>
         </p>
     </body>
 </html>
