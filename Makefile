@@ -16,13 +16,26 @@ delete-pipeline:  ## deletes the CI/CD pipeline
 	aws cloudformation wait stack-delete-complete \
 		--stack-name $(NAME)-pipeline
 
-deploy-app:  ## deploys the application
+deploy-app: cloudformation/xebia-email-signature.yaml ## deploys the application
 	aws cloudformation deploy \
 		--role-arn arn:aws:iam::$(AWS_ACCOUNT_ID):role/CloudformationRole \
 		--stack-name $(NAME) \
 		--capabilities CAPABILITY_IAM \
 		--no-fail-on-empty-changeset \
 		--template-file cloudformation/$(NAME).yaml
+
+cloudformation/xebia-email-signature.yaml: src/app_runner_custom_domain_resource_provider/__init__.py
+	pipenv run aws-cfn-update lambda-inline-code  \
+		--resource AppRunnerCustomDomainProvider  \
+		--file $? $@
+
+deploy-certificate:  ## deploys the certificate
+	aws cloudformation deploy \
+                --region us-east-1 \
+                --role-arn arn:aws:iam::$(AWS_ACCOUNT_ID):role/CloudformationRole \
+                --stack-name $(NAME)-certificate \
+                --no-fail-on-empty-changeset \
+                --template-file cloudformation/certificate.yaml
 
 delete-app:  ## deletes the application
 	aws cloudformation delete-stack \
@@ -32,8 +45,3 @@ delete-app:  ## deletes the application
 
 update-image-reference: ## updates the image reference in the deployment
 	cru  --verbose update --image-reference $(IMAGE):$(VERSION) cloudformation
-
-invalidate-cache: ## updates the image reference in the deployment
-	DISTRIBUTION_ID=$$(aws cloudfront list-distributions --query "DistributionList.Items[*].Id" --output text) && \
-		INVALIDATION_ID=$$(aws cloudfront create-invalidation --distribution-id $$DISTRIBUTION_ID --paths /\* --query "Invalidation.Id" --output text) && \
-		aws cloudfront wait invalidation-completed --distribution-id $$DISTRIBUTION_ID --id $$INVALIDATION_ID
