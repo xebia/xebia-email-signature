@@ -140,7 +140,7 @@ def main():
     else:
         employee_details = ask_details()
 
-    rendered_output = render_template(employee_details, "signature.tpl")
+    rendered_output = render_template(employee_details, "signature.html.jinja")
     _ = validate_html(rendered_output)
     print(rendered_output)
 

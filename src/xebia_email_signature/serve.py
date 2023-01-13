@@ -20,9 +20,9 @@ def create_signature():
             phonenumbers.PhoneNumberFormat.INTERNATIONAL,
         )
     if data["type"] == "Unofficial signature":
-        return render_template("simple-signature.tpl", data=data)
+        return render_template("simple-signature.html.jinja", data=data)
     else:
-        return render_template("signature.tpl", data=data)
+        return render_template("signature.html.jinja", data=data)
 
 
 def main():

@@ -22,9 +22,11 @@ from custom_resource import call_00006_describe_custom_domains
 
 from custom_resource import call_00007_describe_custom_domains
 
-from custom_resource import call_00008_disassociate_custom_domain
+from custom_resource import call_00008_describe_custom_domains
 
 from custom_resource import call_00009_disassociate_custom_domain
+
+from custom_resource import call_00010_disassociate_custom_domain
 
 
 class CustomResourceUnitTestBase(unittest.TestCase):
@@ -83,15 +85,21 @@ class CustomResourceUnitTestBase(unittest.TestCase):
         )
 
         self.stubs["apprunner"].add_response(
-            "disassociate_custom_domain",
-            call_00008_disassociate_custom_domain.response,
-            call_00008_disassociate_custom_domain.request,
+            "describe_custom_domains",
+            call_00008_describe_custom_domains.response,
+            call_00008_describe_custom_domains.request,
         )
 
         self.stubs["apprunner"].add_response(
             "disassociate_custom_domain",
             call_00009_disassociate_custom_domain.response,
             call_00009_disassociate_custom_domain.request,
+        )
+
+        self.stubs["apprunner"].add_response(
+            "disassociate_custom_domain",
+            call_00010_disassociate_custom_domain.response,
+            call_00010_disassociate_custom_domain.request,
         )
 
         for _, stub in self.stubs.items():

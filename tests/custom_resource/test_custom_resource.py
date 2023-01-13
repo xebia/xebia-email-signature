@@ -37,8 +37,8 @@ _attributes_schema = {
                             "items": [{"type": "string"}],
                         },
                         "SetIdentifier": {"type": "string"},
-                        "Weight": {"type": "integer", "minimum": 1},
-                        "TTL": {"type": "integer", "minimum": 60},
+                        "Weight": {"type": "string", "minimum": 1},
+                        "TTL": {"type": "string", "minimum": 60},
                     },
                 }
             ],
@@ -49,12 +49,14 @@ _attributes_schema = {
 
 class TestCustomResource(CustomResourceUnitTestBase):
     def setUp(self) -> None:
+        sleep_time = 10
         if os.getenv("BOTOCORE_STUBBER_RECORDER") == "on":
             self.start_recorder()
         else:
+            sleep_time = 0.1
             super().setUp()
         self.provider = AppRunnerCustomDomainProvider(
-            self.session.client("apprunner"), sleep_time=0.1
+            self.session.client("apprunner"), sleep_time=sleep_time
         )
 
     def tearDown(self) -> None:
@@ -86,7 +88,7 @@ class TestCustomResource(CustomResourceUnitTestBase):
         request = {
             "ResourceProperties": {
                 "ServiceArn": "arn:aws:apprunner:eu-west-1:444093529715:service/xebia-email-signature/b108f9000e04480e88d3997868fb8e18",
-                "DomainName": "signature.mark.binx.dev",
+                "DomainName": "zig.mark.binx.dev",
             }
         }
         response = {}
@@ -116,7 +118,7 @@ class TestCustomResource(CustomResourceUnitTestBase):
 
         ## replace update
         original_request = deepcopy(request)
-        request["ResourceProperties"]["DomainName"] = "mark.binx.dev"
+        request["ResourceProperties"]["DomainName"] = "zag.mark.binx.dev"
         update_response = {}
         self.provider.update(request, update_response)
         self.assertEqual(
@@ -180,8 +182,8 @@ class TestCustomResource(CustomResourceUnitTestBase):
                             "_e77977a32cca64e784b82e72932f644d.xmkpffzlvd.acm-validations.aws."
                         ],
                         "SetIdentifier": "b108f9000e04480e88d3997868fb8e18",
-                        "Weight": 100,
-                        "TTL": 60,
+                        "Weight": "100",
+                        "TTL": "60",
                     },
                     {
                         "Name": "_fb6cc74845afd3867cb3a14df06d2331.2a57j7852qs07smr4qj2ilatq79cyvg.signature.mark.binx.dev.",
@@ -190,8 +192,8 @@ class TestCustomResource(CustomResourceUnitTestBase):
                             "_925514878b731170e6a1068441eca949.xmkpffzlvd.acm-validations.aws."
                         ],
                         "SetIdentifier": "b108f9000e04480e88d3997868fb8e18",
-                        "Weight": 100,
-                        "TTL": 60,
+                        "Weight": "100",
+                        "TTL": "60",
                     },
                 ],
             },
