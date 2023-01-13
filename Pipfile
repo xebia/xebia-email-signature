@@ -8,6 +8,10 @@ xebia-email-signature = {editable = true, path = "."}
 
 [dev-packages]
 build = "*"
+boto3 = "*"
+botocore-stubber-recorder = "*"
+jsonschema = "*"
+aws-cfn-update = "*"
 
 [requires]
 python_version = "3.10"

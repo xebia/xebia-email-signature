@@ -5,10 +5,11 @@ Parameters:
     Type: String
     Description: the domain name under which the service is available.
     Default: signature.xebia.com
-  CertificateArn:
-    Type: String
-    Description: the arn of the certificate in us-east-1
-    Default: "arn:aws:acm:us-east-1:826523574683:certificate/cd93e64f-9ec7-4cb7-a5d7-9401f38bfe47"
+
+Mappings:
+  AppRunnerHostedZones:
+    eu-west-1:
+      Id: Z087551914Z2PCAU0QHMW
 
 Resources:
   App:
@@ -17,7 +18,7 @@ Resources:
       ServiceName: xebia-email-signature
       SourceConfiguration:
         ImageRepository:
-          ImageIdentifier: 826523574683.dkr.ecr.eu-west-1.amazonaws.com/xebia-email-signature:0.0.0-57100b7
+          ImageIdentifier: 826523574683.dkr.ecr.eu-west-1.amazonaws.com/xebia-email-signature:0.3.0
           ImageRepositoryType: ECR
         AutoDeploymentsEnabled: false
         AuthenticationConfiguration:
@@ -61,68 +62,264 @@ Resources:
                 Resource:
                   - !Sub 'arn:aws:ecr:*:${AWS::AccountId}:repository/xebia-email-signature'
 
-  Distribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Aliases:
-          - !Ref DomainName
-        DefaultCacheBehavior:
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-            - PUT
-            - PATCH
-            - POST
-            - DELETE
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-          Compress: true
-          TargetOriginId: xebiasignatureprodDistributionOrigin153FD91E6
-          ViewerProtocolPolicy: redirect-to-https
-        Enabled: true
-        HttpVersion: http2and3
-        IPV6Enabled: true
-        Origins:
-          - CustomOriginConfig:
-              OriginProtocolPolicy: https-only
-              OriginSSLProtocols:
-                - TLSv1.2
-            DomainName: !GetAtt App.ServiceUrl
-            Id: xebiasignatureprodDistributionOrigin153FD91E6
-        PriceClass: PriceClass_All
-        Restrictions:
-          GeoRestriction:
-            Locations:
-              - RU
-              - CN
-            RestrictionType: blacklist
-        ViewerCertificate:
-          AcmCertificateArn: !Ref CertificateArn
-          MinimumProtocolVersion: "TLSv1.2_2021"
-          SslSupportMethod: "sni-only"
-
   DNSDomain:
     Type: AWS::Route53::HostedZone
     Properties:
       Name: !Ref DomainName
 
-  DNSEntryA:
-    Type: AWS::Route53::RecordSet
+  AppAlias:
+    Type: AWS::Route53::RecordSetGroup
     Properties:
-      AliasTarget:
-        DNSName: !GetAtt Distribution.DomainName
-        HostedZoneId: "Z2FDTNDATAQYW2"
-      HostedZoneId: !Ref DNSDomain
-      Name: !Ref DomainName
-      Type: A
+      Comment: provided by AWS AppRunner
+      HostedZoneId: !GetAtt DNSDomain.Id
+      RecordSets:
+        - Name: !Ref DomainName
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt App.ServiceUrl
+            HostedZoneId: !FindInMap [AppRunnerHostedZones, !Ref 'AWS::Region', Id]
 
-  DNSEntryAAAA:
-    Type: AWS::Route53::RecordSet
+  CertificateValidationRecords:
+    Type: AWS::Route53::RecordSetGroup
     Properties:
-      AliasTarget:
-        DNSName: !GetAtt Distribution.DomainName
-        HostedZoneId: "Z2FDTNDATAQYW2"
-      HostedZoneId: !Ref DNSDomain
-      Name: !Ref DomainName
-      Type: AAAA
+      Comment: provided by AWS AppRunner
+      HostedZoneId: !GetAtt DNSDomain.Id
+      RecordSets: !GetAtt AppRunnerCustomDomain.ValidationResourceRecords
+
+  AppRunnerCustomDomain:
+    Type: Custom::AppRunnerCustomDomain
+    Properties:
+      ServiceArn: !Ref App
+      DomainName: !Ref DomainName
+      ServiceToken: !GetAtt AppRunnerCustomDomainProvider.Arn
+
+  ## below is the implementation of Custom::AppRunnerCustomDomain awaiting obsolescence until
+  ## AWS::AppRunner::CustomDomain is available. The implementation is maintained in a separate
+  ## python file.
+  AppRunnerCustomDomainProvider:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Custom::AppDomainCustomDomain provider
+      Handler: index.handler
+      MemorySize: 128
+      Timeout: 900
+      Role: !GetAtt 'LambdaRole.Arn'
+      Runtime: python3.9
+      Code:
+        ZipFile: |
+          import logging
+          from urllib.request import urlopen, Request
+          from time import sleep
+          import boto3
+          import json
+          from botocore.exceptions import ClientError
+
+
+          class AppRunnerCustomDomainProvider:
+              """
+              temporary implementation of AWS::AppRunner::CustomDomain
+              """
+              def __init__(self, apprunner, sleep_time: float = 10.0):
+                  self.apprunner = apprunner
+                  self.sleep_time = sleep_time
+                  if not self.apprunner:
+                      self.apprunner = boto3.client("apprunner")
+
+              @staticmethod
+              def extract_attributes(response: dict) -> dict:
+                  set_identifier = response["ServiceArn"].split("/")[-1]
+                  return {
+                      "DNSTarget": response["DNSTarget"],
+                      "ValidationResourceRecords": [
+                          {
+                              "Name": r["Name"],
+                              "Type": r["Type"],
+                              "ResourceRecords": [r["Value"]],
+                              "SetIdentifier": set_identifier,
+                              "Weight": "100",
+                              "TTL": "60",
+                          }
+                          for r in response["CustomDomain"]["CertificateValidationRecords"]
+                      ],
+                  }
+
+              def create(self, request, response):
+                  """
+                  associates a Custom Domain with an AppRunner service
+                  """
+                  kwargs = {
+                      "ServiceArn": request.get("ResourceProperties", {}).get("ServiceArn"),
+                      "DomainName": request.get("ResourceProperties", {}).get("DomainName"),
+                      "EnableWWWSubdomain": False,
+                  }
+
+                  _ = self.apprunner.associate_custom_domain(**kwargs)
+
+                  response["PhysicalResourceId"] = "{ServiceArn},{DomainName}".format(**kwargs)
+                  self.read(request, response)
+
+              def update(self, request, response):
+                  """
+                  updates an association of a Custom Domain with an AppRunner service
+                  """
+                  kwargs = {
+                      "ServiceArn": request.get("ResourceProperties", {}).get("ServiceArn"),
+                      "DomainName": request.get("ResourceProperties", {}).get("DomainName"),
+                  }
+
+                  old_kwargs = {
+                      "ServiceArn": request.get("OldResourceProperties", {}).get("ServiceArn"),
+                      "DomainName": request.get("OldResourceProperties", {}).get("DomainName"),
+                  }
+
+                  if old_kwargs == kwargs:
+                      response["Reason"] = "Nothing has changed"
+                      response["PhysicalResourceId"] = request["PhysicalResourceId"]
+                      self.read(request, response)
+                      return
+
+                  self.create(request, response)
+
+              def read(self, request, response):
+                  """
+                  reads the current custom domain and sets the resource attributes.
+                  """
+                  service_arn = request.get("ResourceProperties", {}).get("ServiceArn")
+                  domain_name = request.get("ResourceProperties", {}).get("DomainName")
+
+                  attempt = 0
+                  custom_domain = {}
+                  while custom_domain.get("Status", "creating") == "creating" and attempt < 6:
+                      custom_domains = self.apprunner.describe_custom_domains(
+                          ServiceArn=service_arn
+                      )
+                      custom_domain = next(
+                          filter(
+                              lambda r: r["DomainName"] == domain_name
+                              and r["Status"] != "creating",
+                              custom_domains["CustomDomains"],
+                          ),
+                          {},
+                      )
+                      if not custom_domain:
+                          attempt += 1
+                          logging.info(
+                              f"sleeping {self.sleep_time}s to await the arrival of the validation records"
+                          )
+                          sleep(self.sleep_time)
+
+                  if not custom_domain:
+                      response["Status"] = "FAILED"
+                      response["Reason"] = f"No custom domain found for {domain_name}"
+                      return
+
+                  custom_domains["CustomDomain"] = custom_domain
+                  response["Data"] = self.extract_attributes(custom_domains)
+                  response["Status"] = "SUCCESS"
+
+              def delete(self, request, response):
+                  """
+                  disassociate a Custom Domain from an AppRunner service
+                  """
+                  if not request["PhysicalResourceId"].startswith("arn:aws:apprunner"):
+                      response["Reason"] = "ignoring failed create"
+                      response["Status"] = "SUCCESS"
+                      return
+
+                  kwargs = {
+                      "ServiceArn": request.get("ResourceProperties", {}).get("ServiceArn"),
+                      "DomainName": request.get("ResourceProperties", {}).get("DomainName"),
+                  }
+                  try:
+                      _ = self.apprunner.disassociate_custom_domain(**kwargs)
+                  except ClientError as error:
+                      response["Reason"] = "ignoring error to disassociate custom domain"
+                      logging.error("%s, %s", response["Reason"], error)
+                  response["Status"] = "SUCCESS"
+
+              def handle(self, request):
+                  """
+                  handles a cloudformation resource create, update or delete request
+                  """
+                  response = {
+                      "StackId": request["StackId"],
+                      "RequestId": request["RequestId"],
+                      "LogicalResourceId": request["LogicalResourceId"],
+                      "Status": "SUCCESS",
+                  }
+                  if request.get("PhysicalResourceId", None):
+                      response["PhysicalResourceId"] = request["PhysicalResourceId"]
+
+                  try:
+                      request_type = request.get("RequestType")
+                      if request_type == "Create":
+                          self.create(request, response)
+                      elif request_type == "Update":
+                          self.update(request, response)
+                      elif request_type == "Delete":
+                          self.delete(request, response)
+                      else:
+                          response["Status"] = "FAILED"
+                          response["Reason"] = f"unknown request type {request_type}"
+                  except Exception as error:
+                      response["Status"] = "FAILED"
+                      response["Reason"] = f"exception while processing {request_type}, {error}"
+                      logging.error("%s, %s", response["Reason"], error)
+
+                  return response
+
+
+          def post_response_to_cloudformation(url: str, response: dict):
+              """ "
+              posts the response message to CloudFormation
+              """
+              data = json.dumps(response).encode("utf-8")
+              logging.error("%s", data)
+              put_request = Request(
+                  url=url,
+                  data=data,
+                  headers={"Content-Length": len(data), "Content-Type": ""},
+                  method="PUT",
+              )
+              urlopen(put_request)
+
+
+          def handler(request, _):
+              provider = AppRunnerCustomDomainProvider(boto3.client("apprunner"))
+              post_response_to_cloudformation(request["ResponseURL"], provider.handle(request))
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      Policies:
+        - PolicyName: AssociateCustomDomainsPermission
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - apprunner:AssociateCustomDomain
+                  - apprunner:DisassociateCustomDomain
+                  - apprunner:DescribeCustomDomains
+                Resource:
+                  - '*'
+
+        - PolicyName: WriteToLogGroupPermission
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:CreateLogGroup
+                Resource:
+                  - '*'

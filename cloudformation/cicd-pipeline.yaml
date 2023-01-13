@@ -123,6 +123,9 @@ Resources:
               - Effect: Allow
                 Action: 'acm:*'
                 Resource: '*'
+              - Effect: Allow
+                Action: 'lambda:*'
+                Resource: '*'
 
   Repository:
     Type: AWS::ECR::Repository
