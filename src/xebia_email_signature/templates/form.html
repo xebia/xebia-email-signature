@@ -30,6 +30,15 @@
             border: 1px solid #6C1D5F;
             border-radius: 5px;
         }
+
+        select {
+            width: 98%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #6C1D5F;
+            border-radius: 5px;
+        }
+
         input[type="submit"] {
             background-color: #6C1D5F;
             color: white;
@@ -148,7 +157,25 @@
             <input type="text" id="github_url" name="github_url">
             <div id="github_url-error" class="error"></div>
         </div>
-
+        <div class="form-group">
+            <label for="office">Office</label>
+            <select id="office" name="office">
+            </select>
+            <script>
+                fetch('/static/offices.json')
+                    .then(response => response.json())
+                    .then(values => {
+                        const office = document.getElementById('office');
+                        for (const [key, value] of Object.entries(values)) {
+                            const option = document.createElement('option');
+                            option.value = key;
+                            option.text = key;
+                            office.appendChild(option);
+                        }
+                    })
+                    .catch(error => console.error(error));
+            </script>
+        </div>
         <div class="form-group">
                 <input style="float: left;"  type="submit" name="type"  value="Unofficial signature">
                 <input style="float: right;" type="submit" name="type" value="Official signature">

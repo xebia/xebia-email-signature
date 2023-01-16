@@ -2,6 +2,24 @@ import jinja2
 import tidylib
 import sys
 import argparse
+import phonenumbers
+from xebia_email_signature.office import get_office_by_name
+
+
+def add_office_details(contact_details: dict) -> dict:
+    if "phone" in contact_details:
+        contact_details["phone"] = phonenumbers.format_number(
+            phonenumbers.parse(contact_details["phone"]),
+            phonenumbers.PhoneNumberFormat.INTERNATIONAL,
+        )
+    office = get_office_by_name(contact_details.get("office", ""))
+    contact_details["office_address"] = contact_details.get(
+        "office_address", office.address_lines
+    )
+    contact_details["office_phone"] = contact_details.get(
+        "office_phone", office.telephone_formatted
+    )
+    return contact_details
 
 
 def render_template(contact_details, template_name):
@@ -60,11 +78,10 @@ def ask_details():
     github_url = input("link to your github account (https://github.com/johndoe): ")
     contact_details.update({"github_url": github_url})
 
+    add_office_details(contact_details)
     validate_details(contact_details)
 
     sys.stdout = org_stdout
-
-    return contact_details
 
 
 def validate_details(contact_details):

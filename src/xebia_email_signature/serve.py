@@ -1,6 +1,6 @@
 import os
-from copy import deepcopy
 import phonenumbers
+from xebia_email_signature.signature import add_office_details
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
@@ -13,12 +13,7 @@ def generate_signature():
 
 @app.route("/signature", methods=["POST"])
 def create_signature():
-    data = {k: v for k, v in request.form.items()}
-    if "phone" in data:
-        data["phone"] = phonenumbers.format_number(
-            phonenumbers.parse(data["phone"]),
-            phonenumbers.PhoneNumberFormat.INTERNATIONAL,
-        )
+    data = add_office_details({k: v for k, v in request.form.items()})
     if data["type"] == "Unofficial signature":
         return render_template("simple-signature.html.jinja", data=data)
     else:
