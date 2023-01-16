@@ -1,5 +1,9 @@
 from unittest import TestCase
-from xebia_email_signature.signature import render_template, validate_html
+from xebia_email_signature.signature import (
+    render_template,
+    validate_html,
+    add_office_details,
+)
 
 
 class Test(TestCase):
@@ -13,11 +17,14 @@ class Test(TestCase):
             "unit": "Xebia Cloud",
             "github_url": "https://github.com/user",
         }
+        add_office_details(self.employee_details)
 
     def test_official_template(self):
         rendered_output = render_template(self.employee_details, "signature.html.jinja")
         pretty_output = validate_html(rendered_output)
 
     def test_unofficial_template(self):
-        rendered_output = render_template(self.employee_details, "simple-signature.html.jinja")
+        rendered_output = render_template(
+            self.employee_details, "simple-signature.html.jinja"
+        )
         pretty_output = validate_html(rendered_output)
