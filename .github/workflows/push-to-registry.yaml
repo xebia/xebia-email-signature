@@ -24,7 +24,9 @@ jobs:
       -
         name: Get tag
         id: repository
-        run: echo "tag=$(git describe --tags HEAD)" > $GITHUB_ENV
+        run: |
+          echo "tag=$(git describe --tags HEAD)" > $GITHUB_ENV
+          echo "repository=${{ github.repository }}" | tr '[:upper:]' '[:lower:]' >> $GITHUB_ENV
 
       -
         name: Set up QEMU
@@ -49,4 +51,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ env.tag }}
+          tags: ghcr.io/${{ env.repository }}:${{ env.tag }}
