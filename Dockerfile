@@ -8,6 +8,8 @@ RUN pip install build && python -m build .
 
 FROM public.ecr.aws/docker/library/python:3.9-slim
 
+RUN apt update && apt install -y libtidy-dev
+
 COPY --from=0 /srv/dist/*.whl /tmp/installer/
 
 RUN pip install gunicorn /tmp/installer/*.whl && rm -rf /tmp/installer*

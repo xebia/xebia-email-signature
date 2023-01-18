@@ -29,10 +29,18 @@ help                 -  show this help.
 ```
 
 
-## Run
+## Run from CLI
 
+```shell
+docker build -txebia-signature .
+docker run -it --rm --entrypoint xebia-signature-cli xebia-signature
 ```
-docker run -it --rm  -p 8080:8080  --name xebia_signature $(make showimage)
+
+## Run as service locally
+
+```shell
+docker build -txebia-signature .
+docker run -d -p 8080:8080 --rm xebia-signature
 open http://localhost:8080
 ```
 
