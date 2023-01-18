@@ -21,10 +21,10 @@ class Test(TestCase):
 
     def test_official_template(self):
         rendered_output = render_template(self.employee_details, "signature.html.jinja")
-        pretty_output = validate_html(rendered_output)
+        _ = validate_html(rendered_output)
 
     def test_unofficial_template(self):
         rendered_output = render_template(
             self.employee_details, "simple-signature.html.jinja"
         )
-        pretty_output = validate_html(rendered_output)
+        _ = validate_html(rendered_output)

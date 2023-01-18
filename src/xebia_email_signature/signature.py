@@ -1,8 +1,12 @@
-import jinja2
-import tidylib
-import sys
 import argparse
+import logging
+import sys
+
+import jinja2
 import phonenumbers
+import tidylib
+
+from xebia_email_signature.inline_images import inline_images
 from xebia_email_signature.office import get_office_by_name
 
 
@@ -36,6 +40,8 @@ def render_template(contact_details, template_name):
     template_env = jinja2.Environment(loader=template_loader)
     template = template_env.get_template(template_name)
     output_text = template.render(data=contact_details)
+    if "on" == contact_details.get("with_inline_images"):
+        output_text = inline_images(output_text, "https://xebia.com")
 
     return output_text
 
@@ -157,6 +163,7 @@ def main():
     else:
         employee_details = ask_details()
 
+    employee_details = add_office_details(employee_details)
     rendered_output = render_template(employee_details, "signature.html.jinja")
     _ = validate_html(rendered_output)
     print(rendered_output)

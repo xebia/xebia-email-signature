@@ -1,5 +1,5 @@
 import os
-import phonenumbers
+from xebia_email_signature.inline_images import inline_images
 from xebia_email_signature.signature import add_office_details
 from flask import Flask, request, render_template
 
@@ -15,9 +15,15 @@ def generate_signature():
 def create_signature():
     data = add_office_details({k: v for k, v in request.form.items()})
     if data["type"] == "Unofficial signature":
-        return render_template("simple-signature.html.jinja", data=data)
+        response = render_template("simple-signature.html.jinja", data=data)
     else:
-        return render_template("signature.html.jinja", data=data)
+        response = render_template("signature.html.jinja", data=data)
+
+    return (
+        inline_images(response, request.url)
+        if "on" == data.get("with_inline_images")
+        else response
+    )
 
 
 def main():
