@@ -3,34 +3,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head><title></title></head>
     <body style="font-size: 12pt; font-family: Helvetica, sans-serif; color: #222222;">
-        <p>
-            <span style="color: #6C1D5F">{{ data['full_name'] | e }}<br/></span>
+            <span style="color: #6C1D5F">{{ data['full_name'] | e }}
+            </span>
+            <br>
             <span>{{ data["job_role"] | e }}</span>
-            {% if 'unit' in data and data['unit'] %}
-                <span>/</span>
-                <span style="color: #A1A1A1;">{{data['unit'] | e}}</span>
+                {% if 'unit' in data and data['unit'] %}
+                    <span>/</span>
+                    <span style="color: #A1A1A1;">{{data['unit'] | e}}
+            </span>
+            <br><br>
             {% endif %}
-        </p>
-        <p>
-            <img width="155" height="55" id="Xebia" alt="Xebia" name="Xebia"
+            <div>
+                <img width="155" height="55" id="Xebia" alt="Xebia" name="Xebia"
                  src="https://assets.oblcc.com/xebia/xebia.png"
-            />
-        </p>
-        <p>
-            M <a style="text-decoration: none; color: #222222;" href="tel:{{data['phone'].replace(' ', '') | e }}">{{ data["phone"] | e}}</a><br/>
+                />
+            </div>
+            <br>
+            M <a style="text-decoration: none; color: #222222;" href="tel:{{data['phone'].replace(' ', '') | e }}">{{ data["phone"] | e}}</a>
+            <br>
             <a style="text-decoration: none; color: #222222;" href="mailto:{{ data["email"] | e }}">
                 <span>{{ data["email"] | e }}</span>
             </a>
-        </p>
-        <p>
+            <br><br>
             {% for line in data['office_address'].split('\n') %}
-            <span>{{line | e}}</span><br/>
+            <span>{{line | e}}</span><br>
             {% endfor %}
             {% if data['office_phone'] %}
             <span>T <a style="text-decoration: none; color: #222222;" href="tel:{{ data['office_phone'].replace(' ', '') | e }}">{{data['office_phone'] | e}}</a></span>
             {% endif %}
-        </p>
-        <p>
+            <br><br>
             <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="19" height="19" id="Facebook" src="https://assets.oblcc.com/xebia/facebook.png" alt="Facebook" name="Facebook" /></a>
             <a href="https://twitter.com/xebia" title="Twitter"><img border="0" width="19" height="19" id="Twitter" src="https://assets.oblcc.com/xebia/twitter.png" alt="Twitter" name="Twitter" /></a>
             <a href="https://www.instagram.com/xebianl/" title="Instagram" ><img border="0" width="20" height="19" id="Instagram" src="https://assets.oblcc.com/xebia/instagram.png" alt="Instagram" name="Instagram" /></a>
@@ -41,6 +42,5 @@
             {% if 'github_url' in data and data['github_url'] %}
             <a href="{{ data['github_url'] | e }}" ><img border="0" width="19" height="19" id="Github" src="https://assets.oblcc.com/xebia/github.png" alt="Github" name="Github" /></a>
             {% endif %}
-        </p>
     </body>
 </html>
