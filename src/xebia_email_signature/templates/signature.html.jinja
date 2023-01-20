@@ -2,14 +2,14 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head><title></title></head>
-    <body style="font-size: 12pt; font-family: Helvetica, sans-serif; color: #222222;">
-            <span style="color: #6C1D5F">{{ data['full_name'] | e }}
+    <body style="font-size: 12pt; font-family: Helvetica, sans-serif; color: {{ color_scheme["default"] }};">
+            <span style="color: {{ color_scheme["full_name"] }};">{{ data['full_name'] | e }}
             </span>
             <br>
             <span>{{ data["job_role"] | e }}</span>
                 {% if 'unit' in data and data['unit'] %}
                     <span>/</span>
-                    <span style="color: #A1A1A1;">{{data['unit'] | e}}
+                    <span style="color: {{ color_scheme["unit"] }};;">{{data['unit'] | e}}
             </span>
             <br><br>
             {% endif %}
@@ -19,9 +19,9 @@
                 />
             </div>
             <br>
-            M <a style="text-decoration: none; color: #222222;" href="tel:{{data['phone'].replace(' ', '') | e }}">{{ data["phone"] | e}}</a>
+            <a style="text-decoration: none; color: {{ color_scheme["default"] }};" href="tel:{{data['phone'].replace(' ', '') | e }}">M {{ data["phone"] | e}}</a>
             <br>
-            <a style="text-decoration: none; color: #222222;" href="mailto:{{ data["email"] | e }}">
+            <a style="text-decoration: none; color: {{ color_scheme["default"] }};" href="mailto:{{ data["email"] | e }}">
                 <span>{{ data["email"] | e }}</span>
             </a>
             <br><br>
@@ -29,7 +29,7 @@
             <span>{{line | e}}</span><br>
             {% endfor %}
             {% if data['office_phone'] %}
-            <span>T <a style="text-decoration: none; color: #222222;" href="tel:{{ data['office_phone'].replace(' ', '') | e }}">{{data['office_phone'] | e}}</a></span>
+            <span><a style="text-decoration: none; color:  {{ color_scheme["default"] }};" href="tel:{{ data['office_phone'].replace(' ', '') | e }}">T {{data['office_phone'] | e}}</a></span>
             {% endif %}
             <br><br>
             <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="19" height="19" id="Facebook" src="https://assets.oblcc.com/xebia/facebook.png" alt="Facebook" name="Facebook" /></a>
