@@ -17,7 +17,7 @@ class Test(TestCase):
             "unit": "Xebia Cloud",
             "github_url": "https://github.com/user",
         }
-        add_office_details(self.employee_details)
+        self.employee_details = add_office_details(self.employee_details)
 
     def test_official_template(self):
         rendered_output = render_template(self.employee_details, "signature.html.jinja")

@@ -4,7 +4,7 @@
     <head>
         <title></title>
     </head>
-    <body style="font-family: Helvetica, sans-serif; font-size: 12pt; font-color: #222222; overflow-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;">
+    <body style="font-family: Helvetica, sans-serif; font-size: 12pt; font-color: {{ color_scheme["default"] }}; overflow-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space;">
         <p>
             {{ data['full_name']| e }} -
             {{ data['job_role'] | e }}
@@ -18,8 +18,8 @@
             </a>
         </p>
         <p>
-            <a style="color: #222222; text-decoration: none;" href="email:{{data['email'] | e}}">{{data['email'] | e}}</a> |
-            <a style="color: #222222; text-decoration: none;" href="tel:{{data['phone'].replace(' ', '')}}">{{data['phone'].replace(' ', '')}}</a>
+            <a style="color: {{ color_scheme["default"] }}; text-decoration: none;" href="email:{{data['email'] | e}}">{{data['email'] | e}}</a> |
+            <a style="color: {{ color_scheme["default"] }}; text-decoration: none;" href="tel:{{data['phone'].replace(' ', '')}}">{{data['phone'].replace(' ', '')}}</a>
         </p>
 
     </body>

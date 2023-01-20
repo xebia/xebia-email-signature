@@ -1,6 +1,6 @@
 import os
 from xebia_email_signature.inline_images import inline_images
-from xebia_email_signature.signature import add_office_details
+from xebia_email_signature.signature import add_office_details, get_color_scheme
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
@@ -13,11 +13,17 @@ def generate_signature():
 
 @app.route("/signature", methods=["POST"])
 def create_signature():
-    data = add_office_details({k: v for k, v in request.form.items()})
+    data = add_office_details(request.form)
     if data["type"] == "Unofficial signature":
-        response = render_template("simple-signature.html.jinja", data=data)
+        response = render_template(
+            "simple-signature.html.jinja",
+            data=data,
+            color_scheme=get_color_scheme(data),
+        )
     else:
-        response = render_template("signature.html.jinja", data=data)
+        response = render_template(
+            "signature.html.jinja", data=data, color_scheme=get_color_scheme(data)
+        )
 
     return (
         inline_images(response, request.url)

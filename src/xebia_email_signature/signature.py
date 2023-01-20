@@ -1,5 +1,4 @@
 import argparse
-import logging
 import sys
 
 import jinja2
@@ -11,19 +10,34 @@ from xebia_email_signature.office import get_office_by_name
 
 
 def add_office_details(contact_details: dict) -> dict:
-    if "phone" in contact_details:
-        contact_details["phone"] = phonenumbers.format_number(
-            phonenumbers.parse(contact_details["phone"]),
+    result = {k: v for k, v in contact_details.items()}
+    if "phone" in result:
+        result["phone"] = phonenumbers.format_number(
+            phonenumbers.parse(result["phone"]),
             phonenumbers.PhoneNumberFormat.INTERNATIONAL,
         )
-    office = get_office_by_name(contact_details.get("office", ""))
-    contact_details["office_address"] = contact_details.get(
-        "office_address", office.address_lines
-    )
-    contact_details["office_phone"] = contact_details.get(
-        "office_phone", office.telephone_formatted
-    )
-    return contact_details
+    office = get_office_by_name(result.get("office", ""))
+    result["office_address"] = result.get("office_address", office.address_lines)
+    result["office_phone"] = result.get("office_phone", office.telephone_formatted)
+    return result
+
+
+_dark_color_schemes = {
+    "on": {
+        "default": "black",
+        "full_name": "black",
+        "unit": "black",
+    },
+    "off": {
+        "default": "#222222",
+        "full_name": "#6C1D5F",
+        "unit": "#A1A1A1",
+    },
+}
+
+
+def get_color_scheme(data: dict) -> dict:
+    return _dark_color_schemes.get(data.get("dark_theme"), _dark_color_schemes["off"])
 
 
 def render_template(contact_details, template_name):
@@ -39,7 +53,9 @@ def render_template(contact_details, template_name):
     template_loader = jinja2.PackageLoader(package_name="xebia_email_signature")
     template_env = jinja2.Environment(loader=template_loader)
     template = template_env.get_template(template_name)
-    output_text = template.render(data=contact_details)
+    output_text = template.render(
+        data=contact_details, color_scheme=get_color_scheme(contact_details)
+    )
     if "on" == contact_details.get("with_inline_images"):
         output_text = inline_images(output_text, "https://xebia.com")
 
@@ -84,7 +100,8 @@ def ask_details():
     github_url = input("link to your github account (https://github.com/johndoe): ")
     contact_details.update({"github_url": github_url})
 
-    add_office_details(contact_details)
+    contact_details = add_office_details(contact_details)
+
     validate_details(contact_details)
 
     sys.stdout = org_stdout
