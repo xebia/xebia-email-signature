@@ -8,7 +8,7 @@
             font-family: Helvetica,sans-serif;
         }
         .form-container {
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto;
             padding: 30px;
             border: 1px solid #ddd;
@@ -52,6 +52,17 @@
             background-color: white;
             color: #6C1D5F;
             border: 1px solid #ddd;
+        }
+
+        .weekdays {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .weekdays label {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: normal;
+            width: calc(100% / 9);
         }
         input:focus {
             outline: #6C1D5F solid 1px;
@@ -113,16 +124,24 @@
             }
        }
 
+       function prefillTimezone() {
+            let tz = document.getElementById('timezone');
+            console.log(tz + tz.value);
+            if (tz && tz.value == "") {
+                tz.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            }
+       }
+
         function validateEmail(email) {
             const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         }
     </script>
 </head>
-<body>
+<body onload="prefillTimezone();">
 <div class="form-container">
     <h1>Email Signature Generator</h1>
-    <form action="/signature" method="post" onsubmit="return validateForm()">
+    <form action="/signature" method="post"  onsubmit="return validateForm()">
         <div class="form-group">
             <label for="full_name">Name</label>
             <input type="text" id="full_name" name="full_name" onblur="prefillEmail(this.value)">
@@ -147,6 +166,21 @@
             <input type="text" id="phone" name="phone">
             <div id="phone-error" class="error"></div>
         </div>
+        <div class="form-group weekdays">
+            <div style="margin-bottom: 10px;">Weekday Availability</div>
+            <label><input type="checkbox" name="Mon" value="1" checked> Mon</label>
+            <label><input type="checkbox" name="Tue" value="1" checked> Tue</label>
+            <label><input type="checkbox" name="Wed" value="1" checked> Wed</label>
+            <label><input type="checkbox" name="Thu" value="1" checked> Thu</label>
+            <label><input type="checkbox" name="Fri" value="1" checked> Fri</label>
+            <label><input type="checkbox" name="Sat" value="1" > Sat</label>
+            <label><input type="checkbox" name="Sun" value="1" > Sun</label>
+        </div>
+        <div class="form-group">
+            <label for="timezone">timezone</label>
+            <input type="text" id="timezone" name="timezone">
+            <div id="timezone-error" class="error"></div>
+        </div>
         <div class="form-group">
             <label for="linkedin_url">LinkedIn URL</label>
             <input type="text" id="linkedin_url" name="linkedin_url">
@@ -157,40 +191,30 @@
             <input type="text" id="github_url" name="github_url">
             <div id="github_url-error" class="error"></div>
         </div>
-        <div class="form-group">
-            <label for="office">Office</label>
-            <select id="office" name="office">
-            </select>
-            <script>
-                fetch('/static/offices.json')
-                    .then(response => response.json())
-                    .then(values => {
-                        const office = document.getElementById('office');
-                        for (const [key, value] of Object.entries(values)) {
-                            const option = document.createElement('option');
-                            option.value = key;
-                            option.text = key;
-                            office.appendChild(option);
-                        }
-                    })
-                    .catch(error => console.error(error));
-            </script>
-        </div>
-        <div style="float: left;">
-            <label style= "display: inline;  font-size: 18px; font-weight: normal;" for="with_inline_images">inline images</label>
-            <input type="checkbox" id="with_inline_images" name="with_inline_images" checked>
 
+        <div style="float: left;">
+            <label style= "display: inline;  font-size: 18px; font-weight: normal;">inline images
+            <input type="checkbox" id="with_inline_images" name="with_inline_images" checked>
+            </label>
         </div>
+
         <div style="float: right;">
-            <label style= "display: inline;  font-size: 18px; font-weight: normal;" for="dark_theme">dark theme</label>
+            <label style= "display: inline;  font-size: 18px; font-weight: normal;">dark theme
             <input type="checkbox" id="dark_theme" name="dark_theme">
+            </label>
         </div>
+        <div style="clear: both;"/>
+        <div style="float: left;">
+            <label style= "display: inline;  font-size: 18px; font-weight: normal;">gravatar.com profile picture
+            <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar">
+            </label>
+        </div>
+
 
         <div style="clear: both; padding: 12px 20px;"/>
 
         <div class="form-group">
-                <input style="float: left;"  type="submit" name="type"  value="Unofficial signature">
-                <input style="float: right;" type="submit" name="type" value="Official signature">
+            <input style="float: right;" type="submit" name="type" value="Official signature">
         </div>
         <div style="clear: both; padding: 12px 20px;"/>
 

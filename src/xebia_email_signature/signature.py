@@ -1,12 +1,14 @@
 import argparse
 import sys
-
+import base64
+from io import BytesIO
 import jinja2
 import phonenumbers
 import tidylib
 
 from xebia_email_signature.inline_images import inline_images
 from xebia_email_signature.office import get_office_by_name
+from xebia_email_signature.gravatar import load_profile_picture
 
 
 def add_office_details(contact_details: dict) -> dict:
@@ -22,6 +24,93 @@ def add_office_details(contact_details: dict) -> dict:
     return result
 
 
+def add_profile_picture(contact_details: dict) -> dict:
+    """
+    add the profile picture of the user, base64 encoded
+    """
+    result = {k: v for k, v in contact_details.items()}
+    profile_picture = load_profile_picture(contact_details.get("email"))
+    if profile_picture:
+        image = BytesIO()
+        profile_picture.save(image, format="png")
+        result["profile_picture"] = base64.b64encode(image.getvalue()).decode("ascii")
+    return result
+
+
+def add_weekday_availability(contact_details: dict) -> dict:
+    """
+    adds the weekday_availability
+    :param contact_details:
+    :return:
+    """
+    result = {k: v for k, v in contact_details.items()}
+
+    availability = [
+        1 if contact_details.get("Mon") else 0,
+        1 if contact_details.get("Tue") else 0,
+        1 if contact_details.get("Wed") else 0,
+        1 if contact_details.get("Thu") else 0,
+        1 if contact_details.get("Fri") else 0,
+        1 if contact_details.get("Sat") else 0,
+        1 if contact_details.get("Sun") else 0,
+    ]
+
+    # make weekdays the default
+    if all([v == 0 for v in availability]):
+        availability = [1, 1, 1, 1, 1, 0, 0]
+
+    value = _get_readable_weekdays(availability)
+    timezone = contact_details.get("timezone", None)
+    if timezone:
+        value = f"{value} {timezone}"
+    result["weekday_availability"] = value
+    return result
+
+
+def _get_readable_weekdays(availability: [int]) -> str:
+    """
+    transforms an array of 7 weekday availability into a readable
+    string.
+
+    >>> _get_readable_weekdays([1,1,1,1,1])
+    Mon-Fri
+    >>> _get_readable_weekdays([1,1,0,1,1])
+    Mon-Tue, Thu-Fri
+    >>> _get_readable_weekdays([1,0,0,1,1])
+    Mon, Thu-Fri
+    """
+    weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+    available_days = []
+    for i in range(len(availability)):
+        if availability[i]:
+            available_days.append(weekdays[i])
+
+    if len(available_days) == 7:
+        return "Every day"
+    elif len(available_days) == 0:
+        return "No days"
+    elif len(available_days) == 1:
+        return available_days[0]
+    else:
+        groups = []
+        temp = [available_days[0]]
+        for i in range(1, len(available_days)):
+            if weekdays.index(available_days[i]) == weekdays.index(temp[-1]) + 1:
+                temp.append(available_days[i])
+            else:
+                groups.append(temp)
+                temp = [available_days[i]]
+        groups.append(temp)
+        result = ""
+        for group in groups:
+            if len(group) == 1:
+                result += group[0] + ", "
+            else:
+                result += group[0] + "-" + group[-1] + ", "
+        return result[:-2]
+
+
 _dark_color_schemes = {
     "on": {
         "default": "black",
@@ -31,7 +120,7 @@ _dark_color_schemes = {
     "off": {
         "default": "#222222",
         "full_name": "#6C1D5F",
-        "unit": "#A1A1A1",
+        "unit": "#5A5A5A",
     },
 }
 
@@ -52,6 +141,7 @@ def render_template(contact_details, template_name):
     """
     template_loader = jinja2.PackageLoader(package_name="xebia_email_signature")
     template_env = jinja2.Environment(loader=template_loader)
+    template_env.filters["b64decode"] = base64.b64decode
     template = template_env.get_template(template_name)
     output_text = template.render(
         data=contact_details, color_scheme=get_color_scheme(contact_details)

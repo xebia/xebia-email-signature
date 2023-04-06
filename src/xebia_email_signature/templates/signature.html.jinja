@@ -2,45 +2,67 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head><title></title></head>
-    <body style="font-size: 11pt; font-family: Helvetica, Arial, sans-serif; color: {{ color_scheme["default"] }};">
-            <span style="font-size: 12pt; color: {{ color_scheme["full_name"] }};">{{ data['full_name'] | e }}
+    <body style="font-size: 11pt; font-family: Calibri, sans-serif; ">
+    <table summary="contact details">
+        <tr style="line-height: 1.25;">
+        {% if data.get('profile_picture') %}
+        <td>
+        <img width="76px" height="76px" src="data:image/png;base64,{{ data['profile_picture'] }}"/>
+        </td>
+        <td/>
+        <td style="vertical-align:top;">
+        {% else %}
+        <td colspan="3" style="vertical-align:top; ">
+        {% endif %}
+            <span style="font-family: Calibri, sans-serif; font-size: 12px; font-weight: bold; color: {{ color_scheme['full_name'] }};">
+            {{ data['full_name'] | e }}
             </span>
             <br>
-            <span>{{ data["job_role"] | e }}</span>
-                {% if 'unit' in data and data['unit'] %}
-                    <span>/</span>
-                    <span style="color: {{ color_scheme["unit"] }};;">{{data['unit'] | e}}
+            <span style="font-family: Calibri, sans-serif;font-size: 10px; font-weight: bold; color: {{ color_scheme['unit'] }};">
+                {{ data["job_role"] | e }}
             </span>
-            <br><br>
-            {% endif %}
-            <div>
-                <img width="155" height="55" id="Xebia" alt="Xebia" name="Xebia"
-                 src="https://assets.oblcc.com/xebia/xebia.png"
-                />
-            </div>
             <br>
-            <a style="text-decoration: none; color: {{ color_scheme["default"] }};" href="tel:{{data['phone'].replace(' ', '') | e }}">M {{ data["phone"] | e}}</a>
+            {% if 'unit' in data and data['unit'] %}
+            <span style="font-family: Calibri, sans-serif; font-size: 10px;  color: {{ color_scheme['unit'] }};">
+                {{data['unit'] | e}}
+            </span>
             <br>
-            <a style="text-decoration: none; color: {{ color_scheme["default"] }};" href="mailto:{{ data["email"] | e }}">
-                <span>{{ data["email"] | e }}</span>
-            </a>
-            <br><br>
-            {% for line in data['office_address'].split('\n') %}
-            <span>{{line | e}}</span><br>
-            {% endfor %}
-            {% if data['office_phone'] %}
-            <span><a style="text-decoration: none; color:  {{ color_scheme["default"] }};" href="tel:{{ data['office_phone'].replace(' ', '') | e }}">T {{data['office_phone'] | e}}</a></span>
             {% endif %}
-            <br><br>
-            <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="19" height="19" id="Facebook" src="https://assets.oblcc.com/xebia/facebook.png" alt="Facebook" name="Facebook" /></a>
-            <a href="https://twitter.com/xebia" title="Twitter"><img border="0" width="19" height="19" id="Twitter" src="https://assets.oblcc.com/xebia/twitter.png" alt="Twitter" name="Twitter" /></a>
-            <a href="https://www.instagram.com/xebianl/" title="Instagram" ><img border="0" width="20" height="19" id="Instagram" src="https://assets.oblcc.com/xebia/instagram.png" alt="Instagram" name="Instagram" /></a>
-            <a href="https://www.youtube.com/user/XebiaNL" title="YouTube"><img border="0" width="19" height="19" id="YouTube" src="https://assets.oblcc.com/xebia/youtube.png" alt="YouTube" name="YouTube" /></a>
+            <span style="font-family: Calibri, sans-serif;font-size: 8px; ">
+                <a style="text-decoration: none;  color: {{ color_scheme['unit'] }};" href="tel:{{data['phone'].replace(' ', '') | e }}">
+                {{ data["phone"] | e}}
+                </a>
+            </span>
+            <br>
+            {% if data['weekday_availability'] %}
+                <span style=" font-family: Calibri, sans-serif;font-size: 8px; color: {{ color_scheme['unit'] }};">
+                   {{ data['weekday_availability'] |e }}
+                </span>
+            {% endif %}
+        </td>
+        </tr>
+        <tr>
+        <td style="width: 60px; text-align: center;">
+            <img width="58" height="20" id="Xebia" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia" name="Xebia"
+                 src="https://assets.oblcc.com/xebia/xebia.png"/>
+        </td>
+        <td style="background-color: #6C1D5F;">
+        </td>
+        <td>
+            <a style="font-family: Calibri, sans-serif; font-size: 8px; color: {{ color_scheme["full_name"] }};" href="https://xebia.com" title="Xebia website">xebia.com</a>
+            <br>
+            <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="8" height="8" id="Facebook" src="https://assets.oblcc.com/xebia/facebook-dark.png" alt="Facebook" name="Facebook" /></a>
+            <a href="https://twitter.com/xebia" title="Twitter"><img border="0" width="8" height="8" id="Twitter" src="https://assets.oblcc.com/xebia/twitter-dark.png" alt="Twitter" name="Twitter" /></a>
+            <a href="https://www.instagram.com/xebianl/" title="Instagram" ><img border="0" width="8" height="8" id="Instagram" src="https://assets.oblcc.com/xebia/instagram-dark.png" alt="Instagram" name="Instagram" /></a>
+            <a href="https://www.youtube.com/user/XebiaNL" title="YouTube"><img border="0" width="8" height="8" id="YouTube" src="https://assets.oblcc.com/xebia/youtube-dark.png" alt="YouTube" name="YouTube" /></a>
             {% if 'linkedin_url' in data and data['linkedin_url'] %}
-            <a href="{{ data['linkedin_url'] | e }}" ><img border="0" width="19" height="19" id="LinkedIn" src="https://assets.oblcc.com/xebia/linkedin.png" alt="LinkedIn" name="LinkedIn" /></a>
+            <a href="{{ data['linkedin_url'] | e }}" ><img border="0" width="8" height="8" id="LinkedIn" src="https://assets.oblcc.com/xebia/linkedin-dark.png" alt="LinkedIn" name="LinkedIn" /></a>
             {% endif %}
             {% if 'github_url' in data and data['github_url'] %}
-            <a href="{{ data['github_url'] | e }}" ><img border="0" width="19" height="19" id="Github" src="https://assets.oblcc.com/xebia/github.png" alt="Github" name="Github" /></a>
+            <a href="{{ data['github_url'] | e }}" ><img border="0" width="8" height="8" id="Github" src="https://assets.oblcc.com/xebia/github-dark.png" alt="Github" name="Github" /></a>
             {% endif %}
+        </td>
+        </tr>
+        </table>
     </body>
 </html>
