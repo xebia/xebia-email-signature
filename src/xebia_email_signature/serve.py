@@ -1,10 +1,10 @@
 import os
 from xebia_email_signature.inline_images import inline_images
 from xebia_email_signature.signature import (
-    add_office_details,
     get_color_scheme,
     add_profile_picture,
     add_weekday_availability,
+    add_formatted_phone,
 )
 
 
@@ -20,8 +20,8 @@ def generate_signature():
 
 @app.route("/signature", methods=["POST"])
 def create_signature():
-    data = add_office_details(request.form)
     data = add_weekday_availability(request.form)
+    data = add_formatted_phone(data)
 
     if data.get("profile_image_from_gravatar"):
         data = add_profile_picture(data)

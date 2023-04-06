@@ -7,22 +7,7 @@ import phonenumbers
 import tidylib
 
 from xebia_email_signature.inline_images import inline_images
-from xebia_email_signature.office import get_office_by_name
 from xebia_email_signature.gravatar import load_profile_picture
-
-
-def add_office_details(contact_details: dict) -> dict:
-    result = {k: v for k, v in contact_details.items()}
-    if "phone" in result:
-        result["phone"] = phonenumbers.format_number(
-            phonenumbers.parse(result["phone"]),
-            phonenumbers.PhoneNumberFormat.INTERNATIONAL,
-        )
-    office = get_office_by_name(result.get("office", ""))
-    result["office_address"] = result.get("office_address", office.address_lines)
-    result["office_phone"] = result.get("office_phone", office.telephone_formatted)
-    return result
-
 
 def add_profile_picture(contact_details: dict) -> dict:
     """
@@ -67,17 +52,34 @@ def add_weekday_availability(contact_details: dict) -> dict:
     return result
 
 
+def add_formatted_phone(contact_details: dict) -> dict:
+    """
+    adds the field formatted_phone to the contact details based
+    on the phone field.
+    >>> add_formatted_phone({'phone': '+31622374114'})
+    {'phone': '+31622374114', 'formatted_phone': '+31 6 22374114'}
+    >>> add_formatted_phone({})
+    {}
+    """
+    result = {k: v for k, v in contact_details.items()}
+    phone = contact_details.get('phone')
+    if phone:
+        result['formatted_phone'] = phonenumbers.format_number(
+            phonenumbers.parse(phone),
+            phonenumbers.PhoneNumberFormat.INTERNATIONAL,)
+    return result
+
 def _get_readable_weekdays(availability: [int]) -> str:
     """
     transforms an array of 7 weekday availability into a readable
     string.
 
     >>> _get_readable_weekdays([1,1,1,1,1])
-    Mon-Fri
+    'Mon-Fri'
     >>> _get_readable_weekdays([1,1,0,1,1])
-    Mon-Tue, Thu-Fri
+    'Mon-Tue, Thu-Fri'
     >>> _get_readable_weekdays([1,0,0,1,1])
-    Mon, Thu-Fri
+    'Mon, Thu-Fri'
     """
     weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 

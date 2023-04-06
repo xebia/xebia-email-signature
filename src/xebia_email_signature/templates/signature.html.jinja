@@ -30,7 +30,7 @@
             {% endif %}
             <span style="font-family: Calibri, sans-serif;font-size: 8px; ">
                 <a style="text-decoration: none;  color: {{ color_scheme['unit'] }};" href="tel:{{data['phone'].replace(' ', '') | e }}">
-                {{ data["phone"] | e}}
+                {{ data["formatted_phone"] | e}}
                 </a>
             </span>
             <br>
@@ -46,7 +46,7 @@
             <img width="58" height="20" id="Xebia" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia" name="Xebia"
                  src="https://assets.oblcc.com/xebia/xebia.png"/>
         </td>
-        <td style="background-color: #6C1D5F;">
+        <td style="background-color: #6C1D5F; width: 1px;">
         </td>
         <td>
             <a style="font-family: Calibri, sans-serif; font-size: 8px; color: {{ color_scheme["full_name"] }};" href="https://xebia.com" title="Xebia website">xebia.com</a>
