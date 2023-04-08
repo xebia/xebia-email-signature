@@ -1,24 +1,26 @@
 import argparse
-import sys
 import base64
+import sys
 from io import BytesIO
+from typing import Optional
+
 import jinja2
 import phonenumbers
 import tidylib
+from PIL import Image
 
 from xebia_email_signature.inline_images import inline_images
-from xebia_email_signature.gravatar import load_profile_picture
 
-def add_profile_picture(contact_details: dict) -> dict:
+
+def add_profile_picture(contact_details: dict, image: Optional[Image.Image]) -> dict:
     """
     add the profile picture of the user, base64 encoded
     """
     result = {k: v for k, v in contact_details.items()}
-    profile_picture = load_profile_picture(contact_details.get("email"))
-    if profile_picture:
-        image = BytesIO()
-        profile_picture.save(image, format="png")
-        result["profile_picture"] = base64.b64encode(image.getvalue()).decode("ascii")
+    if image:
+        bytes = BytesIO()
+        image.save(bytes, format="png")
+        result["profile_picture"] = base64.b64encode(bytes.getvalue()).decode("ascii")
     return result
 
 
@@ -62,12 +64,14 @@ def add_formatted_phone(contact_details: dict) -> dict:
     {}
     """
     result = {k: v for k, v in contact_details.items()}
-    phone = contact_details.get('phone')
+    phone = contact_details.get("phone")
     if phone:
-        result['formatted_phone'] = phonenumbers.format_number(
+        result["formatted_phone"] = phonenumbers.format_number(
             phonenumbers.parse(phone),
-            phonenumbers.PhoneNumberFormat.INTERNATIONAL,)
+            phonenumbers.PhoneNumberFormat.INTERNATIONAL,
+        )
     return result
+
 
 def _get_readable_weekdays(availability: [int]) -> str:
     """

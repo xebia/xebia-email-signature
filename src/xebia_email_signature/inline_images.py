@@ -1,7 +1,7 @@
-import re
-from bs4 import BeautifulSoup
-import requests
 import base64
+
+import requests
+from bs4 import BeautifulSoup
 
 
 def inline_images(html_doc, base_url):

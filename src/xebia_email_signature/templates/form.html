@@ -62,7 +62,7 @@
             display: inline-block;
             margin-right: 10px;
             font-weight: normal;
-            width: calc(100% / 9);
+            width: calc(100% / 6);
         }
         input:focus {
             outline: #6C1D5F solid 1px;
@@ -141,7 +141,7 @@
 <body onload="prefillTimezone();">
 <div class="form-container">
     <h1>Email Signature Generator</h1>
-    <form action="/signature" method="post"  onsubmit="return validateForm()">
+    <form action="/signature" method="post"  enctype="multipart/form-data" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="full_name">Name</label>
             <input type="text" id="full_name" name="full_name" onblur="prefillEmail(this.value)">
@@ -151,6 +151,15 @@
             <label for="email">Email</label>
             <input type="text" id="email" name="email" onchange="validateEmail()">
             <div id="email-error" class="error"></div>
+        </div>
+        <div class="form-group" >
+            <label for="profile_picture">Profile picture</label>
+            <input type="file" style="display: inline;  font-size: 18px; font-weight: normal;"
+                   id="profile_picture" name="profile_picture"
+                   accept="image/png,image/jpeg">
+            <label style= "display: inline;  font-size: 18px; font-weight: normal;">use gravatar.com
+                <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar">
+            </label>
         </div>
         <div class="form-group">
             <label for="job_role">Role</label>
@@ -168,11 +177,13 @@
         </div>
         <div class="form-group weekdays">
             <div style="margin-bottom: 10px;">Weekday Availability</div>
+            <div>
             <label><input type="checkbox" name="Mon" value="1" checked> Mon</label>
             <label><input type="checkbox" name="Tue" value="1" checked> Tue</label>
             <label><input type="checkbox" name="Wed" value="1" checked> Wed</label>
             <label><input type="checkbox" name="Thu" value="1" checked> Thu</label>
             <label><input type="checkbox" name="Fri" value="1" checked> Fri</label>
+            </div>
             <label><input type="checkbox" name="Sat" value="1" > Sat</label>
             <label><input type="checkbox" name="Sun" value="1" > Sun</label>
         </div>
@@ -201,12 +212,6 @@
         <div style="float: right;">
             <label style= "display: inline;  font-size: 18px; font-weight: normal;">dark theme
             <input type="checkbox" id="dark_theme" name="dark_theme">
-            </label>
-        </div>
-        <div style="clear: both;"/>
-        <div style="float: left;">
-            <label style= "display: inline;  font-size: 18px; font-weight: normal;">gravatar.com profile picture
-            <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar">
             </label>
         </div>
 
