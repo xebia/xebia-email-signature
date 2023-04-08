@@ -72,6 +72,8 @@
             font-size: 14px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
     <script>
         function validateForm() {
             let errors = document.getElementsByClassName('error');
@@ -132,6 +134,16 @@
             }
        }
 
+        function toggleUseGravatar(email) {
+            let from_gravatar = document.getElementById('profile_image_from_gravatar');
+
+            const hash= CryptoJS.MD5(email).toString();
+            let url = `https://www.gravatar.com/avatar/${hash}?d=404`;
+            fetch(url).then(function(response) {
+                from_gravatar.checked = response.ok;
+            })
+        }
+
         function validateEmail(email) {
             const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
@@ -149,7 +161,7 @@
         </div>
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="text" id="email" name="email" onchange="validateEmail()">
+            <input type="text" id="email" name="email" onblur="toggleUseGravatar(this.value)" onchange="return validateEmail()">
             <div id="email-error" class="error"></div>
         </div>
         <div class="form-group" >
