@@ -141,6 +141,7 @@
             let url = `https://www.gravatar.com/avatar/${hash}?d=404`;
             fetch(url).then(function(response) {
                 from_gravatar.checked = response.ok;
+                from_gravatar.disabled = !response.ok;
             })
         }
 
@@ -170,7 +171,7 @@
                    id="profile_picture" name="profile_picture"
                    accept="image/png,image/jpeg">
             <label style= "display: inline;  font-size: 18px; font-weight: normal;">use gravatar.com
-                <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar">
+                <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar" disabled>
             </label>
         </div>
         <div class="form-group">
