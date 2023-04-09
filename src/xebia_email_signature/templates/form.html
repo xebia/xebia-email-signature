@@ -137,7 +137,7 @@
         function toggleUseGravatar(email) {
             let from_gravatar = document.getElementById('profile_image_from_gravatar');
 
-            const hash= CryptoJS.MD5(email).toString();
+            const hash = CryptoJS.MD5(email).toString();
             let url = `https://www.gravatar.com/avatar/${hash}?d=404`;
             fetch(url).then(function(response) {
                 from_gravatar.checked = response.ok;
