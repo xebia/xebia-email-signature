@@ -4,38 +4,35 @@
     <head><title></title></head>
     <body style="font-size: 11pt; font-family: Calibri, sans-serif; ">
     <table summary="contact details">
-        <tr style="line-height: 1.25;">
+        <tr style="line-height: 1;">
         {% if data.get('profile_picture') %}
         <td>
         <img width="76px" height="76px" src="data:image/png;base64,{{ data['profile_picture'] }}"/>
         </td>
-        <td/>
-        <td style="vertical-align:top;">
+        <td style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
         {% else %}
-        <td colspan="3" style="vertical-align:top; ">
+        <td colspan="2" style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
         {% endif %}
-            <span style="font-family: Calibri, sans-serif; font-size: 12px; font-weight: bold; color: {{ color_scheme['full_name'] }};">
+            <span style="line-height: 1.25; font-family: Calibri, sans-serif; font-size: 12pt; font-weight: bold; color: {{ color_scheme['full_name'] }};">
             {{ data['full_name'] | e }}
             </span>
             <br>
-            <span style="font-family: Calibri, sans-serif;font-size: 10px; font-weight: bold; color: {{ color_scheme['unit'] }};">
+            <span style="font-family: Calibri, sans-serif;font-size: 10pt; font-weight: bold; color: {{ color_scheme['unit'] }};">
                 {{ data["job_role"] | e }}
             </span>
             <br>
             {% if 'unit' in data and data['unit'] %}
-            <span style="font-family: Calibri, sans-serif; font-size: 10px;  color: {{ color_scheme['unit'] }};">
+            <span style="font-family: Calibri, sans-serif; font-size: 10pt;  color: {{ color_scheme['unit'] }};">
                 {{data['unit'] | e}}
             </span>
             <br>
             {% endif %}
-            <span style="font-family: Calibri, sans-serif;font-size: 8px; ">
                 <a style="text-decoration: none;  color: {{ color_scheme['unit'] }};" href="tel:{{data['phone'].replace(' ', '') | e }}">
-                {{ data["formatted_phone"] | e}}
+                <span style="font-family: Calibri, sans-serif;font-size: 8pt; ">{{ data["formatted_phone"] | e}}</span>
                 </a>
-            </span>
             <br>
             {% if data['weekday_availability'] %}
-                <span style=" font-family: Calibri, sans-serif;font-size: 8px; color: {{ color_scheme['unit'] }};">
+                <span style=" font-family: Calibri, sans-serif;font-size: 8pt; color: {{ color_scheme['unit'] }};">
                    {{ data['weekday_availability'] |e }}
                 </span>
             {% endif %}
@@ -43,13 +40,13 @@
         </tr>
         <tr>
         <td style="width: 60px; text-align: center;">
-            <img width="58" height="20" id="Xebia" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia" name="Xebia"
-                 src="https://assets.oblcc.com/xebia/xebia.png"/>
+            <img width="58" id="Xebia" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia" name="Xebia"
+                 src="{{ 'https://assets.oblcc.com/xebia/xebia.png' if data['unit'] != 'Xebia Academy' else 'https://cdn.xebia.com/assets/logos/academy.png'}}"/>
         </td>
-        <td style="background-color: #6C1D5F; width: 1px;">
         </td>
-        <td>
-            <a style="font-family: Calibri, sans-serif; font-size: 8px; color: {{ color_scheme["full_name"] }};" href="https://xebia.com" title="Xebia website">xebia.com</a>
+        <td style="border-left: solid #6C1D5F; padding-left: 5px;">
+
+            <a style="font-family: Calibri, sans-serif; font-size: 8pt; color: {{ color_scheme["full_name"] }};" href="https://xebia.com" title="Xebia website">xebia.com</a>
             <br>
             <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="10" height="10" id="Facebook" src="https://assets.oblcc.com/xebia/facebook-dark.png" alt="Facebook" name="Facebook" /></a>
             <a href="https://twitter.com/xebia" title="Twitter"><img border="0" width="10" height="10" id="Twitter" src="https://assets.oblcc.com/xebia/twitter-dark.png" alt="Twitter" name="Twitter" /></a>
