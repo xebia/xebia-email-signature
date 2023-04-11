@@ -179,6 +179,8 @@
                     return false;
                 }
                 reader.readAsDataURL(profile_image);
+            } else {
+                return true;
             }
         }
         function validateEmail(email) {
