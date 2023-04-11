@@ -90,6 +90,11 @@
                 document.getElementById('email-error').innerHTML = 'Please enter a valid email address';
                 return false;
             }
+
+            if (!validateProfileImage()) {
+                return false;
+            }
+
             let job_role = document.getElementById('job_role').value;
             if  (job_role.trim() === '') {
                 document.getElementById('job_role-error').innerHTML = 'Please enter your role';
@@ -145,6 +150,37 @@
             })
         }
 
+        function validateProfileImage() {
+            let profile_image = document.getElementById('profile_picture').files[0];
+            document.getElementById('profile_picture-error').innerHTML = '';
+
+            if (profile_image) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        if (img.naturalHeight != img.naturalWidth) {
+                            document.getElementById('profile_picture-error').innerHTML = 'Please profile a square profile image instead of ' + img.naturalWidth + 'x' + img.naturalHeight;
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+
+                    img.onerror = function() {
+                        document.getElementById('profile_picture-error').innerHTML = 'Please profile an profile image';
+                        return false;
+                    }
+                }
+
+                reader.onerror = function() {
+                    document.getElementById('profile_picture-error').innerHTML = 'Please profile an profile image';
+                    return false;
+                }
+                reader.readAsDataURL(profile_image);
+            }
+        }
         function validateEmail(email) {
             const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
@@ -169,10 +205,11 @@
             <label for="profile_picture">Profile picture</label>
             <input type="file" style="display: inline;  font-size: 18px; font-weight: normal;"
                    id="profile_picture" name="profile_picture"
-                   accept="image/png,image/jpeg">
+                   accept="image/png,image/jpeg" onchange="return validateProfileImage();">
             <label style= "display: inline;  font-size: 18px; font-weight: normal;">use gravatar.com
                 <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar" disabled>
             </label>
+            <div id="profile_picture-error" class="error"></div>
         </div>
         <div class="form-group">
             <label for="job_role">Role</label>
