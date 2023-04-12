@@ -3,6 +3,7 @@ from xebia_email_signature.signature import (
     render_template,
     validate_html,
     add_weekday_availability,
+    add_formatted_phone,
 )
 
 
@@ -17,6 +18,7 @@ class Test(TestCase):
             "unit": "Xebia Cloud",
             "github_url": "https://github.com/user",
         }
+        self.employee_details = add_formatted_phone(self.employee_details)
         self.employee_details = add_weekday_availability(self.employee_details)
 
     def test_official_template(self):

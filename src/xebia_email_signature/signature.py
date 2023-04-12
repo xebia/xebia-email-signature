@@ -1,26 +1,57 @@
 import argparse
 import base64
 import sys
+import re
 from io import BytesIO
 from typing import Optional
+from copy import copy
 
 import jinja2
 import phonenumbers
 import tidylib
 from PIL import Image
+from werkzeug.datastructures import FileStorage
 
+from xebia_email_signature.gravatar import (
+    load_profile_from_gravatar,
+    mask_profile_picture,
+)
 from xebia_email_signature.inline_images import inline_images
 
 
-def add_profile_picture(contact_details: dict, image: Optional[Image.Image]) -> dict:
+def add_profile_picture(contact_details: dict, file: Optional[FileStorage]) -> dict:
     """
     add the profile picture of the user, base64 encoded
     """
+    image: Image.Image = None
     result = {k: v for k, v in contact_details.items()}
+    if file:
+        if file.mimetype not in ["image/png", "image/jpeg", "image/jpg"]:
+            raise ValueError("only png and jpeg images allowed")
+
+        if contact_details.get("profile_image_from_gravatar"):
+            raise ValueError("only png and jpeg images allowed")
+
+        try:
+            image = Image.open(BytesIO(file.stream.read()))
+            image = mask_profile_picture(image)
+        except Exception:
+            return "failed to process uploaded image", 500
+
+    elif contact_details.get("profile_image_from_gravatar"):
+        image = load_profile_from_gravatar(contact_details.get("email"))
+        if not image:
+            raise ValueError("no profile image found for email on gravatar.com")
+        image = mask_profile_picture(image)
+    else:
+        # no image to add
+        pass
+
     if image:
-        bytes = BytesIO()
-        image.save(bytes, format="png")
-        result["profile_picture"] = base64.b64encode(bytes.getvalue()).decode("ascii")
+        buffer = BytesIO()
+        image.save(buffer, format="png")
+        result["profile_picture"] = base64.b64encode(buffer.getvalue()).decode("ascii")
+
     return result
 
 
@@ -117,22 +148,48 @@ def _get_readable_weekdays(availability: [int]) -> str:
         return result[:-2]
 
 
-_dark_color_schemes = {
-    "on": {
-        "default": "black",
-        "full_name": "black",
-        "unit": "black",
-    },
-    "off": {
+_themes = {
+    "Xebia Academy": {
         "default": "#222222",
         "full_name": "#6C1D5F",
         "unit": "#5A5A5A",
+        "link": "#06A99C",
+        "logo_url": "https://cdn.xebia.com/assets/logos/academy.png",
+        "url": "https://xebia.com/training",
+    },
+    "default": {
+        "default": "#222222",
+        "full_name": "#6C1D5F",
+        "unit": "#5A5A5A",
+        "link": "#6C1D5F",
+        "logo_url": "https://assets.oblcc.com/xebia/xebia.png",
+        "url": "https://xebia.com",
     },
 }
 
 
-def get_color_scheme(data: dict) -> dict:
-    return _dark_color_schemes.get(data.get("dark_theme"), _dark_color_schemes["off"])
+def get_theme(data: dict) -> dict:
+    """
+    returns the correct theme for the data['unit']. If data['dark_theme'] == "on",
+    than all colors will be black.
+
+    >>> get_theme({"unit": "Xebia Cloud", "dark_theme": "on"})
+    {'default': 'black', 'full_name': 'black', 'unit': 'black', 'link': 'black', 'logo_url': 'https://assets.oblcc.com/xebia/xebia.png', 'url': 'https://xebia.com'}
+    >>> get_theme({"unit": "Xebia Cloud", "dark_theme": "off"})
+    {'default': '#222222', 'full_name': '#6C1D5F', 'unit': '#5A5A5A', 'link': '#6C1D5F', 'logo_url': 'https://assets.oblcc.com/xebia/xebia.png', 'url': 'https://xebia.com'}
+    >>> get_theme({"unit": "Xebia Academy", "dark_theme": "on"})
+    {'default': 'black', 'full_name': 'black', 'unit': 'black', 'link': 'black', 'logo_url': 'https://cdn.xebia.com/assets/logos/academy.png', 'url': 'https://xebia.com/training'}
+    >>> get_theme({"unit": "Xebia Academy", "dark_theme": "off"})
+    {'default': '#222222', 'full_name': '#6C1D5F', 'unit': '#5A5A5A', 'link': '#06A99C', 'logo_url': 'https://cdn.xebia.com/assets/logos/academy.png', 'url': 'https://xebia.com/training'}
+
+
+    """
+    result = copy(_themes.get(data.get("unit", "default"), _themes["default"]))
+    if data.get("dark_theme", "off") == "on":
+        for k, v in result.items():
+            if re.match(r"^#[0-9A-Fa-f]{6}$", v):
+                result[k] = "black"
+    return result
 
 
 def render_template(contact_details, template_name):
@@ -147,10 +204,9 @@ def render_template(contact_details, template_name):
     """
     template_loader = jinja2.PackageLoader(package_name="xebia_email_signature")
     template_env = jinja2.Environment(loader=template_loader)
-    template_env.filters["b64decode"] = base64.b64decode
     template = template_env.get_template(template_name)
     output_text = template.render(
-        data=contact_details, color_scheme=get_color_scheme(contact_details)
+        data=contact_details, theme=get_theme(contact_details)
     )
     if "on" == contact_details.get("with_inline_images"):
         output_text = inline_images(output_text, "https://xebia.com")
@@ -166,8 +222,7 @@ def ask_details():
         dict: Employee details (full_name, email, phone, job_role,
                                 linkedin_url)
     """
-    contact_details = dict()
-
+    contact_details = {}
     org_stdout = sys.stdout
     sys.stdout = sys.stderr
 
@@ -196,9 +251,10 @@ def ask_details():
     github_url = input("link to your github account (https://github.com/johndoe): ")
     contact_details.update({"github_url": github_url})
 
-    contact_details = add_office_details(contact_details)
-
-    validate_details(contact_details)
+    data = add_profile_picture(contact_details, None)
+    data = add_weekday_availability(data)
+    data = add_formatted_phone(data)
+    validate_details(data)
 
     sys.stdout = org_stdout
 
@@ -218,7 +274,7 @@ def validate_details(contact_details):
     assert contact_details["linkedin_url"]
 
 
-def validate_html(raw_html):
+def validate_html(raw_html) -> str:
     """
     Make sure we're producing valid HTML
 
@@ -228,7 +284,7 @@ def validate_html(raw_html):
     tidy_options = {
         "indent": "auto",
         "indent-spaces": 2,
-        "wrap": 72,
+        "wrap": 200,
         "markup": True,
         "output-xml": False,
         "input-xml": False,
@@ -272,14 +328,15 @@ def main():
             "linkedin_url": "https://linkedin.com/user",
             "unit": "Xebia Cloud",
             "github_url": "https://github.com/user",
+            "timezone": "Europe/Amsterdam",
         }
     else:
         employee_details = ask_details()
 
-    employee_details = add_office_details(employee_details)
+    employee_details = add_formatted_phone(employee_details)
+    employee_details = add_weekday_availability(employee_details)
     rendered_output = render_template(employee_details, "signature.html.jinja")
-    _ = validate_html(rendered_output)
-    print(rendered_output)
+    print(validate_html(rendered_output))
 
 
 if __name__ == "__main__":
