@@ -100,11 +100,10 @@
                 document.getElementById('job_role-error').innerHTML = 'Please enter your role';
                 return false;
             }
-            let phone = document.getElementById('phone').value;
-            if   (!/\+[0-9]{10,}/.test(phone)) {
-                document.getElementById('phone-error').innerHTML = 'Please enter your phone in the format +31355381921';
+            if (!validatePhoneNumber()) {
                 return false;
             }
+
             let linkedin_url = document.getElementById('linkedin_url').value;
             if   (linkedin_url && !/https:\/\/(www\.)?linkedin.*/.test(linkedin_url)) {
                 document.getElementById('linkedin_url-error').innerHTML = 'Please enter your LinkedIn URL';
@@ -187,6 +186,18 @@
             const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         }
+
+        function validatePhoneNumber() {
+            let phone = document.getElementById('phone').value;
+            document.getElementById('phone-error').innerHTML = '';
+
+            const re = /^\+[0-9]{10,}$/;
+            if (!re.test(String(phone).toLowerCase())) {
+                document.getElementById('phone-error').innerHTML = 'phone number should start with a + followed by at least 10 digits, and not contain any spaces';
+                return false;
+            }
+            return true;
+        }
     </script>
 </head>
 <body onload="prefillTimezone();">
@@ -224,7 +235,7 @@
         </div>
         <div class="form-group">
             <label for="phone">Phone</label>
-            <input type="text" id="phone" name="phone">
+            <input type="text" id="phone" name="phone" onchange="return validatePhoneNumber();">
             <div id="phone-error" class="error"></div>
         </div>
         <div class="form-group weekdays">
