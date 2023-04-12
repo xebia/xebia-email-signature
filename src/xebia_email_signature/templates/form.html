@@ -193,7 +193,7 @@
 
             const re = /^\+[0-9]{10,15}$/;
             if (!re.test(String(phone).toLowerCase())) {
-                document.getElementById('phone-error').innerHTML = 'phone number should start with a + followed by at 10 to 15 digits without any other characters';
+                document.getElementById('phone-error').innerHTML = 'phone number should start with a + followed by 10 to 15 digits without any other characters';
                 return false;
             }
             return true;
