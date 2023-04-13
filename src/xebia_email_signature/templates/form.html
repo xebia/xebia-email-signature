@@ -92,10 +92,6 @@
                 return false;
             }
 
-            if (!validateProfileImage()) {
-                return false;
-            }
-
             let job_role = document.getElementById('job_role').value;
             if  (job_role.trim() === '') {
                 document.getElementById('job_role-error').innerHTML = 'Please enter your role';
@@ -154,8 +150,9 @@
         }
 
         function validateProfileImage() {
-            let profile_image = document.getElementById('profile_picture').files[0];
-            document.getElementById('profile_picture-error').innerHTML = '';
+            let profile_image = document.getElementById('profile_picture');
+            let profileImageError = document.getElementById('profile_picture-error');
+            profileImageError.innerHTML = '';
 
             if (profile_image) {
                 let reader = new FileReader();
@@ -164,26 +161,27 @@
                     img.src = e.target.result;
                     img.onload = function() {
                         if (img.naturalHeight != img.naturalWidth) {
-                            document.getElementById('profile_picture-error').innerHTML = 'Please profile a square profile image instead of ' + img.naturalWidth + 'x' + img.naturalHeight;
-                            return false;
+                            msg = 'Please profile a square profile image instead of ' + img.naturalWidth + 'x' + img.naturalHeight;
+                            profile_image.setCustomValidity(msg);
+                            profileImageError.innerHTML = msg;
                         } else {
-                            return true;
+                            profile_image.setCustomValidity('');
                         }
                     }
 
                     img.onerror = function() {
-                        document.getElementById('profile_picture-error').innerHTML = 'Please profile an profile image';
-                        return false;
+                        msg = 'failed to read profile picture. try another.'
+                        profile_image.setCustomValidity(msg)
+                        profileImageError.innerHTML = msg
                     }
                 }
 
                 reader.onerror = function() {
-                    document.getElementById('profile_picture-error').innerHTML = 'Please profile an profile image';
-                    return false;
+                    msg = 'failed to read profile picture file. try another.'
+                    profile_image.setCustomValidity(msg)
+                    profileImageError.innerHTML = msg
                 }
-                reader.readAsDataURL(profile_image);
-            } else {
-                return true;
+                reader.readAsDataURL(profile_image.files[0]);
             }
         }
         function validateEmail(email) {
@@ -222,7 +220,7 @@
             <label for="profile_picture">Profile picture</label>
             <input type="file" style="display: inline;  font-size: 18px; font-weight: normal;"
                    id="profile_picture" name="profile_picture"
-                   accept="image/png,image/jpeg" onchange="return validateProfileImage();">
+                   accept="image/png,image/jpeg" onchange="validateProfileImage();">
             <label style= "display: inline;  font-size: 18px; font-weight: normal;">use gravatar.com
                 <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar" disabled>
             </label>

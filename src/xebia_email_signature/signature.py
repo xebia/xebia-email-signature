@@ -30,13 +30,17 @@ def add_profile_picture(contact_details: dict, file: Optional[FileStorage]) -> d
             raise ValueError("only png and jpeg images allowed")
 
         if contact_details.get("profile_image_from_gravatar"):
-            raise ValueError("only png and jpeg images allowed")
+            raise ValueError("Either the profile image or use gravatar should be used")
 
         try:
             image = Image.open(BytesIO(file.stream.read()))
-            image = mask_profile_picture(image)
         except Exception:
             return "failed to process uploaded image", 500
+
+        x, y = image.size
+        if x != y:
+            raise ValueError(f"profile image should be square, this one is {x}x{y}")
+        image = mask_profile_picture(image)
 
     elif contact_details.get("profile_image_from_gravatar"):
         image = load_profile_from_gravatar(contact_details.get("email"))

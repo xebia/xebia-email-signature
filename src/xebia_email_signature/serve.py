@@ -24,7 +24,7 @@ def create_signature():
     try:
         data = add_profile_picture(request.form, request.files.get("profile_picture"))
     except ValueError as error:
-        return error.args, 400
+        return error.args[0], 400
 
     data = add_weekday_availability(data)
     data = add_formatted_phone(data)
