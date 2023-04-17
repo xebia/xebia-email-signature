@@ -159,7 +159,7 @@ _themes = {
         "unit": "#5A5A5A",
         "link": "#06A99C",
         "logo_url": "https://cdn.xebia.com/assets/logos/academy.png",
-        "url": "https://xebia.com/training",
+        "url": "https://xebia.com/academy",
     },
     "default": {
         "default": "#222222",

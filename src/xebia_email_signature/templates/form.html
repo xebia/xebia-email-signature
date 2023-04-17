@@ -169,7 +169,7 @@
                     img.src = e.target.result;
                     img.onload = function() {
                         if (img.naturalHeight != img.naturalWidth) {
-                            msg = 'Please profile a square profile image instead of ' + img.naturalWidth + 'x' + img.naturalHeight;
+                            msg = 'Please provide a square profile image instead of ' + img.naturalWidth + 'x' + img.naturalHeight;
                             profile_image.setCustomValidity(msg);
                             profileImageError.innerHTML = msg;
                         } else {
