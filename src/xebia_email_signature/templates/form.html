@@ -149,6 +149,14 @@
             })
         }
 
+        function clearProfileImage(event) {
+            console.log(event);
+            if (event.target.checked) {
+                let profile_image = document.getElementById('profile_picture');
+                profile_image.value = '';
+            }
+        }
+
         function validateProfileImage() {
             let profile_image = document.getElementById('profile_picture');
             let profileImageError = document.getElementById('profile_picture-error');
@@ -222,7 +230,7 @@
                    id="profile_picture" name="profile_picture"
                    accept="image/png,image/jpeg" onchange="validateProfileImage();">
             <label style= "display: inline;  font-size: 18px; font-weight: normal;">use gravatar.com
-                <input type="checkbox" id="profile_image_from_gravatar" value="1" name="profile_image_from_gravatar" disabled>
+                <input type="checkbox" id="profile_image_from_gravatar" value="1" onchange="clearProfileImage(event);" name="profile_image_from_gravatar" disabled>
             </label>
             <div id="profile_picture-error" class="error"></div>
         </div>
