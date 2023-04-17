@@ -15,12 +15,15 @@ def get_content_of_url(url: str) -> (bytes, str):
     returns the cached binary content and content type of the `url`.
     the content is cached for a maximum of 3600 seconds
     """
+
     @lru_cache(maxsize=128)
     def _get_content(url: str, expire_at: int):
         _ = expire_at  # only used to expire the cached result
-        response = _session.get(url, headers={'User-Agent': 'curl/7.86.0'})
+        response = _session.get(url, headers={"User-Agent": "curl/7.86.0"})
         if response.status_code != 200:
-            raise ValueError(f"could not download {url}, {response.status_code}, {response.text}")
+            raise ValueError(
+                f"could not download {url}, {response.status_code}, {response.text}"
+            )
         return response.content, response.headers["content-type"]
 
     return _get_content(url, int(datetime.now().timestamp() / 3600 + 1))

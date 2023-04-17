@@ -248,14 +248,33 @@
             <input placeholder="+14043434832" type="text" id="phone" name="phone" onchange="return validatePhoneNumber();">
             <div id="phone-error" class="error"></div>
         </div>
+        <div class="form-group">
+            <label for="office">Office</label>
+            <select id="office" name="office">
+            </select>
+            <script>
+                fetch('/static/offices.json')
+                    .then(response => response.json())
+                    .then(values => {
+                        const office = document.getElementById('office');
+                        for (const [key, value] of Object.entries(values)) {
+                            const option = document.createElement('option');
+                            option.value = key;
+                            option.text = key;
+                            office.appendChild(option);
+                        }
+                    })
+                    .catch(error => console.error(error));
+            </script>
+        </div>
         <div class="form-group weekdays">
             <div style="margin-bottom: 10px;">Weekday availability</div>
             <div>
-            <label><input type="checkbox" name="Mon" value="1" checked> Mon</label>
-            <label><input type="checkbox" name="Tue" value="1" checked> Tue</label>
-            <label><input type="checkbox" name="Wed" value="1" checked> Wed</label>
-            <label><input type="checkbox" name="Thu" value="1" checked> Thu</label>
-            <label><input type="checkbox" name="Fri" value="1" checked> Fri</label>
+            <label><input type="checkbox" name="Mon" value="1"> Mon</label>
+            <label><input type="checkbox" name="Tue" value="1"> Tue</label>
+            <label><input type="checkbox" name="Wed" value="1"> Wed</label>
+            <label><input type="checkbox" name="Thu" value="1"> Thu</label>
+            <label><input type="checkbox" name="Fri" value="1"> Fri</label>
             </div>
             <label><input type="checkbox" name="Sat" value="1" > Sat</label>
             <label><input type="checkbox" name="Sun" value="1" > Sun</label>

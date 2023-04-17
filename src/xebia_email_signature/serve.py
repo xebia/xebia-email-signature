@@ -8,7 +8,9 @@ from xebia_email_signature.signature import (
     add_profile_picture,
     add_weekday_availability,
     add_formatted_phone,
+    add_office_details,
 )
+
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
@@ -26,6 +28,7 @@ def create_signature():
     except ValueError as error:
         return error.args[0], 400
 
+    data = add_office_details(data)
     data = add_weekday_availability(data)
     data = add_formatted_phone(data)
 

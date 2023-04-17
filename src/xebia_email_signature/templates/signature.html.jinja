@@ -13,11 +13,11 @@
         {% else %}
         <td colspan="2" style="vertical-align:top; padding-top: 10px;">
         {% endif %}
-            <span style="line-height: 1.25; font-family: Calibri, sans-serif; font-size: 12pt; font-weight: bold; color: {{ theme['full_name'] }};">
+            <span style="line-height: 1.25; font-family: Calibri, sans-serif; font-size: 12pt; font-weight: 600; color: {{ theme['full_name'] }};">
             {{ data['full_name'] | e }}
             </span>
             <br>
-            <span style="font-family: Calibri, sans-serif;font-size: 10pt; font-weight: bold; color: {{ theme['unit'] }};">
+            <span style="font-family: Calibri, sans-serif;font-size: 10pt; font-weight: 600; color: {{ theme['unit'] }};">
                 {{ data["job_role"] | e }}
             </span>
             <br>
@@ -60,5 +60,10 @@
         </td>
         </tr>
         </table>
+        {% if data.get('office_address') %}
+        <span style=" font-family: Calibri, sans-serif;font-size: 8pt; color: {{ theme['unit'] }};">
+           {{ data['office_address'] |e }}
+        </span>
+        {% endif %}
     </body>
 </html>

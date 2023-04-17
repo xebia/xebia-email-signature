@@ -16,6 +16,7 @@ from xebia_email_signature.gravatar import (
     load_profile_from_gravatar,
     mask_profile_picture,
 )
+from xebia_email_signature.office import get_office_by_name
 from xebia_email_signature.inline_images import inline_images
 
 
@@ -105,6 +106,14 @@ def add_formatted_phone(contact_details: dict) -> dict:
             phonenumbers.parse(phone),
             phonenumbers.PhoneNumberFormat.INTERNATIONAL,
         )
+    return result
+
+
+def add_office_details(contact_details: dict) -> dict:
+    result = {k: v for k, v in contact_details.items()}
+    office = get_office_by_name(result.get("office", ""))
+    result["office_address"] = result.get("office_address", office.address)
+    result["office_phone"] = result.get("office_phone", office.telephone_formatted)
     return result
 
 
@@ -258,6 +267,7 @@ def ask_details():
     data = add_profile_picture(contact_details, None)
     data = add_weekday_availability(data)
     data = add_formatted_phone(data)
+    data = add_office_details(data)
     validate_details(data)
 
     sys.stdout = org_stdout
