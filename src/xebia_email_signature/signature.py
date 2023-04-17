@@ -77,9 +77,9 @@ def add_weekday_availability(contact_details: dict) -> dict:
         1 if contact_details.get("Sun") else 0,
     ]
 
-    # make weekdays the default
+    # no weekdays specified.
     if all([v == 0 for v in availability]):
-        availability = [1, 1, 1, 1, 1, 0, 0]
+        return result
 
     value = _get_readable_weekdays(availability)
     timezone = contact_details.get("timezone", None)
