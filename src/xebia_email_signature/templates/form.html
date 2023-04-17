@@ -102,7 +102,7 @@
             }
 
             let linkedin_url = document.getElementById('linkedin_url').value;
-            if   (linkedin_url && !/https:\/\/(www\.)?linkedin.*/.test(linkedin_url)) {
+            if   (linkedin_url && !/https:\/\/([^\.]*\.)?linkedin\.com/.test(linkedin_url)) {
                 document.getElementById('linkedin_url-error').innerHTML = 'Please enter your LinkedIn URL';
                 return false;
             }
@@ -351,7 +351,7 @@
 
         <div class="form-group">
             <label for="linkedin_url">LinkedIn URL</label>
-            <input placeholder="https://www.linkedin.com/in/..." type="text" id="linkedin_url" name="linkedin_url">
+            <input placeholder="https://www.linkedin.com/in/..." value="https://www.linkedin.com/company/xebia", type="text" id="linkedin_url" name="linkedin_url">
             <div id="linkedin_url-error" class="error"></div>
         </div>
         <div class="form-group">
