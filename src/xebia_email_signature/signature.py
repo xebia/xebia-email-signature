@@ -202,7 +202,7 @@ def get_theme(data: dict) -> dict:
     if data.get("dark_theme", "off") == "on":
         for k, v in result.items():
             if re.match(r"^#[0-9A-Fa-f]{6}$", v):
-                result[k] = "black"
+                result[k] = "inherit"
     return result
 
 
