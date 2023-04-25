@@ -24,7 +24,7 @@ def generate_signature():
 @app.route("/signature", methods=["POST"])
 def create_signature():
     try:
-        data = add_profile_picture(request.form, (64,64), request.files.get("profile_picture"))
+        data = add_profile_picture(request.form, (90,90), request.files.get("profile_picture"))
     except ValueError as error:
         return error.args[0], 400
 

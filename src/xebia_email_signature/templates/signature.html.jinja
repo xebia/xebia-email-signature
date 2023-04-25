@@ -7,7 +7,7 @@
         <tr style="line-height: 1;">
         {% if data.get('profile_picture') %}
         <td>
-        <img width="64px" height="64px" src="data:image/png;base64,{{ data['profile_picture'] }}"/>
+        <img src="data:image/png;base64,{{ data['profile_picture'] }}"/>
         </td>
         <td style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
         {% else %}

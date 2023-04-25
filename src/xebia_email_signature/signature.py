@@ -54,8 +54,7 @@ def add_profile_picture(contact_details: dict, size: tuple, file: Optional[FileS
 
     if image:
         buffer = BytesIO()
-        image.resize(size)
-        image.save(buffer, format="png")
+        image.resize(size).save(buffer, format="png")
         result["profile_picture"] = base64.b64encode(buffer.getvalue()).decode("ascii")
 
     return result
