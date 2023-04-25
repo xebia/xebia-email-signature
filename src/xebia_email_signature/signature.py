@@ -20,7 +20,7 @@ from xebia_email_signature.office import get_office_by_name
 from xebia_email_signature.inline_images import inline_images
 
 
-def add_profile_picture(contact_details: dict, file: Optional[FileStorage]) -> dict:
+def add_profile_picture(contact_details: dict, size: tuple, file: Optional[FileStorage]) -> dict:
     """
     add the profile picture of the user, base64 encoded
     """
@@ -54,6 +54,7 @@ def add_profile_picture(contact_details: dict, file: Optional[FileStorage]) -> d
 
     if image:
         buffer = BytesIO()
+        image.resize(size)
         image.save(buffer, format="png")
         result["profile_picture"] = base64.b64encode(buffer.getvalue()).decode("ascii")
 
@@ -264,7 +265,7 @@ def ask_details():
     github_url = input("link to your github account (https://github.com/johndoe): ")
     contact_details.update({"github_url": github_url})
 
-    data = add_profile_picture(contact_details, None)
+    data = add_profile_picture(contact_details, (76,76), None)
     data = add_weekday_availability(data)
     data = add_formatted_phone(data)
     data = add_office_details(data)
