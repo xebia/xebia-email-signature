@@ -265,7 +265,7 @@ def ask_details():
     github_url = input("link to your github account (https://github.com/johndoe): ")
     contact_details.update({"github_url": github_url})
 
-    data = add_profile_picture(contact_details, (76,76), None)
+    data = add_profile_picture(contact_details, (64,64), None)
     data = add_weekday_availability(data)
     data = add_formatted_phone(data)
     data = add_office_details(data)
