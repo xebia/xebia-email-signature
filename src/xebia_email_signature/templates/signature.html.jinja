@@ -6,7 +6,7 @@
     <table summary="contact details">
         <tr style="line-height: 1;">
         {% if data.get('profile_picture') %}
-        <td>
+        <td style="width: 60px; text-align: center;">
         <img src="data:image/png;base64,{{ data['profile_picture'] }}"/>
         </td>
         <td style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
@@ -14,7 +14,7 @@
         <td colspan="2" style="vertical-align:top; padding-top: 10px;">
         {% endif %}
             <span style="line-height: 1.25; font-family: Calibri, sans-serif; font-size: 12pt; font-weight: 600; color: {{ theme['full_name'] }};">
-            {{ data['full_name'] | e }}
+                {{ data['full_name'] | e }}
             </span>
             <br>
             <span style="font-family: Calibri, sans-serif;font-size: 10pt; font-weight: 600; color: {{ theme['unit'] }};">
@@ -22,12 +22,12 @@
             </span>
             <br>
             {% if 'unit' in data and data['unit'] %}
-            <span style="font-family: Calibri, sans-serif; font-size: 10pt;  color: {{ theme['unit'] }};">
+            <span style="font-family: Calibri, sans-serif; font-size: 8pt;  color: {{ theme['unit'] }};">
                 {{data['unit'] | e}}
             </span>
             <br>
             {% endif %}
-                <a style="text-decoration: none;  color: {{ theme['unit'] }};" href="tel:{{data['phone'].replace(' ', '') | e }}">
+                <a style="text-decoration: none;  color: {{ theme['unit'] }};" href="tel:{{data['formatted_phone'].replace(' ', '') | e }}">
                 <span style="font-family: Calibri, sans-serif;font-size: 8pt; ">{{ data["formatted_phone"] | e}}</span>
                 </a>
             <br>
@@ -38,15 +38,30 @@
             {% endif %}
         </td>
         </tr>
+        {% if 'office' in data and data["office"].__contains__("Xpirit") %}
+        <tr>
+        <td colspan="2">
+            <img width="120" height="36" id="Xebia_Xpirit" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia|Xpirit" name="Xebia|Xpirit"
+                 src="{{ theme['logo_url'] }}"/>
+        </td>
+        </tr>
+        <tr>
+        <td colspan="2" style="vertical-align:top;">
+        <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
+           Microsoft solutions by Xebia
+        </span>
+        </td>
+        </tr>
+        {% else %}
         <tr>
         <td style="width: 60px; text-align: center;">
             <img width="58" height="22" id="Xebia" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia" name="Xebia"
-                 src="{{theme['logo_url']}}"/>
+                 src="{{ theme['logo_url'] }}"/>
         </td>
-        <td style="border-left: solid #6C1D5F; padding-left: 5px;">
+        <td style="border-left: solid #6C1D5F; padding-left: 5px;">         
 
             <a style="font-family: Calibri, sans-serif; font-size: 8pt; color: {{ theme["link"] }};" href="{{theme['url']}}" title="Xebia website">{{theme['url'][8:]}}</a>
-            <br>
+            <br>            
             <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="10" height="10" id="Facebook" src="https://assets.oblcc.com/xebia/facebook-dark.png" alt="Facebook" name="Facebook" /></a>
             <a href="https://twitter.com/xebia" title="Twitter"><img border="0" width="10" height="10" id="Twitter" src="https://assets.oblcc.com/xebia/twitter-dark.png" alt="Twitter" name="Twitter" /></a>
             <a href="https://www.instagram.com/xebianl/" title="Instagram" ><img border="0" width="10" height="10" id="Instagram" src="https://assets.oblcc.com/xebia/instagram-dark.png" alt="Instagram" name="Instagram" /></a>
@@ -59,11 +74,16 @@
             {% endif %}
         </td>
         </tr>
-        </table>
-        {% if data.get('office_address') %}
-        <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
-           {{ data['office_address'] |e }}
-        </span>
         {% endif %}
+        {% if data.get('office_address') %}
+        <tr>
+        <td colspan="2" style="vertical-align:top;">
+        <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
+           {{ data['office_address'] | e }}
+        </span>
+        </td>
+        </tr>
+        {% endif %}
+        </table>
     </body>
 </html>
