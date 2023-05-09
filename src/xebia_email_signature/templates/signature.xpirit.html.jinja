@@ -6,7 +6,7 @@
     <table summary="contact details">
         <tr style="line-height: 1;">
         {% if data.get('profile_picture') %}
-        <td>
+        <td style="width: 60px; text-align: center;">
         <img src="data:image/png;base64,{{ data['profile_picture'] }}" width="60px" height="60px" />
         </td>
         <td style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
@@ -39,31 +39,27 @@
         </td>
         </tr>
         <tr>
-        <td style="width: 60px; text-align: center;">
-            <img width="58" height="22" id="Xebia" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia" name="Xebia"
-                 src="{{theme['logo_url']}}"/>
-        </td>
-        <td style="border-left: solid #6C1D5F; padding-left: 5px;">
-
-            <a style="font-family: Calibri, sans-serif; font-size: 8pt; color: {{ theme["link"] }};" href="{{theme['url']}}" title="Xebia website">{{theme['url'][8:]}}</a>
-            <br>
-            <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="10" height="10" id="Facebook" src="https://assets.oblcc.com/xebia/facebook-dark.png" alt="Facebook" name="Facebook" /></a>
-            <a href="https://twitter.com/xebia" title="Twitter"><img border="0" width="10" height="10" id="Twitter" src="https://assets.oblcc.com/xebia/twitter-dark.png" alt="Twitter" name="Twitter" /></a>
-            <a href="https://www.instagram.com/xebianl/" title="Instagram" ><img border="0" width="10" height="10" id="Instagram" src="https://assets.oblcc.com/xebia/instagram-dark.png" alt="Instagram" name="Instagram" /></a>
-            <a href="https://www.youtube.com/user/XebiaNL" title="YouTube"><img border="0" width="10" height="10" id="YouTube" src="https://assets.oblcc.com/xebia/youtube-dark.png" alt="YouTube" name="YouTube" /></a>
-            {% if 'linkedin_url' in data and data['linkedin_url'] %}
-            <a href="{{ data['linkedin_url'] | e }}" ><img border="0" width="10" height="10" id="LinkedIn" src="https://assets.oblcc.com/xebia/linkedin-dark.png" alt="LinkedIn" name="LinkedIn" /></a>
-            {% endif %}
-            {% if 'github_url' in data and data['github_url'] %}
-            <a href="{{ data['github_url'] | e }}" ><img border="0" width="10" height="10" id="Github" src="https://assets.oblcc.com/xebia/github-dark.png" alt="Github" name="Github" /></a>
-            {% endif %}
+        <td colspan="2">
+            <img width="120" height="36" id="Xebia_Xpirit" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia|Xpirit" name="Xebia|Xpirit"
+                 src="{{ theme['logo_url'] }}"/>
         </td>
         </tr>
-        </table>
-        {% if data.get('office_address') %}
+        <tr>
+        <td colspan="2" style="vertical-align:top;">
         <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
-           {{ data['office_address'] |e }}
+           Microsoft solutions by Xebia
         </span>
+        </td>
+        </tr>
+        {% if data.get('office_address') %}
+        <tr>
+        <td colspan="2" style="vertical-align:top;">
+        <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
+           {{ data['office_address'] | e }}
+        </span>
+        </td>
+        </tr>
         {% endif %}
+        </table>
     </body>
 </html>

@@ -32,7 +32,8 @@ def create_signature():
     data = add_weekday_availability(data)
     data = add_formatted_phone(data)
 
-    response = render_template("signature.html.jinja", data=data, theme=get_theme(data))
+    jinjafile = "signature.xpirit.html.jinja" if data["office"].__contains__("Xpirit") else "signature.html.jinja"
+    response = render_template(jinjafile, data=data, theme=get_theme(data))
 
     return (
         inline_images(response, request.url)
