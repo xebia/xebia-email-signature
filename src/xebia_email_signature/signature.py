@@ -203,7 +203,7 @@ def get_theme(data: dict) -> dict:
     >>> get_theme({"unit": "Xebia Academy", "dark_theme": "off"})
     {'default': '#222222', 'full_name': '#6C1D5F', 'unit': '#5A5A5A', 'link': '#06A99C', 'logo_url': 'https://cdn.xebia.com/assets/logos/academy.png', 'url': 'https://xebia.com/training'}
     >>> get_theme({"unit": "Xebia | Xpirit", "dark_theme": "off"})
-    {'default': '#222222', 'full_name': '#f28019', 'unit': '#5A5A5A', 'link': '#06A99C', 'logo_url': 'https://xpirit.com/wp-content/uploads/2023/04/Xebia_Xpirit_logo_2023_DEF.png', 'url': 'https://www.xpirit.com/'}
+    {'default': '#222222', 'full_name': '#FF6200', 'unit': '#5A5A5A', 'link': '#FF6200', 'logo_url': 'https://assets.oblcc.com/xebia/xebia_xpirit_logo.png', 'url': 'https://www.xpirit.com'}
     """
 
     if (data["office"].__contains__("Xpirit")):
