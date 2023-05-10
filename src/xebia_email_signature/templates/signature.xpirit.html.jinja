@@ -3,15 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head><title></title></head>
     <body style="font-size: 11pt; font-family: Calibri, sans-serif; ">
-    <table summary="contact details">
-        <tr style="line-height: 1;">
+    <table summary="contact details" border=0>
+        <tr>
         {% if data.get('profile_picture') %}
-        <td style="width: 60px; text-align: center;">
-        <img src="data:image/png;base64,{{ data['profile_picture'] }}" width="60px" height="60px" />
+        <td>
+        <img src="data:image/png;base64,{{ data['profile_picture'] }}" />
         </td>
-        <td style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
+        <td>
         {% else %}
-        <td colspan="2" style="vertical-align:top; padding-top: 10px;">
+        <td colspan="2">
         {% endif %}
             <span style="line-height: 1.25; font-family: Calibri, sans-serif; font-size: 12pt; font-weight: 600; color: {{ theme['full_name'] }};">
             {{ data['full_name'] | e }}
@@ -45,7 +45,7 @@
         </td>
         </tr>
         <tr>
-        <td colspan="2" style="vertical-align:top;">
+        <td colspan="2">
         <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
            Microsoft solutions by Xebia
         </span>
@@ -53,7 +53,7 @@
         </tr>
         {% if data.get('office_address') %}
         <tr>
-        <td colspan="2" style="vertical-align:top;">
+        <td colspan="2">
         <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
            {{ data['office_address'] | e }}
         </span>
