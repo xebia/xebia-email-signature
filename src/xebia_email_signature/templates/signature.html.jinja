@@ -7,7 +7,7 @@
         <tr style="line-height: 1;">
         {% if data.get('profile_picture') %}
         <td>
-        <img src="data:image/png;base64,{{ data['profile_picture'] }}"/>
+        <img src="data:image/png;base64,{{ data['profile_picture'] }}" />
         </td>
         <td style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
         {% else %}
@@ -22,12 +22,12 @@
             </span>
             <br>
             {% if 'unit' in data and data['unit'] %}
-            <span style="font-family: Calibri, sans-serif; font-size: 10pt;  color: {{ theme['unit'] }};">
+            <span style="font-family: Calibri, sans-serif; font-size: 8pt;  color: {{ theme['unit'] }};">
                 {{data['unit'] | e}}
             </span>
             <br>
             {% endif %}
-                <a style="text-decoration: none;  color: {{ theme['unit'] }};" href="tel:{{data['phone'].replace(' ', '') | e }}">
+                <a style="text-decoration: none;  color: {{ theme['unit'] }};" href="tel:{{data['formatted_phone'].replace(' ', '') | e }}">
                 <span style="font-family: Calibri, sans-serif;font-size: 8pt; ">{{ data["formatted_phone"] | e}}</span>
                 </a>
             <br>
