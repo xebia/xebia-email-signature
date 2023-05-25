@@ -11,6 +11,7 @@ import phonenumbers
 import tidylib
 from PIL import Image
 from werkzeug.datastructures import FileStorage
+import logging
 
 from xebia_email_signature.gravatar import (
     load_profile_from_gravatar,
@@ -102,10 +103,14 @@ def add_formatted_phone(contact_details: dict) -> dict:
     result = {k: v for k, v in contact_details.items()}
     phone = contact_details.get("phone")
     if phone:
-        result["formatted_phone"] = phonenumbers.format_number(
-            phonenumbers.parse(phone),
-            phonenumbers.PhoneNumberFormat.INTERNATIONAL,
-        )
+        try:
+            result["formatted_phone"] = phonenumbers.format_number(
+                phonenumbers.parse(phone),
+                phonenumbers.PhoneNumberFormat.INTERNATIONAL,
+            )
+        except phonenumbers.phonenumberutil.NumberParseException as error:
+            logging.error("%s is not a valid phone number, %s", phone, error)
+            result["formatted_phone"] = phone
     return result
 
 
