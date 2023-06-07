@@ -1,4 +1,5 @@
 import pkg_resources
+import re
 import json
 from typing import Optional
 from dataclasses import dataclass
@@ -9,6 +10,10 @@ import phonenumbers
 class Office:
     address: str
     telephone: Optional[str]
+
+    @property
+    def address_lines(self) -> list[str]:
+        return self.address.split("\n")
 
     @property
     def telephone_formatted(self) -> str:
@@ -32,8 +37,8 @@ def load_locations():
 _offices = load_locations()
 
 
-def get_office_by_name(name: str) -> dict:
-    location = _offices.get(name, _offices["Xebia Netherlands"])
+def get_office_by_name(name: str) -> Office:
+    location = _offices.get(name, _offices["Hilversum, Netherlands"])
     return Office(address=location["address"], telephone=location.get("telephone", ""))
 
 

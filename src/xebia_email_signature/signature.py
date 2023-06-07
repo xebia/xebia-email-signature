@@ -21,7 +21,9 @@ from xebia_email_signature.office import get_office_by_name
 from xebia_email_signature.inline_images import inline_images
 
 
-def add_profile_picture(contact_details: dict, size: tuple, file: Optional[FileStorage]) -> dict:
+def add_profile_picture(
+    contact_details: dict, size: tuple, file: Optional[FileStorage]
+) -> dict:
     """
     add the profile picture of the user, base64 encoded
     """
@@ -117,7 +119,7 @@ def add_formatted_phone(contact_details: dict) -> dict:
 def add_office_details(contact_details: dict) -> dict:
     result = {k: v for k, v in contact_details.items()}
     office = get_office_by_name(result.get("office", ""))
-    result["office_address"] = result.get("office_address", office.address)
+    result["office_address"] = result.get("office_address", office.address_lines)
     result["office_phone"] = result.get("office_phone", office.telephone_formatted)
     return result
 
@@ -211,7 +213,7 @@ def get_theme(data: dict) -> dict:
     {'default': '#222222', 'full_name': '#FF6200', 'unit': '#5A5A5A', 'link': '#FF6200', 'logo_url': 'https://assets.oblcc.com/xebia/xebia_xpirit_logo.png', 'url': 'https://www.xpirit.com'}
     """
 
-    if (data["office"].__contains__("Xpirit")):
+    if data["office"].__contains__("Xpirit"):
         result = copy(_themes.get("Xebia | Xpirit"))
     else:
         result = copy(_themes.get(data.get("unit", "default"), _themes["default"]))
@@ -282,7 +284,7 @@ def ask_details():
     github_url = input("link to your github account (https://github.com/johndoe): ")
     contact_details.update({"github_url": github_url})
 
-    data = add_profile_picture(contact_details, (64,64), None)
+    data = add_profile_picture(contact_details, (64, 64), None)
     data = add_weekday_availability(data)
     data = add_formatted_phone(data)
     data = add_office_details(data)
