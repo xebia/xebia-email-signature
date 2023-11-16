@@ -26,5 +26,6 @@ class Test(TestCase):
         _ = validate_html(rendered_output)
 
     def test_xpirit_template(self):
-        rendered_output = render_template(self.employee_details, "signature.xpirit.html.jinja")
+        rendered_output = render_template(self.employee_details,
+                                          "signature.xpirit.html.jinja")
         _ = validate_html(rendered_output)
