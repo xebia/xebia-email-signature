@@ -9,6 +9,7 @@
   --xebia-dawn: #9D92B2;
   --xebia-light-blueish-gray: #F7F8FC;
   --xebia-neutral-dark-grey: #5A5A5A;
+  --xebia-neutral-regular-grey: #A1A1A1;
   --xebia-neutral-light-grey: #dedede;
   --xebia-neutral-almost-black: #222;
 }
@@ -159,7 +160,8 @@ input:focus {
 }
 
 select,
-input[type="text"] {
+input[type="text"],
+input[type="email"] {
   font-family: Arial, sans-serif;
   letter-spacing: -0.05em;
   font-size: 18px;
@@ -171,6 +173,10 @@ input[type="text"] {
   color: var(--xebia-neutral-dark-grey, #5A5A5A);
   border: 1px solid var(--xebia-tranquil-velvet, #6C1D5F);
   border-radius: 5px;
+}
+
+input::placeholder {
+  color: var(--xebia-neutral-regular-grey, #A1A1A1)
 }
 
 .select-icon-picker {
