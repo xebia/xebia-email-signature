@@ -1,0 +1,430 @@
+/* ------------------------------------------------------------------------ */
+/*  BASE STYLE
+/* ------------------------------------------------------------------------ */
+:root {
+  --font-base: #6C1D5F;
+  --font-second: #6C1D5F;
+
+  --xebia-tranquil-velvet: #6C1D5F;
+  --xebia-dawn: #9D92B2;
+  --xebia-light-blueish-gray: #F7F8FC;
+  --xebia-neutral-dark-grey: #5A5A5A;
+  --xebia-neutral-light-grey: #dedede;
+  --xebia-neutral-almost-black: #222;
+}
+
+@font-face {
+  font-family: "Proxima";
+  src: url("/static/fonts/ProximaNova/ProximaNova-Bold.woff2") format("woff2"),
+    url("/static/fonts/ProximaNova/ProximaNova-Bold.woff") format("woff"),
+    url("/static/fonts/ProximaNova/ProximaNova-Bold.otf") format("opentype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: "Proxima";
+  src: url("/static/fonts/ProximaNova/ProximaNova-BoldIt.woff2") format("woff2"),
+    url("/static/fonts/ProximaNova/ProximaNova-BoldIt.woff") format("woff"),
+    url("/static/fonts/ProximaNova/ProximaNova-BoldIt.otf") format("opentype");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 700;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: "Proxima";
+  src: url("/static/fonts/ProximaNova/ProximaNova-Semibold.woff2") format("woff2"),
+    url("/static/fonts/ProximaNova/ProximaNova-Semibold.woff") format("woff"),
+    url("/static/fonts/ProximaNova/ProximaNova-Semibold.otf") format("opentype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: "Proxima";
+  src: url("/static/fonts/ProximaNova/ProximaNova-SemiboldIt.woff2") format("woff2"),
+    url("/static/fonts/ProximaNova/ProximaNova-SemiboldIt.woff") format("woff"),
+    url("/static/fonts/ProximaNova/ProximaNova-SemiboldIt.otf") format("opentype");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 600;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: "Proxima";
+  src: url("/static/fonts/ProximaNova/ProximaNova-Regular.woff2") format("woff2"),
+    url("/static/fonts/ProximaNova/ProximaNova-Regular.woff") format("woff"),
+    url("/static/fonts/ProximaNova/ProximaNova-Regular.otf") format("opentype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: "Proxima";
+  src: url("/static/fonts/ProximaNova/ProximaNova-RegularIt.woff2") format("woff2"),
+    url("/static/fonts/ProximaNova/ProximaNova-RegularIt.woff") format("woff"),
+    url("/static/fonts/ProximaNova/ProximaNova-RegularIt.otf") format("opentype");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: normal;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Proxima", Helvetica, sans-serif;
+  color: var(--xebia-neutral-dark-grey, #5A5A5A);
+  background: url('/static/main-bg.svg') var(--xebia-tranquil-velvet, #6C1D5F) fixed;
+}
+
+.main {
+  max-width: 601px;
+  margin: 0 auto;
+  padding: 62px 0 82px;
+}
+
+.logo {
+  margin-bottom: 48px;
+}
+
+.site-title {
+  color: var(--xebia-light-blueish-gray, #F7F8FC);
+  font-weight: 600;
+  margin: 0 0 48px;
+}
+
+.form-section {
+  display: flex;
+  gap: 18px;
+}
+
+.form-wrapper {
+  padding: 10px;
+  background: var(--xebia-light-blueish-gray, #F7F8FC);
+  border-radius: 11px;
+}
+
+.preview-container,
+.form-container {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 32px;
+}
+
+.form-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: 600;
+
+  margin-bottom: 11px;
+}
+
+label span {
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 400;
+  color: var(--xebia-neutral-dark-grey, #5A5A5A);
+}
+
+input:focus {
+  outline: 0;
+}
+
+select,
+input[type="text"] {
+  font-family: Arial, sans-serif;
+  letter-spacing: -0.05em;
+  font-size: 18px;
+  line-height: 20px;
+
+  width: 100%;
+  padding: 12px 17px 11px;
+
+  color: var(--xebia-neutral-dark-grey, #5A5A5A);
+  border: 1px solid var(--xebia-tranquil-velvet, #6C1D5F);
+  border-radius: 5px;
+}
+
+.select-icon-picker {
+  width: 71px;
+  flex-shrink: 0;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+/* Choices.js */
+.choices {
+  margin-bottom: 0;
+}
+
+.choices[data-type*=select-one]::after {
+  content: url(icon-arrow-down.svg);
+
+  width: 16px;
+  height: 10px;
+
+  right: 11px;
+  top: calc(50% - 8px);
+
+  border: 0;
+
+  transform-origin: center 100%;
+  transition: transform 0.2s ease-in;
+}
+
+.choices[data-type*=select-one].is-open::after {
+  transform: rotate(180deg);
+  margin-top: 0;
+}
+
+.choices__inner {
+  background-color: #fff;
+  height: 44px;
+  padding: 12px 18px;
+  border: 1px solid var(--xebia-tranquil-velvet, #6C1D5F);
+  border-radius: 5px;
+}
+
+.choices.is-focused .choices__inner {
+  border-color: var(--xebia-tranquil-velvet, #6C1D5F);
+  border-radius: 5px;
+}
+
+.choices__list--dropdown {
+  width: 264px !important;
+  border-color: var(--xebia-tranquil-velvet, #6C1D5F) !important;
+  border-radius: 5px;
+  padding: 0 12px;
+}
+
+.choices__list--single {
+  padding: 0;
+}
+
+.choices__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 18px !important;
+  line-height: 20px;
+  padding: 12px 0 !important;
+
+  cursor: pointer;
+}
+
+.choices__item:not(:last-child) {
+  border-bottom: 2px solid var(--xebia-neutral-light-grey, #dedede)
+}
+
+.choices__item--selectable {
+  display: flex;
+  align-items: center;
+}
+
+.select-item-icon {
+  width: 16px;
+  /* height: 21px; */
+}
+
+.select-choice-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Form features */
+.input-chars-counter {
+  position: absolute;
+  right: 12px;
+
+  font-size: 18px;
+  letter-spacing: -0.05em;
+  color: var(--xebia-dawn, #9D92B2);
+}
+
+.input-icon[type="text"] {
+  padding-left: 52px;
+}
+
+.input-icon-img {
+  position: absolute;
+  left: 18px;
+}
+
+/* Buttons */
+.btn {
+  font-family: "Proxima", Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  text-decoration: none;
+
+  padding: 8px 17px;
+  border-radius: 5px;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  cursor: pointer;
+}
+
+.btn-primary {
+  color: #fff;
+  font-weight: 600;
+  background: var(--xebia-tranquil-velvet, "#6C1D5F");
+}
+
+.btn-dawn {
+  width: 100%;
+  background: var(--xebia-dawn, "#9D92B2");
+  color: #fff;
+  transition: background-color 0.15s ease-in;
+}
+
+.btn-dawn:hover {
+  background-color: var(--xebia-tranquil-velvet, "#6C1D5F");
+}
+
+.btn-small {
+  font-size: 14px;
+  padding: 5px 12px;
+  gap: 8px;
+}
+
+.btn-md {
+  font-size: 18px;
+  padding: 10px 19px;
+}
+
+.btn-outline {
+  color: var(--xebia-dawn, "#9D92B2") !important;
+  border: 1px solid var(--xebia-dawn, "#9D92B2");
+  transition: border 0.15s ease-in;
+}
+
+.btn-outline:hover {
+  border-color: var(--xebia-tranquil-velvet, "#6C1D5F")
+}
+
+.preview-container {
+  width: 420px;
+  margin: 48px auto 0;
+  padding: 40px;
+}
+
+.preview-header {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--xebia-dawn, #9D92B2)
+}
+
+.preview-iframe {
+  border: 0;
+  height: fit-content;
+}
+
+/* Utilities */
+
+/* Display */
+.flex {
+  display: flex;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Flex */
+.items-center {
+  align-items: center;
+}
+
+/* Position */
+.relative {
+  position: relative;
+}
+
+/* Width */
+.w-2\/6 {
+  width: 33.333333%;
+}
+
+.w-1\/6 {
+  width: 16.666666%;
+}
+
+.w-5\/6 {
+  width: 83.333333%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Padding */
+.pb-0 {
+  padding-bottom: 0;
+}
+
+/* Margin */
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+/* Text alignment */
+.text-left {
+  text-align: left;
+}
+
+.font-semibold {
+  font-weight: 700;
+}
+
+/* Gap */
+.gap-1 {
+  gap: 1rem;
+}
+
+.flex-column {
+  flex-direction: column;
+}
