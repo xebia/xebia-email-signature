@@ -227,6 +227,18 @@
                     </div>
                     <div id="cta-link-error" class="error"></div>
                   </div>
+                  <div class="form-group mb-0">
+                    <button
+                      class="btn btn-primary btn-trash btn-md js-form-clone-remove"
+                    >
+                      <img
+                        width="16"
+                        height="18"
+                        src="static/icon-btn-trash.svg"
+                        alt="Icon trash"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -487,6 +499,7 @@
           let targetEl = document.querySelector(cloneTarget);
           if (!targetEl?.initalNode) {
             targetEl.initialNode = targetEl.cloneNode(true);
+            targetEl.classList.add('form-clone');
           }
 
           el.addEventListener('click', (e) => {
@@ -503,7 +516,7 @@
 
       function cloneRemoveBtnInit(btn) {
         btn.addEventListener('click', (e) => {
-          btn.closest('.form-section').remove();
+          btn.closest('.form-clone').innerHTML = '';
         });
       }
 
