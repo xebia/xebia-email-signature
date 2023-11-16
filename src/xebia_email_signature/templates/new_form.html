@@ -40,7 +40,7 @@
               type="text"
               id="full_name"
               name="full_name"
-              value="John Doe"
+              placeholder="John Doe"
               onblur="prefillEmail(this.value)"
             />
             <div id="full_name-error" class="error"></div>
@@ -51,7 +51,7 @@
               type="text"
               id="email"
               name="email"
-              value="john.doe@xebia.com"
+              placeholder="john.doe@xebia.com"
               onchange="validateEmail()"
             />
             <div id="email-error" class="error"></div>
@@ -63,7 +63,7 @@
               type="text"
               id="job_role"
               name="job_role"
-              value="Senior Designer | Netherlands"
+              placeholder="Senior Designer | Netherlands"
             />
             <div id="job_role-error" class="error"></div>
           </div>
@@ -80,7 +80,7 @@
               type="text"
               id="unit"
               name="unit"
-              value="Software Technology"
+              placeholder="Software Technology"
             />
             <div id="unit-error" class="error"></div>
           </div>
@@ -92,7 +92,7 @@
               type="text"
               id="phone"
               name="phone"
-              value="+00000000000"
+              placeholder="+00000000000"
               onchange="validatePhoneNumber();"
             />
             <div id="phone-error" class="error"></div>
@@ -125,7 +125,7 @@
                     type="text"
                     id="sm-0-link"
                     name="sm[0][link]"
-                    value="https://www.linkedin.com/company/xebia"
+                    placeholder="https://www.linkedin.com/company/xebia"
                   />
                   <div id="sm-link-error" class="error"></div>
                 </div>
@@ -159,7 +159,7 @@
                         class="js-input-maxlen"
                         name="cta[0][desc]"
                         maxlength="40"
-                        value="Read our latest insights"
+                        placeholder="Read our latest insights"
                       />
                     </div>
                     <div id="cta-desc-error" class="error"></div>
@@ -211,7 +211,7 @@
                         type="text"
                         id="cta-0-link"
                         name="cta[0][link]"
-                        value="https://www.xebia.com/news"
+                        placeholder="https://www.xebia.com/news"
                       />
                     </div>
                     <div id="cta-link-error" class="error"></div>
@@ -463,36 +463,6 @@
         });
       }
 
-      async function sendFormDataAsync(formEl) {
-        let url = formEl.action;
-        let formData = new FormData(formEl);
-
-        return fetch(url, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-      }
-
-      function formInit() {
-        let formEl = document.querySelector('.js-form');
-        formEl?.addEventListener('submit', (e) => {
-          e.preventDefault();
-
-          let isValid = validateForm();
-          if (isValid) {
-            sendFormDataAsync(formEl)
-              // .then((response) => response.json())
-              .then((data) => {
-                console.log(data);
-              });
-          }
-        });
-      }
-
-      // TODO: temp solution
       function handleFormSubmit(e) {
         let previewContainer = document.querySelector('.preview-container');
         let previewIframe = previewContainer.querySelector('iframe');
@@ -510,7 +480,6 @@
         allCloneInit();
         allSelectInit();
         allMaxCharsCounterInit();
-        // formInit();
       })();
     </script>
   </body>
