@@ -128,6 +128,18 @@
                   />
                   <div id="sm-link-error" class="error"></div>
                 </div>
+                <div class="form-group">
+                  <button
+                    class="btn btn-primary btn-trash btn-md js-form-clone-remove"
+                  >
+                    <img
+                      width="16"
+                      height="18"
+                      src="static/icon-btn-trash.svg"
+                      alt="Icon trash"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -342,12 +354,18 @@
         let cloneCount = parseInt(targetEl.dataset.cloneCount ?? 0) + 1;
 
         cloneEl.classList.remove(cloneTarget.replace(/^\./, ''));
+        cloneEl.classList.add('form-clone');
         cloneEl.removeAttribute('data-clone-count');
 
         targetEl.dataset.cloneCount = cloneCount;
         cloneEl = prepareCloneFields(cloneCount, cloneEl);
 
         targetEl?.parentNode.appendChild(cloneEl);
+
+        let removeBtn = cloneEl.querySelector('.js-form-clone-remove');
+        if (removeBtn) {
+          cloneRemoveBtnInit(removeBtn);
+        }
 
         allMaxCharsCounterInit();
         allSelectInit();
@@ -475,6 +493,17 @@
             e.preventDefault();
             cloneFormGroup(cloneTarget);
           });
+        });
+
+        let formCloneRemoveBtn = document.querySelectorAll(
+          '.js-form-clone-remove'
+        );
+        formCloneRemoveBtn?.forEach(cloneRemoveBtnInit);
+      }
+
+      function cloneRemoveBtnInit(btn) {
+        btn.addEventListener('click', (e) => {
+          btn.closest('.form-section').remove();
         });
       }
 

@@ -133,6 +133,9 @@ body {
 }
 
 .form-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   margin-bottom: 18px;
 }
 
@@ -348,6 +351,10 @@ input::placeholder {
 
 .btn-outline:hover {
   border-color: var(--xebia-tranquil-velvet, "#6C1D5F")
+}
+
+.btn-trash {
+  height: 45px;
 }
 
 .preview-container {
