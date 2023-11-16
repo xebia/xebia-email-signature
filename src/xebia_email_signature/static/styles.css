@@ -16,9 +16,9 @@
 
 @font-face {
   font-family: "Proxima";
-  src: url("/static/fonts/ProximaNova/ProximaNova-Bold.woff2") format("woff2"),
-    url("/static/fonts/ProximaNova/ProximaNova-Bold.woff") format("woff"),
-    url("/static/fonts/ProximaNova/ProximaNova-Bold.otf") format("opentype");
+  src: url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Bold.woff2") format("woff2"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Bold.woff") format("woff"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Bold.otf") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 700;
@@ -27,9 +27,9 @@
 
 @font-face {
   font-family: "Proxima";
-  src: url("/static/fonts/ProximaNova/ProximaNova-BoldIt.woff2") format("woff2"),
-    url("/static/fonts/ProximaNova/ProximaNova-BoldIt.woff") format("woff"),
-    url("/static/fonts/ProximaNova/ProximaNova-BoldIt.otf") format("opentype");
+  src: url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-BoldIt.woff2") format("woff2"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-BoldIt.woff") format("woff"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-BoldIt.otf") format("opentype");
   font-display: swap;
   font-style: italic;
   font-weight: 700;
@@ -38,9 +38,9 @@
 
 @font-face {
   font-family: "Proxima";
-  src: url("/static/fonts/ProximaNova/ProximaNova-Semibold.woff2") format("woff2"),
-    url("/static/fonts/ProximaNova/ProximaNova-Semibold.woff") format("woff"),
-    url("/static/fonts/ProximaNova/ProximaNova-Semibold.otf") format("opentype");
+  src: url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Semibold.woff2") format("woff2"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Semibold.woff") format("woff"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Semibold.otf") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 600;
@@ -49,9 +49,9 @@
 
 @font-face {
   font-family: "Proxima";
-  src: url("/static/fonts/ProximaNova/ProximaNova-SemiboldIt.woff2") format("woff2"),
-    url("/static/fonts/ProximaNova/ProximaNova-SemiboldIt.woff") format("woff"),
-    url("/static/fonts/ProximaNova/ProximaNova-SemiboldIt.otf") format("opentype");
+  src: url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-SemiboldIt.woff2") format("woff2"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-SemiboldIt.woff") format("woff"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-SemiboldIt.otf") format("opentype");
   font-display: swap;
   font-style: italic;
   font-weight: 600;
@@ -60,9 +60,9 @@
 
 @font-face {
   font-family: "Proxima";
-  src: url("/static/fonts/ProximaNova/ProximaNova-Regular.woff2") format("woff2"),
-    url("/static/fonts/ProximaNova/ProximaNova-Regular.woff") format("woff"),
-    url("/static/fonts/ProximaNova/ProximaNova-Regular.otf") format("opentype");
+  src: url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Regular.woff2") format("woff2"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Regular.woff") format("woff"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-Regular.otf") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -71,9 +71,9 @@
 
 @font-face {
   font-family: "Proxima";
-  src: url("/static/fonts/ProximaNova/ProximaNova-RegularIt.woff2") format("woff2"),
-    url("/static/fonts/ProximaNova/ProximaNova-RegularIt.woff") format("woff"),
-    url("/static/fonts/ProximaNova/ProximaNova-RegularIt.otf") format("opentype");
+  src: url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-RegularIt.woff2") format("woff2"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-RegularIt.woff") format("woff"),
+    url("https://xebia.com/wp-content/themes/xebia-theme/css/fonts/ProximaNova/ProximaNova-RegularIt.otf") format("opentype");
   font-display: swap;
   font-style: italic;
   font-weight: 400;
