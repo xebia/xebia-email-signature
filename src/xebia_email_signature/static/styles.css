@@ -329,6 +329,12 @@ input::placeholder {
   gap: 8px;
 }
 
+.btn-tiny {
+  font-size: 12px;
+  padding: 5px 8px;
+  gap: 6px;
+}
+
 .btn-md {
   font-size: 18px;
   padding: 10px 19px;
@@ -345,6 +351,7 @@ input::placeholder {
 }
 
 .preview-container {
+  position: relative;
   width: 420px;
   margin: 48px auto 0;
   padding: 40px;
@@ -359,6 +366,12 @@ input::placeholder {
 .preview-iframe {
   border: 0;
   height: fit-content;
+}
+
+.preview-btn-copy {
+  position: absolute;
+  top: 14px;
+  right: 14px;
 }
 
 /* Utilities */
@@ -415,6 +428,10 @@ input::placeholder {
 
 .mb-8 {
   margin-bottom: 2rem;
+}
+
+.ml-auto {
+  margin-left: auto;
 }
 
 /* Text alignment */

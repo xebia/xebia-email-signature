@@ -231,16 +231,20 @@
           </div>
 
           <div class="form-bottom">
-            <a
+            <!-- <a
               class="btn btn-outline btn-small"
               href="static/design.pdf"
               target="_blank"
             >
               <img src="/static/icon-watch.svg" alt="Icon Watch" />
               Design Guidelines
-            </a>
+            </a> -->
 
-            <input class="btn btn-primary" type="submit" value="Create" />
+            <input
+              class="btn btn-primary ml-auto"
+              type="submit"
+              value="Create"
+            />
           </div>
         </form>
       </div>
@@ -252,7 +256,19 @@
           src="/new/signature"
           height="100%"
           width="100%"
+          allow="clipboard-write"
         ></iframe>
+        <button
+          class="preview-btn-copy btn btn-tiny btn-primary js-signature-copy"
+        >
+          <img
+            width="14"
+            height="16"
+            src="/static/icon-copy.png"
+            alt="Copy icon"
+          />
+          <span>Copy signature</span>
+        </button>
       </div>
     </main>
 
@@ -475,10 +491,40 @@
         }
       }
 
+      function selectIframeNode(node, iframe) {
+        let doc = iframe.contentWindow.document;
+        let range = doc.createRange();
+        range.selectNodeContents(node);
+        let select = iframe.contentWindow.getSelection();
+        select.removeAllRanges();
+        select.addRange(range);
+      }
+
+      function signatureCopyInit() {
+        let btn = document.querySelector('.js-signature-copy');
+        let iframe = document.querySelector('.preview-iframe');
+
+        btn.addEventListener('click', (e) => {
+          selectIframeNode(iframe.contentWindow.document.body, iframe);
+          iframe.contentWindow.document.execCommand('copy');
+
+          let btnTextEl = btn.querySelector('span');
+          let btnOriginalText = btnTextEl.innerText;
+
+          btnTextEl.innerText = 'Copied!';
+          if (!btnTextEl.textTimeout) {
+            btnTextEl.textTimeout = setTimeout(() => {
+              btnTextEl.innerText = btnOriginalText;
+            }, 3000);
+          }
+        });
+      }
+
       (() => {
         allCloneInit();
         allSelectInit();
         allMaxCharsCounterInit();
+        signatureCopyInit();
       })();
     </script>
   </body>
