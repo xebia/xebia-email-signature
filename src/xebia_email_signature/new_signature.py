@@ -181,6 +181,9 @@ def add_call_to_actions(contact_details: dict) -> dict:
     formatted_calls = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in calls_to_action.keys()], default=0)) + 1)]
     for k, v in calls_to_action.items():
         split_key = k.split('[')
+        if split_key[2][:-1] == 'link':
+            if v[:8] != 'https://':
+                v = 'https://' + v
         formatted_calls[int(split_key[1][:-1])][split_key[2][:-1]] = v
     result["call_to_action"] = formatted_calls
     return result
@@ -192,6 +195,9 @@ def add_social_media(contact_details: dict) -> dict:
     formatted_social_media = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in social_media.keys()], default=0)) + 1)]
     for k, v in social_media.items():
         split_key = k.split('[')
+        if split_key[2][:-1] == 'link':
+            if v[:8] != 'https://':
+                v = 'https://' + v
         formatted_social_media[int(split_key[1][:-1])][split_key[2][:-1]] = v
     result["social_media"] = formatted_social_media
     return result
