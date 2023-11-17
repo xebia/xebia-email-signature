@@ -347,7 +347,7 @@
       }
 
       function validatePhoneNumber(phone) {
-        const re = /^\+[0-9]{10,15}$/;
+        const re = /^\+[0-9]{10,15}$|^$/;
         return re.test(String(phone).toLowerCase());
       }
 
