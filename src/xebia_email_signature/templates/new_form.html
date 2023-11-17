@@ -527,13 +527,15 @@
         }
       }
 
-      function selectIframeNode(node, iframe) {
+      function copyIframeContent(iframe) {
         let doc = iframe.contentWindow.document;
         let range = doc.createRange();
-        range.selectNodeContents(node);
+        range.selectNodeContents(iframe.contentWindow.document);
         let select = iframe.contentWindow.getSelection();
         select.removeAllRanges();
         select.addRange(range);
+        iframe.contentWindow.document.execCommand('copy');
+        select.removeAllRanges();
       }
 
       function signatureCopyInit() {
@@ -541,8 +543,7 @@
         let iframe = document.querySelector('.preview-iframe');
 
         btn.addEventListener('click', (e) => {
-          selectIframeNode(iframe.contentWindow.document.body, iframe);
-          iframe.contentWindow.document.execCommand('copy');
+          copyIframeContent(iframe);
 
           let btnTextEl = btn.querySelector('span');
           let btnOriginalText = btnTextEl.innerText;
