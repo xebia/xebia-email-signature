@@ -38,13 +38,15 @@
                 href={{'mailto:' ~ data['email']}}
                 style="text-decoration: none; color: #6c1d5f"
               >
-                {{ data['full_name'] | e }}
+                <span style="color: #6c1d5f;">
+                  {{ data['full_name'] | e }}
+                </span>
               </a>
               {% if 'social_media' in data and data['social_media'] %}
-                <span style="color: #a1a1a1; font-size: 10px">|</span>
+                <span style="color: #cccccc; font-size: 10px; font-weight: 200;">|</span>
                 {% for media in data['social_media'] %}
                     {% if media %}
-                        <a href={{media['link']}}>
+                        <a href={{media['link']}} style="vertical-align: middle;">
                         {% if media['icon'] == 'linkedin' %}
                             <img width="10" height="10" src="{{ url_for('static', _external=True, filename='email-logo-li.png') }}"/>
                         {% endif %}
@@ -168,7 +170,11 @@
                     {% if call['icon'] == 'award' %}
                         <img width="8" height="7" src="{{ url_for('static', _external=True, filename='email-cta-icon-award.png') }}"/>
                     {% endif %}
-                    <a href={{call['link']}} style="text-decoration: none; color: #6C1D5F;">{{call['desc']}}</a>
+                    <a href={{call['link']}} style="text-decoration: none; color: #5a5a5a;">
+                      <span style="color: #6c1d5f;">
+                        {{call['desc']}}
+                      </span>
+                    </a>
                     <br />
                 {% endif %}
             {% endfor %}
