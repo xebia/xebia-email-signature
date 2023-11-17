@@ -71,8 +71,8 @@
                 {{ data["job_role"] | e }}
               </span>
               <br/>
-              {% if 'service-line' in data and data['service-line'] %}
-                {{data['service-line'] | e}}
+              {% if 'unit' in data and data['unit'] %}
+                {{data['unit'] | e}}
                 <br>
               {% endif %}
               {% if 'formatted_phone' in data and data['formatted_phone'] %}
