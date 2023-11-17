@@ -38,7 +38,9 @@
                 href={{'mailto:' ~ data['email']}}
                 style="text-decoration: none; color: #6c1d5f"
               >
-                {{ data['full_name'] | e }}
+                <span style="color: #6c1d5f">
+                  {{ data['full_name'] | e }}
+                </span>
               </a>
               {% if 'social_media' in data and data['social_media'] %}
                 <span style="color: #a1a1a1; font-size: 10px">|</span>
