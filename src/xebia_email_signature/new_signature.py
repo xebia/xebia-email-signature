@@ -178,11 +178,10 @@ def _get_readable_weekdays(availability: [int]) -> str:
 def add_call_to_actions(contact_details: dict) -> dict:
     result = {k: v for k, v in contact_details.items()}
     calls_to_action = {k: v for k, v in contact_details.items() if "cta" in k}
-    formatted_calls = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in calls_to_action.keys()])) + 1)]
+    formatted_calls = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in calls_to_action.keys()], default=0)) + 1)]
     for k, v in calls_to_action.items():
         split_key = k.split('[')
         formatted_calls[int(split_key[1][:-1])][split_key[2][:-1]] = v
-    # formatted_calls = [{"icon": "blog", "link": "xxx", "desc": len(formatted_calls)}]
     result["call_to_action"] = formatted_calls
     return result
 
@@ -190,7 +189,7 @@ def add_call_to_actions(contact_details: dict) -> dict:
 def add_social_media(contact_details: dict) -> dict:
     result = {k: v for k, v in contact_details.items()}
     social_media = {k: v for k, v in contact_details.items() if "sm" in k}
-    formatted_social_media = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in social_media.keys()])) + 1)]
+    formatted_social_media = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in social_media.keys()], default=0)) + 1)]
     for k, v in social_media.items():
         split_key = k.split('[')
         formatted_social_media[int(split_key[1][:-1])][split_key[2][:-1]] = v
