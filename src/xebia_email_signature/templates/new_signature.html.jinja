@@ -12,7 +12,7 @@
     <tr style="line-height: 1">
       <td style="padding-right: 10px">
         <img width="75" height="70" alt="Xebia logo bulb"
-          src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='xebia-bulb.png') }}" />
+          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='xebia-bulb.png') }}" />
       </td>
       <td colspan="2" style="
               vertical-align: top;
@@ -49,11 +49,11 @@
               <a href="{{ media['link'] }}" style="text-decoration: none; ">
                 {% if media['icon'] == 'linkedin' %}
                 <img width="12" height="12"
-                  src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-logo-li.png') }}" />
+                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}" />
                 {% endif %}
                 {% if media['icon'] == 'x' %}
                 <img width="12" height="12"
-                  src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-logo-x.png') }}" />
+                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}" />
                 {% endif %}
               </a>
             </td>
@@ -107,19 +107,18 @@
               ">
           <a href="https://xebia.com/" title="Website" style="text-decoration: none;">
             <img border="0" width="10" height="10" id="Website"
-              src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-logo-web.png') }}"
+              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-web.png') }}"
               alt="Website" name="Website" /></a>
           <a href="https://www.linkedin.com/company/xebia" title="Linkedin" style="text-decoration: none;"><img
               border="0" width="10" height="10" id="Linkedin"
-              src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-logo-li.png') }}"
+              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}"
               alt="Linkedin" name="Linkedin" /></a>
           <a href="https://x.com/xebia" title="X" style="text-decoration: none;"><img border="0" width="10" height="10"
-              id="X"
-              src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-logo-x.png') }}"
+              id="X" src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}"
               alt="X" name="X" /></a>
           <a href="https://www.youtube.com/@XebiaNL" title="YouTube" style="text-decoration: none;"><img border="0"
               width="10" height="10" id="YouTube"
-              src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-logo-yt.png') }}"
+              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-yt.png') }}"
               alt="YouTube" name="YouTube" /></a>
         </p>
         <span style="
@@ -135,19 +134,19 @@
           {% if call %}
           {% if call['icon'] == 'blog' %}
           <img width="10" height="9"
-            src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-cta-icon-blog.png') }}" />
+            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-blog.png') }}" />
           {% endif %}
           {% if call['icon'] == 'meeting' %}
           <img width="10" height="9"
-            src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-cta-icon-meeting.png') }}" />
+            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-meeting.png') }}" />
           {% endif %}
           {% if call['icon'] == 'event' %}
           <img width="10" height="9"
-            src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-cta-icon-event.png') }}" />
+            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-event.png') }}" />
           {% endif %}
           {% if call['icon'] == 'award' %}
           <img width="10" height="9"
-            src="{{ url_for('static', _external=True, _scheme='https' if data['is_https'] else 'http',filename='email-cta-icon-award.png') }}" />
+            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-award.png') }}" />
           {% endif %}
           <a href="{{call['link']}}" style="text-decoration: none; color: #5a5a5a;">
             <span style="text-decoration: none; color: #6c1d5f;">
