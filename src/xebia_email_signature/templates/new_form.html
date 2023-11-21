@@ -597,7 +597,8 @@
             );
           });
 
-          iframe.style.height = iframeDoc.body.scrollHeight + 16 + 'px';
+          iframe.style.height =
+            (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
         });
       }
 
