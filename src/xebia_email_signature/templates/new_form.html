@@ -303,35 +303,43 @@
         for (let i = 0; i < errors.length; i++) {
           errors[i].innerHTML = '';
         }
-        let name = document.getElementById('full_name').value;
-        if (name.trim() === '') {
+        let nameEl = document.getElementById('full_name');
+        if (nameEl.value.trim() === '') {
           document.getElementById('full_name-error').innerHTML =
             'Please enter your name';
+          scrollTo(nameEl);
           return false;
         }
-        let email = document.getElementById('email').value;
-        if (!validateEmail(email)) {
+        let emailEl = document.getElementById('email');
+        if (!validateEmail(emailEl.value)) {
           document.getElementById('email-error').innerHTML =
             'Please enter a valid email address';
+          scrollTo(emailEl);
           return false;
         }
 
-        let job_role = document.getElementById('job_role').value;
-        if (job_role.trim() === '') {
+        let jobRoleEl = document.getElementById('job_role');
+        if (jobRoleEl.value.trim() === '') {
           document.getElementById('job_role-error').innerHTML =
             'Please enter your role';
+          scrollTo(jobRoleEl);
           return false;
         }
 
-        let phone = document.getElementById('phone').value;
-        if (!validatePhoneNumber(phone)) {
+        let phoneEl = document.getElementById('phone');
+        if (!validatePhoneNumber(phoneEl.value)) {
           document.getElementById(
             'phone-error'
-          ).innerHTML = `phone number (${phone} should start with a + followed by 10 to 15 digits without any other characters`;
+          ).innerHTML = `phone number (${phoneEl.value} should start with a + followed by 10 to 15 digits without any other characters`;
+          scrollTo(phoneEl);
           return false;
         }
 
         return true;
+      }
+
+      function scrollTo(el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
       function prefillEmail(full_name) {
@@ -589,7 +597,6 @@
             );
           });
 
-          console.log(iframeDoc.body.scrollHeight + 16);
           iframe.style.height = iframeDoc.body.scrollHeight + 16 + 'px';
         });
       }
