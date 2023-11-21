@@ -26,7 +26,7 @@ def create_new_signature():
     data = add_formatted_phone(request.form)
     data = add_call_to_actions(data)
     data = add_social_media(data)
-    data['scheme'] = 'https' if request.is_secure else 'http'
+    data['scheme'] = request.headers.get('X-Forwarded-Proto', 'http')
 
     jinjafile = "new_signature.html.jinja"
     response = render_template(jinjafile, data=data, theme=get_new_theme(data))
