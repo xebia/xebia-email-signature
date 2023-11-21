@@ -521,7 +521,7 @@
         if (validateForm()) {
           previewContainer?.classList.remove('hidden');
           previewIframe.style.height =
-            previewIframe.contentWindow.document.body.scrollHeight + 12 + 'px';
+            previewIframe.contentWindow.document.body.scrollHeight * 1.2 + 'px';
         } else {
           previewContainer?.classList.add('hidden');
         }
