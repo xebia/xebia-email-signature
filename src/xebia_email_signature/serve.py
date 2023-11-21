@@ -23,10 +23,10 @@ def generate_new_signature():
 
 @app.route("/new/signature", methods=["POST"])
 def create_new_signature():
-    is_https = request.is_secure
     data = add_formatted_phone(request.form)
     data = add_call_to_actions(data)
     data = add_social_media(data)
+    data['is_https'] = request.is_secure
 
     jinjafile = "new_signature.html.jinja"
     response = render_template(jinjafile, data=data, theme=get_new_theme(data))
