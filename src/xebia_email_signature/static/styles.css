@@ -368,7 +368,7 @@ input::placeholder {
 
 .preview-iframe {
   border: 0;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 .preview-btn-copy {

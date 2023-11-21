@@ -521,7 +521,7 @@
         if (validateForm()) {
           previewContainer?.classList.remove('hidden');
           previewIframe.style.height =
-            previewIframe.contentWindow.document.body.scrollHeight + 12 + 'px';
+            previewIframe.contentWindow.document.body.scrollHeight * 1.2 + 'px';
         } else {
           previewContainer?.classList.add('hidden');
         }
@@ -557,11 +557,42 @@
         });
       }
 
+      async function toDataURL(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          var reader = new FileReader();
+          reader.onloadend = function () {
+            callback(reader.result);
+          };
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+      }
+
+      function iframePrepareInit() {
+        let iframe = document.querySelector('.preview-iframe');
+        iframe.addEventListener('load', () => {
+          let iframeDoc = iframe.contentWindow.document;
+          let anchors = iframeDoc.querySelectorAll('a');
+          let images = iframeDoc.querySelectorAll('img');
+
+          anchors?.forEach((anchor) => anchor.setAttribute('target', '_blank'));
+          images?.forEach((img) => {
+            toDataURL(img.src, (imageBase64) =>
+              img.setAttribute('src', imageBase64)
+            );
+          });
+        });
+      }
+
       (() => {
         allCloneInit();
         allSelectInit();
         allMaxCharsCounterInit();
         signatureCopyInit();
+        iframePrepareInit();
       })();
     </script>
   </body>
