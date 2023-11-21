@@ -109,6 +109,12 @@
                     >
                       LinkedIn
                     </option>
+                    <option
+                      value="x"
+                      data-custom-properties="/static/x-logo.png"
+                    >
+                      X
+                    </option>
                   </select>
                   <div id="sm-icon-error" class="error"></div>
                 </div>
@@ -520,8 +526,6 @@
 
         if (validateForm()) {
           previewContainer?.classList.remove('hidden');
-          previewIframe.style.height =
-            previewIframe.contentWindow.document.body.scrollHeight * 1.2 + 'px';
         } else {
           previewContainer?.classList.add('hidden');
         }
@@ -584,6 +588,9 @@
               img.setAttribute('src', imageBase64)
             );
           });
+
+          console.log(iframeDoc.body.scrollHeight + 16);
+          iframe.style.height = iframeDoc.body.scrollHeight + 16 + 'px';
         });
       }
 
