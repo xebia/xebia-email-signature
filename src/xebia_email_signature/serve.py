@@ -15,6 +15,7 @@ from xebia_email_signature.new_signature import add_call_to_actions, \
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
+app.config["PREFERRED_URL_SCHEME"] = 'https'
 
 
 @app.route("/new")
