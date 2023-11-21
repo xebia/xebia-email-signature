@@ -15,8 +15,6 @@ from xebia_email_signature.new_signature import add_call_to_actions, \
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
-app.config["PREFERRED_URL_SCHEME"] = 'https'
-
 
 @app.route("/new")
 def generate_new_signature():
@@ -25,6 +23,7 @@ def generate_new_signature():
 
 @app.route("/new/signature", methods=["POST"])
 def create_new_signature():
+    is_https = request.is_secure
     data = add_formatted_phone(request.form)
     data = add_call_to_actions(data)
     data = add_social_media(data)
