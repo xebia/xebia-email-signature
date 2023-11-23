@@ -87,7 +87,7 @@
 body {
   font-family: "Proxima", Helvetica, sans-serif;
   color: var(--xebia-neutral-dark-grey, #5A5A5A);
-  background: url('/static/main-bg.svg') var(--xebia-tranquil-velvet, #6C1D5F) fixed;
+  background: url('/static/main-bg.svg') no-repeat fixed 0 0/cover var(--xebia-tranquil-velvet, #6C1D5F);
 }
 
 .main {
