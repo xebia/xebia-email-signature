@@ -91,8 +91,10 @@
               type="text"
               id="phone"
               name="phone"
-              placeholder="+00 000 000 000"
-              onchange="validatePhoneNumber();"
+              placeholder="+00000000000"
+              oninput="handleChangePhoneNumber(this)"
+              minlength="11"
+              maxlength="16"
             />
             <div id="phone-error" class="error"></div>
           </div>
@@ -124,7 +126,7 @@
                     type="text"
                     id="sm-0-link"
                     name="sm[0][link]"
-                    placeholder="https://www.linkedin.com/company/xebia"
+                    placeholder="https://www.linkedin.com/company/profile"
                   />
                   <div id="sm-link-error" class="error"></div>
                 </div>
@@ -600,6 +602,11 @@
           iframe.style.height =
             (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
         });
+      }
+
+      function handleChangePhoneNumber(phoneEl) {
+        let phoneVal = phoneEl.value;
+        phoneEl.value = phoneVal.replace(/[^\d\+]/g, '');
       }
 
       (() => {
