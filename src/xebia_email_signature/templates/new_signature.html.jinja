@@ -44,7 +44,7 @@
               |
             </td>
             {% for media in data['social_media'] %}
-            {% if media %}
+            {% if media and media['icon'] and media['link'] %}
             <td>
               <a href="{{ media['link'] }}" style="text-decoration: none; ">
                 {% if media['icon'] == 'linkedin' %}
@@ -131,7 +131,7 @@
                 margin: 0;
               ">
           {% for call in data['call_to_action'] %}
-          {% if call %}
+          {% if call and call['icon'] and call['desc'] and call['link'] %}
           {% if call['icon'] == 'blog' %}
           <img width="10" height="9"
             src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-blog.png') }}" />
