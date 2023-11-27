@@ -12,6 +12,7 @@
   --xebia-neutral-dark-grey: #5A5A5A;
   --xebia-neutral-regular-grey: #A1A1A1;
   --xebia-neutral-light-grey: #dedede;
+  --xebia-neutral-off-white: #F4F4F4;
   --xebia-neutral-almost-black: #222222;
 }
 
@@ -160,10 +161,6 @@ label span {
   color: var(--xebia-neutral-dark-grey, #5A5A5A);
 }
 
-input:focus {
-  outline: 0;
-}
-
 select,
 input[type="text"],
 input[type="email"] {
@@ -178,10 +175,18 @@ input[type="email"] {
   color: var(--xebia-neutral-dark-grey, #5A5A5A);
   border: 1px solid var(--xebia-tranquil-velvet, #6C1D5F);
   border-radius: 5px;
+  outline: 4px solid transparent;
 }
 
 input::placeholder {
   color: var(--xebia-neutral-regular-grey, #A1A1A1)
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="email"]:focus {
+  outline-color: rgb(108 29 95 / 15%);
+  transition: outline .2s ease-in;
 }
 
 .select-icon-picker {
@@ -197,6 +202,14 @@ input::placeholder {
 /* Choices.js */
 .choices {
   margin-bottom: 0;
+}
+
+.choices.is-disabled {
+  background: var(--xebia-neutral-off-white, #F4F4F4);
+}
+
+.choices.is-disabled[data-type*=select-one]::after {
+  opacity: 0.3;
 }
 
 .choices[data-type*=select-one]::after {
@@ -304,6 +317,7 @@ input::placeholder {
   align-items: center;
   gap: 12px;
 
+  transition: background-color 0.15s ease-in;
   cursor: pointer;
 }
 
@@ -311,7 +325,6 @@ input::placeholder {
   color: #fff;
   font-weight: 600;
   background: var(--xebia-tranquil-velvet, "#6C1D5F");
-  transition: background-color 0.15s ease-in;
 }
 
 .btn-primary:hover {
@@ -322,7 +335,6 @@ input::placeholder {
   width: 100%;
   background: var(--xebia-dawn, "#9D92B2");
   color: #fff;
-  transition: background-color 0.15s ease-in;
 }
 
 .btn-dawn:hover {
@@ -332,6 +344,9 @@ input::placeholder {
 .btn[disabled] {
   background: var(--xebia-dawn, "#9D92B2");
   color: #fff;
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
   transition: background-color 0.15s ease-in;
 }
 

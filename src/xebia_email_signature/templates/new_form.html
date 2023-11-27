@@ -437,6 +437,8 @@
       }
 
       function selectInit(el) {
+        let choicesCount = el.options.length;
+
         el.originalInnerHTML = el.innerHTML;
         el.choices = new Choices(el, {
           searchEnabled: false,
@@ -447,17 +449,22 @@
             return {
               item: ({ classNames }, data) => {
                 const { customProperties: iconData, label } = data;
-
                 return template(`
-                    <div class="${
-                      data.highlighted
-                        ? classNames.highlightedState
-                        : classNames.itemSelectable
-                    } ${
-                  data.placeholder ? classNames.placeholder : ''
-                }" data-item data-id="${data.id}" data-value="${data.value}" ${
-                  data.active ? 'aria-selected="true"' : ''
-                } ${data.disabled ? 'aria-disabled="true"' : ''}>
+                    <div 
+                      class="
+                        ${
+                          data.highlighted
+                            ? classNames.highlightedState
+                            : classNames.itemSelectable
+                        } 
+                        ${data.placeholder ? classNames.placeholder : ''}
+                      " 
+                      data-item 
+                      data-id="${data.id}" 
+                      data-value="${data.value}" 
+                      ${data.active ? 'aria-selected="true"' : ''} 
+                      ${data.disabled ? 'aria-disabled="true"' : ''}
+                    >
                   <img class="select-item-icon" width="24" height="24" src="${String(
                     iconData
                   )}" alt="Icon ${label}">
@@ -490,6 +497,10 @@
             };
           },
         });
+
+        if (choicesCount < 2) {
+          el.choices.disable();
+        }
       }
 
       function allSelectInit() {
