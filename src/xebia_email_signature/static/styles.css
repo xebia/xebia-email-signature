@@ -6,6 +6,7 @@
   --font-second: #6C1D5F;
 
   --xebia-tranquil-velvet: #6C1D5F;
+  --xebia-tranquil-velvet-dark: #4A1E47;
   --xebia-dawn: #9D92B2;
   --xebia-light-blueish-gray: #F7F8FC;
   --xebia-neutral-dark-grey: #5A5A5A;
@@ -310,6 +311,11 @@ input::placeholder {
   color: #fff;
   font-weight: 600;
   background: var(--xebia-tranquil-velvet, "#6C1D5F");
+  transition: background-color 0.15s ease-in;
+}
+
+.btn-primary:hover {
+  background-color: var(--xebia-tranquil-velvet-dark, #4A1E47);
 }
 
 .btn-dawn {
@@ -321,6 +327,12 @@ input::placeholder {
 
 .btn-dawn:hover {
   background-color: var(--xebia-tranquil-velvet, "#6C1D5F");
+}
+
+.btn[disabled] {
+  background: var(--xebia-dawn, "#9D92B2");
+  color: #fff;
+  transition: background-color 0.15s ease-in;
 }
 
 .btn-small {
