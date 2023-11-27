@@ -150,6 +150,7 @@
             <button
               class="btn btn-md btn-dawn text-left font-semibold js-form-clone-btn"
               data-clone-target=".js-form-sm"
+              data-clone-remove-original="true"
             >
               <img src="static/icon-btn-add.svg" alt="Icon add" />
               Add Social Media
@@ -250,6 +251,7 @@
             <button
               class="btn btn-dawn btn-md w-100 text-left font-semibold js-form-clone-btn"
               data-clone-target=".js-form-cta"
+              data-clone-remove-original="true"
             >
               <img src="static/icon-btn-add.svg" alt="Icon add" />
               Add another Call to Action
@@ -516,11 +518,16 @@
         let formCloneBtn = document.querySelectorAll('.js-form-clone-btn');
 
         formCloneBtn?.forEach((el) => {
-          let { cloneTarget } = el.dataset;
+          let { cloneTarget, cloneRemoveOriginal } = el.dataset;
           let targetEl = document.querySelector(cloneTarget);
+
           if (!targetEl?.initalNode) {
             targetEl.initialNode = targetEl.cloneNode(true);
             targetEl.classList.add('form-clone');
+          }
+
+          if (cloneRemoveOriginal) {
+            targetEl.innerHTML = '';
           }
 
           el.addEventListener('click', (e) => {
