@@ -100,137 +100,38 @@
           </div>
 
           <div>
-            <div class="js-form-sm" data-clone-count="0">
-              <div class="form-section">
-                <div class="form-group select-icon-picker">
-                  <label for="sm-0-icon">Icon</label>
-                  <select class="js-choice" id="sm-0-icon" name="sm[0][icon]">
-                    <option
-                      value="linkedin"
-                      data-custom-properties="/static/li-logo.png"
-                    >
-                      LinkedIn
-                    </option>
-                    <option
-                      value="x"
-                      data-custom-properties="/static/x-logo.png"
-                    >
-                      X
-                    </option>
-                  </select>
-                  <div id="sm-icon-error" class="error"></div>
-                </div>
-                <div class="form-group w-100">
-                  <label for="sm-0-link">Link to personal profile</label>
-                  <input
-                    type="text"
-                    id="sm-0-link"
-                    name="sm[0][link]"
-                    placeholder="https://www.linkedin.com/company/profile"
-                  />
-                  <div id="sm-link-error" class="error"></div>
-                </div>
-                <div class="form-group">
-                  <button
-                    class="btn btn-primary btn-trash btn-md js-form-clone-remove"
-                  >
-                    <img
-                      width="16"
-                      height="18"
-                      src="static/icon-btn-trash.svg"
-                      alt="Icon trash"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <button
-              class="btn btn-md btn-dawn text-left font-semibold js-form-clone-btn"
-              data-clone-target=".js-form-sm"
-              data-clone-remove-original="true"
-            >
-              <img src="static/icon-btn-add.svg" alt="Icon add" />
-              Add Social Media
-            </button>
-          </div>
-
-          <div>
-            <label for="cta-0-desc">
-              Call to action
-              <span>By default is generated this placeholder information</span>
-            </label>
-            <div class="js-form-cta" data-clone-count="0">
-              <div class="form-wrapper flex flex-column mb-4">
+            <div>
+              <div class="js-form-sm" data-clone-count="0">
                 <div class="form-section">
-                  <div class="form-group w-100">
-                    <div class="relative flex items-center">
-                      <input
-                        type="text"
-                        id="cta-0-desc"
-                        class="js-input-maxlen"
-                        name="cta[0][desc]"
-                        maxlength="40"
-                        placeholder="Read our latest insights"
-                      />
-                    </div>
-                    <div id="cta-desc-error" class="error"></div>
-                  </div>
-                </div>
-                <div class="form-section">
-                  <div class="form-group select-icon-picker mb-0">
-                    <select
-                      class="js-choice"
-                      id="cta-0-icon"
-                      name="cta[0][icon]"
-                    >
+                  <div class="form-group select-icon-picker">
+                    <label for="sm-0-icon">Icon</label>
+                    <select class="js-choice" id="sm-0-icon" name="sm[0][icon]">
                       <option
-                        data-custom-properties="/static/cta-icon-blog.png"
-                        value="blog"
+                        value="linkedin"
+                        data-custom-properties="/static/li-logo.png"
                       >
-                        My articles in the blog
+                        LinkedIn
                       </option>
                       <option
-                        data-custom-properties="/static/cta-icon-meeting.png"
-                        value="meeting"
+                        value="x"
+                        data-custom-properties="/static/x-logo.png"
                       >
-                        Schedule a meeting
-                      </option>
-                      <option
-                        data-custom-properties="/static/cta-icon-event.png"
-                        value="event"
-                      >
-                        Find me in the event
-                      </option>
-                      <option
-                        data-custom-properties="/static/cta-icon-award.png"
-                        value="award"
-                      >
-                        Special / Award
+                        X
                       </option>
                     </select>
-                    <div id="cta-icon-error" class="error"></div>
+                    <div id="sm-icon-error" class="error"></div>
                   </div>
-                  <div class="form-group w-100 mb-0">
-                    <div class="relative flex items-center">
-                      <img
-                        class="input-icon-img"
-                        src="/static/icon-link.svg"
-                        alt="Icon Watch"
-                      />
-                      <input
-                        class="input-icon"
-                        type="text"
-                        id="cta-0-link"
-                        name="cta[0][link]"
-                        placeholder="https://www.xebia.com/news"
-                      />
-                    </div>
-                    <div id="cta-link-error" class="error"></div>
+                  <div class="form-group w-100">
+                    <label for="sm-0-link">Link to personal profile</label>
+                    <input
+                      type="text"
+                      id="sm-0-link"
+                      name="sm[0][link]"
+                      placeholder="https://www.linkedin.com/company/profile"
+                    />
+                    <div id="sm-link-error" class="error"></div>
                   </div>
-                  <div class="form-group mb-0">
+                  <div class="form-group">
                     <button
                       class="btn btn-primary btn-trash btn-md js-form-clone-remove"
                     >
@@ -245,17 +146,124 @@
                 </div>
               </div>
             </div>
+
+            <div class="form-group">
+              <button
+                class="btn btn-md btn-dawn text-left font-semibold js-form-clone-btn"
+                data-clone-target=".js-form-sm"
+                data-clone-remove-original="true"
+                data-clone-max-items="2"
+              >
+                <img src="static/icon-btn-add.svg" alt="Icon add" />
+                Add Social Media
+              </button>
+            </div>
           </div>
 
-          <div class="form-group">
-            <button
-              class="btn btn-dawn btn-md w-100 text-left font-semibold js-form-clone-btn"
-              data-clone-target=".js-form-cta"
-              data-clone-remove-original="true"
-            >
-              <img src="static/icon-btn-add.svg" alt="Icon add" />
-              Add another Call to Action
-            </button>
+          <div>
+            <div>
+              <label for="cta-0-desc">
+                Call to action
+                <span
+                  >By default is generated this placeholder information</span
+                >
+              </label>
+              <div class="js-form-cta" data-clone-count="0">
+                <div class="form-wrapper flex flex-column mb-4">
+                  <div class="form-section">
+                    <div class="form-group w-100">
+                      <div class="relative flex items-center">
+                        <input
+                          type="text"
+                          id="cta-0-desc"
+                          class="js-input-maxlen"
+                          name="cta[0][desc]"
+                          maxlength="40"
+                          placeholder="Read our latest insights"
+                        />
+                      </div>
+                      <div id="cta-desc-error" class="error"></div>
+                    </div>
+                  </div>
+                  <div class="form-section">
+                    <div class="form-group select-icon-picker mb-0">
+                      <select
+                        class="js-choice"
+                        id="cta-0-icon"
+                        name="cta[0][icon]"
+                      >
+                        <option
+                          data-custom-properties="/static/cta-icon-blog.png"
+                          value="blog"
+                        >
+                          My articles in the blog
+                        </option>
+                        <option
+                          data-custom-properties="/static/cta-icon-meeting.png"
+                          value="meeting"
+                        >
+                          Schedule a meeting
+                        </option>
+                        <option
+                          data-custom-properties="/static/cta-icon-event.png"
+                          value="event"
+                        >
+                          Find me in the event
+                        </option>
+                        <option
+                          data-custom-properties="/static/cta-icon-award.png"
+                          value="award"
+                        >
+                          Special / Award
+                        </option>
+                      </select>
+                      <div id="cta-icon-error" class="error"></div>
+                    </div>
+                    <div class="form-group w-100 mb-0">
+                      <div class="relative flex items-center">
+                        <img
+                          class="input-icon-img"
+                          src="/static/icon-link.svg"
+                          alt="Icon Watch"
+                        />
+                        <input
+                          class="input-icon"
+                          type="text"
+                          id="cta-0-link"
+                          name="cta[0][link]"
+                          placeholder="https://www.xebia.com/news"
+                        />
+                      </div>
+                      <div id="cta-link-error" class="error"></div>
+                    </div>
+                    <div class="form-group mb-0">
+                      <button
+                        class="btn btn-primary btn-trash btn-md js-form-clone-remove"
+                      >
+                        <img
+                          width="16"
+                          height="18"
+                          src="static/icon-btn-trash.svg"
+                          alt="Icon trash"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button
+                class="btn btn-dawn btn-md w-100 text-left font-semibold js-form-clone-btn"
+                data-clone-target=".js-form-cta"
+                data-clone-remove-original="true"
+                data-clone-max-items="2"
+              >
+                <img src="static/icon-btn-add.svg" alt="Icon add" />
+                Add another Call to Action
+              </button>
+            </div>
           </div>
 
           <div class="form-bottom">
@@ -452,19 +460,19 @@
               item: ({ classNames }, data) => {
                 const { customProperties: iconData, label } = data;
                 return template(`
-                    <div 
+                    <div
                       class="
                         ${
                           data.highlighted
                             ? classNames.highlightedState
                             : classNames.itemSelectable
-                        } 
+                        }
                         ${data.placeholder ? classNames.placeholder : ''}
-                      " 
-                      data-item 
-                      data-id="${data.id}" 
-                      data-value="${data.value}" 
-                      ${data.active ? 'aria-selected="true"' : ''} 
+                      "
+                      data-item
+                      data-id="${data.id}"
+                      data-value="${data.value}"
+                      ${data.active ? 'aria-selected="true"' : ''}
                       ${data.disabled ? 'aria-disabled="true"' : ''}
                     >
                   <img class="select-item-icon" width="24" height="24" src="${String(
@@ -533,6 +541,7 @@
           el.addEventListener('click', (e) => {
             e.preventDefault();
             cloneFormGroup(cloneTarget);
+            updateCloneBtn(el);
           });
         });
 
@@ -542,9 +551,28 @@
         formCloneRemoveBtn?.forEach(cloneRemoveBtnInit);
       }
 
+      function updateCloneBtn(cloneBtn) {
+        let { cloneTarget, cloneMaxItems = Infinity } = cloneBtn.dataset;
+        let targetEl = document.querySelector(cloneTarget);
+
+        if (
+          Number(cloneMaxItems) <=
+          targetEl.parentElement.querySelectorAll('.form-clone > *:first-child')
+            .length
+        ) {
+          cloneBtn.setAttribute('disabled', true);
+        } else {
+          cloneBtn.removeAttribute('disabled');
+        }
+      }
+
       function cloneRemoveBtnInit(btn) {
         btn.addEventListener('click', (e) => {
-          btn.closest('.form-clone').innerHTML = '';
+          let formClone = btn.closest('.form-clone');
+          let cloneBtn =
+            formClone.parentNode.parentNode.querySelector('.js-form-clone-btn');
+          formClone.innerHTML = '';
+          updateCloneBtn(cloneBtn);
         });
       }
 
