@@ -400,6 +400,7 @@
           cloneRemoveBtnInit(removeBtn);
         }
 
+        onSmSelectChangeInit();
         allMaxCharsCounterInit();
         allSelectInit();
       }
@@ -656,12 +657,33 @@
         phoneEl.value = phoneVal.replace(/[^\d\+]/g, '');
       }
 
+      function onSmSelectChangeInit() {
+        let smSelects = document.querySelectorAll('select[name^=sm]');
+        smSelects.forEach((smSelect) => {
+          smSelect.addEventListener('change', (e) =>
+            handleSmSelectChange(smSelect)
+          );
+        });
+      }
+
+      function handleSmSelectChange(smSelect) {
+        let linkFieldName = smSelect.name.replace('icon', 'link');
+        let linkField = document.querySelector(`[name="${linkFieldName}"]`);
+
+        if (smSelect.value === 'linkedin') {
+          linkField.placeholder = 'https://www.linkedin.com/in/username/';
+        } else if (smSelect.value === 'x') {
+          linkField.placeholder = 'https://x.com/profil';
+        }
+      }
+
       (() => {
         allCloneInit();
         allSelectInit();
         allMaxCharsCounterInit();
         signatureCopyInit();
         iframePrepareInit();
+        onSmSelectChangeInit();
       })();
     </script>
   </body>
