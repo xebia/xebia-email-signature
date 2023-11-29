@@ -3,10 +3,6 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-  <title></title>
-</head>
-
 <body style="font-size: 11px; font-family: Arial, sans-serif; ">
   <table summary="contact details">
     <tr>
@@ -19,166 +15,217 @@
         </a>
       </td>
       <td style="
-              vertical-align: top;
-              border-left: 1px solid #6c1d5f;
-              padding-left: 12px;
-            ">
+        vertical-align: top;
+        border-left: 1px solid #6c1d5f;
+        padding-left: 12px;
+      ">
         <table style="border-collapse: collapse;">
-          <tr>
-            <td style="
-              padding: 0 0 2px;
+          <tr style="
+              line-height: 1; 
+              vertical-align: baseline;
             ">
-              <a href="{{'mailto:' ~ data['email']}}" style="
-                        font-family: Arial;
-                        font-size: 14px;
-                        font-style: normal;
-                        font-weight: 700;
-                        line-height: normal;
-                        text-decoration: none;
-                        color: #6c1d5f;
-                        margin: 0;
-                      ">
-                <span style="text-decoration: none; color: #6c1d5f;">
-                  {{ data['full_name'] | e }}
-                </span>
-              </a>
-            </td>
-            {% if 'social_media' in data and data['social_media'] %}
-            <td style="color: #dddddd; font-size: 12px; font-weight: 200; padding: 0 4px 2px;">
-              |
-            </td>
-            {% for media in data['social_media'] %}
-            {% if media and media['icon'] and media['link'] %}
             <td style="
-              padding: 0 2px 2px 0;
-            ">
-              <a href="{{ media['link'] }}" style="text-decoration: none; ">
-                {% if media['icon'] == 'linkedin' %}
-                <img width="14" height="14"
-                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}" />
-                {% endif %}
-                {% if media['icon'] == 'x' %}
-                <img width="14" height="14"
-                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}" />
-                {% endif %}
-              </a>
+                padding: 0 0 2px;
+              ">
+              <table style="border-collapse: collapse;">
+                <tr style="line-height: 1">
+                  <td>
+                    <p style="text-decoration: none; margin: 0; line-height: 1">
+                      <a href="{{'mailto:' ~ data['email']}}" style="
+                          font-family: Arial;
+                          font-size: 14px;
+                          font-style: normal;
+                          font-weight: 700;
+                          line-height: 16px;
+                          text-decoration: none;
+                          color: #6c1d5f;
+                          margin: 0;
+                        ">
+                        <span style="text-decoration: none; color: #6c1d5f;">
+                          {{ data['full_name'] | e }}
+                        </span>
+                      </a>
+                    </p>
+                  </td>
+                  {% if 'social_media' in data and data['social_media'] %}
+                  <td style="color: #dddddd; font-size: 12px; font-weight: 200; padding: 0 4px 2px;">
+                    |
+                  </td>
+                  {% for media in data['social_media'] %}
+                  {% if media and media['icon'] and media['link'] %}
+                  <td style="
+                      padding: 0 2px 2px 0;
+                    ">
+                    <p style="text-decoration: none; margin: 0; line-height: 1">
+                      <a href="{{ media['link'] }}" style="text-decoration: none; ">
+                        {% if media['icon'] == 'linkedin' %}
+                        <img width="14" height="14"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}" />
+                        {% endif %}
+                        {% if media['icon'] == 'x' %}
+                        <img width="14" height="14"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}" />
+                        {% endif %}
+                      </a>
+                    </p>
+                  </td>
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
+                </tr>
+              </table>
             </td>
-            {% endif %}
-            {% endfor %}
-            {% endif %}
           </tr>
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 2px;
+              ">
+              <p style="
+                  color: #5a5a5a;
+                  font-family: Arial;
+                  font-size: 12px;
+                  font-weight: 700;
+                  line-height: 14px;
+                  font-style: normal;
+                  margin: 0;
+                ">
+                {{ data["job_role"] | e }}
+              </p>
+            </td>
+          </tr>
+          {% if 'unit' in data and data['unit'] %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 2px;
+              ">
+              <p style="
+                  color: #5a5a5a;
+                  font-family: Arial;
+                  font-size: 12px;
+                  line-height: 14px;
+                  font-style: normal;
+                  margin: 0;
+                ">
+                {{ data["unit"] | e }}
+              </p>
+            </td>
+          </tr>
+          {% endif %}
+          {% if 'formatted_phone' in data and data['formatted_phone'] %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 2px;
+              ">
+              <p style="
+                  color: #5a5a5a;
+                  font-family: Arial;
+                  font-size: 12px;
+                  line-height: 14px;
+                  font-style: normal;
+                  margin: 0;
+                ">
+                {{ data["formatted_phone"] | e}}
+              </p>
+            </td>
+          </tr>
+          {% endif %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 4px;
+                padding-bottom: 2px;
+              ">
+
+              <p style="
+                  color: #6c1d5f;
+                  font-family: Arial;
+                  font-size: 11px;
+                  line-height: 13px;
+                  font-style: normal;
+                  font-weight: 400;
+                  margin: 0;
+                ">
+                Find Xebia on:
+              </p>
+            </td>
+          </tr>
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 4px;
+              ">
+              <p style="
+                  font-size: 10px;
+                  line-height: 12px;
+                  text-decoration: none;
+                  margin:0;
+                ">
+                <a href="https://xebia.com/" title="Website" style="text-decoration: none;">
+                  <img border="0" width="14" height="14" id="Website"
+                    src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-web.png') }}"
+                    alt="Website" name="Website" /></a>
+                <a href="https://www.linkedin.com/company/xebia" title="Linkedin" style="text-decoration: none;">
+                  <img border="0" width="14" height="14" id="Linkedin"
+                    src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}"
+                    alt="Linkedin" name="Linkedin" /></a>
+                <a href="https://x.com/xebia" title="X" style="text-decoration: none;">
+                  <img border="0" width="14" height="14" id="X"
+                    src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}"
+                    alt="X" name="X" /></a>
+                <a href="https://www.youtube.com/@XebiaNL" title="YouTube" style="text-decoration: none;">
+                  <img border="0" width="14" height="14" id="YouTube"
+                    src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-yt.png') }}"
+                    alt="YouTube" name="YouTube" /></a>
+              </p>
+            </td>
+          </tr>
+          {% for call in data['call_to_action'] %}
+          {% if call and call['icon'] and call['desc'] and call['link'] %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 2px;
+              ">
+              <p style="
+                  font-family: Arial;
+                  font-size: 9px;
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 11px;
+                  color: #5a5a5a;
+                  vertical-align: middle;
+                  margin: 0;
+                ">
+                {% if call['icon'] == 'blog' %}
+                <img width="12" height="11" style="vertical-align: middle;"
+                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-blog.png') }}" />
+                {% endif %}
+                {% if call['icon'] == 'meeting' %}
+                <img width="12" height="11" style="vertical-align: middle;"
+                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-meeting.png') }}" />
+                {% endif %}
+                {% if call['icon'] == 'event' %}
+                <img width="12" height="11" style="vertical-align: middle;"
+                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-event.png') }}" />
+                {% endif %}
+                {% if call['icon'] == 'award' %}
+                <img width="12" height="11" style="vertical-align: middle;"
+                  src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-award.png') }}" />
+                {% endif %}
+                <a href="{{call['link']}}" style="color: #5a5a5a;">
+                  <span style="color: #5a5a5a;">
+                    {{call['desc']}}
+                  </span>
+                </a>
+                <br />
+              </p>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
         </table>
-        <p style="
-                color: #5a5a5a;
-                font-family: Arial;
-                font-size: 12px;
-                line-height: normal;
-                font-style: normal;
-                margin: 0 0 2px;
-              ">
-          <span style="font-weight: 700; margin-bottom: 2px;">
-            {{ data["job_role"] | e }}
-          </span>
-        </p>
-        {% if 'unit' in data and data['unit'] %}
-        <p style="
-                color: #5a5a5a;
-                font-family: Arial;
-                font-size: 12px;
-                line-height: normal;
-                font-style: normal;
-                margin: 0 0 2px;
-              ">
-          <span style="margin-bottom: 2px;">
-            {{data['unit'] | e}}
-          </span>
-        </p>
-        {% endif %}
-        {% if 'formatted_phone' in data and data['formatted_phone'] %}
-        <p style="
-                color: #5a5a5a;
-                font-family: Arial;
-                font-size: 12px;
-                line-height: normal;
-                font-style: normal;
-                margin: 0 0 2px;
-              ">
-          {{ data["formatted_phone"] | e}}
-        </p>
-        {% endif %}
-        <p style="
-                color: #6c1d5f;
-                font-family: Arial;
-                font-size: 11px;
-                line-height: normal;
-                font-style: normal;
-                font-weight: 400;
-                margin: 4px 0 2px;
-              ">
-          Find Xebia on:
-        </p>
-        <p style="
-                font-size: 10px;
-                line-height: 12px;
-                line-height: normal;
-                margin-top: 0;
-                margin-bottom: 4px;
-                text-decoration: none;
-              ">
-          <a href="https://xebia.com/" title="Website" style="text-decoration: none;">
-            <img border="0" width="14" height="14" id="Website"
-              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-web.png') }}"
-              alt="Website" name="Website" /></a>
-          <a href="https://www.linkedin.com/company/xebia" title="Linkedin" style="text-decoration: none;">
-            <img border="0" width="14" height="14" id="Linkedin"
-              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}"
-              alt="Linkedin" name="Linkedin" /></a>
-          <a href="https://x.com/xebia" title="X" style="text-decoration: none;">
-            <img border="0" width="14" height="14" id="X"
-              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}" alt="X"
-              name="X" /></a>
-          <a href="https://www.youtube.com/@XebiaNL" title="YouTube" style="text-decoration: none;">
-            <img border="0" width="14" height="14" id="YouTube"
-              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-yt.png') }}"
-              alt="YouTube" name="YouTube" /></a>
-        </p>
-        {% for call in data['call_to_action'] %}
-        {% if call and call['icon'] and call['desc'] and call['link'] %}
-        <p style="
-                font-family: Arial;
-                font-size: 9px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: normal;
-                color: #5a5a5a;
-                margin: 0 0 2px;
-                vertical-align: middle;
-              ">
-          {% if call['icon'] == 'blog' %}
-          <img width="12" height="11" style="vertical-align: middle;"
-            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-blog.png') }}" />
-          {% endif %}
-          {% if call['icon'] == 'meeting' %}
-          <img width="12" height="11" style="vertical-align: middle;"
-            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-meeting.png') }}" />
-          {% endif %}
-          {% if call['icon'] == 'event' %}
-          <img width="12" height="11" style="vertical-align: middle;"
-            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-event.png') }}" />
-          {% endif %}
-          {% if call['icon'] == 'award' %}
-          <img width="12" height="11" style="vertical-align: middle;"
-            src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-award.png') }}" />
-          {% endif %}
-          <a href="{{call['link']}}" style="color: #5a5a5a;">
-            <span style="color: #5a5a5a;">
-              {{call['desc']}}
-            </span>
-          </a>
-          <br />
-        </p>
-        {% endif %}
-        {% endfor %}
       </td>
     </tr>
   </table>
