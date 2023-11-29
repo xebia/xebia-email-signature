@@ -1,42 +1,64 @@
 
 function validateForm() {
-  let errors = document.getElementsByClassName('error');
-  for (let i = 0; i < errors.length; i++) {
-    errors[i].innerHTML = '';
-  }
+  let errors = [];
+  let errorsEls = document.querySelectorAll('.error');
+  errorsEls.forEach((error) => (error.innerHTML = ''));
+
   let nameEl = document.getElementById('full_name');
   if (nameEl.value.trim() === '') {
-    document.getElementById('full_name-error').innerHTML =
-      'Please enter your name';
-    scrollTo(nameEl);
-    return false;
+    errors.push({
+      target: document.getElementById('full_name-error'),
+      msg: 'Please enter your name',
+      input: nameEl
+    })
   }
   let emailEl = document.getElementById('email');
   if (!validateEmail(emailEl.value)) {
-    document.getElementById('email-error').innerHTML =
-      'Please enter a valid email address';
-    scrollTo(emailEl);
-    return false;
+    errors.push({
+      target: document.getElementById('email-error'),
+      msg: 'Please enter a valid email address',
+      input: nameEl
+    })
   }
 
   let jobRoleEl = document.getElementById('job_role');
   if (jobRoleEl.value.trim() === '') {
-    document.getElementById('job_role-error').innerHTML =
-      'Please enter your role';
-    scrollTo(jobRoleEl);
-    return false;
+    errors.push({
+      target: document.getElementById('job_role-error'),
+      msg: 'Please enter your role',
+      input: nameEl
+    })
   }
 
   let phoneEl = document.getElementById('phone');
   if (!validatePhoneNumber(phoneEl.value)) {
-    document.getElementById(
-      'phone-error'
-    ).innerHTML = `phone number (${phoneEl.value} should start with a + followed by 10 to 15 digits without any other characters`;
-    scrollTo(phoneEl);
-    return false;
+    errors.push({
+      target: document.getElementById('phone-error'),
+      msg: `Phone number (${phoneEl.value} should start with a + followed by 10 to 15 digits without any other characters`,
+      input: phoneEl
+    })
   }
 
-  return true;
+  let linkEls = document.querySelectorAll('input[type=url]');
+  linkEls.forEach((linkEl) => {
+    if (!validateUrl(linkEl.value)) {
+      let formGroupContainer =
+        linkEl.closest('.form-clone') || linkEl.closest('form-group');
+
+      errors.push({
+        target: formGroupContainer.querySelector('.error'),
+        msg: `Link have to be valid URL.`,
+        input: linkEl
+      })
+    }
+  });
+
+  if (errors.length > 0) {
+    errors.forEach(error => {
+      error.target.innerHTML = error.msg;
+    })
+    scrollTo(errors.pop().input);
+  }
 }
 
 function scrollTo(el) {
