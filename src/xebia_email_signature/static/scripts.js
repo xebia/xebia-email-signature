@@ -1,4 +1,3 @@
-
 function validateForm() {
   let errors = [];
   let errorsEls = document.querySelectorAll('.error');
@@ -39,26 +38,52 @@ function validateForm() {
     })
   }
 
-  let linkEls = document.querySelectorAll('input[type=url]');
-  linkEls.forEach((linkEl) => {
-    if (!validateUrl(linkEl.value)) {
-      let formGroupContainer =
-        linkEl.closest('.form-clone') || linkEl.closest('form-group');
-
+  let smLinkEls = document.querySelectorAll('.js-sm-link');
+  smLinkEls.forEach((linkEl) => {
+    if (linkEl.value.length !== 0 && !validateUrl(linkEl.value)) {
       errors.push({
-        target: formGroupContainer.querySelector('.error'),
+        target: linkEl.parentNode.querySelector('.js-sm-link-error'),
         msg: `Link have to be valid URL.`,
         input: linkEl
       })
     }
   });
 
+  let ctaLinkEls = document.querySelectorAll('.js-cta-link');
+  ctaLinkEls.forEach((linkEl) => {
+    let ctaDescEl = linkEl.closest('.form-wrapper')?.querySelector('.js-cta-desc');
+    if ((ctaDescEl.value.length + linkEl.value.length !== 0) && !validateUrl(linkEl.value)) {
+      errors.push({
+        target: linkEl.closest('.form-group').querySelector('.js-cta-link-error'),
+        msg: `Link have to be valid URL.`,
+        input: linkEl
+      })
+    }
+  });
+
+  let ctaDescEls = document.querySelectorAll('.js-cta-desc');
+  ctaDescEls.forEach((descEl) => {
+    let ctaLinkEl = descEl.closest('.form-wrapper')?.querySelector('.js-cta-link');
+    if ((ctaLinkEl.value.length + descEl.value.length !== 0) && !validateUrl(descEl.value)) {
+      errors.push({
+        target: descEl.closest('.form-group').querySelector('.js-cta-desc-error'),
+        msg: `Please enter CTA description.`,
+        input: descEl
+      })
+    }
+  });
+
   if (errors.length > 0) {
     errors.forEach(error => {
+      if (!error.target) return;
       error.target.innerHTML = error.msg;
     })
-    scrollTo(errors.pop().input);
+    scrollTo(errors[0].target);
+
+    return false;
   }
+
+  return true;
 }
 
 function scrollTo(el) {
