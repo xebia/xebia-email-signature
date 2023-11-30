@@ -110,6 +110,7 @@ body {
 
 .form-section {
   display: flex;
+  align-items: flex-start;
   gap: 18px;
 }
 
@@ -206,6 +207,7 @@ input[type="email"]:focus {
 
 .choices.is-disabled {
   background: var(--xebia-neutral-off-white, #F4F4F4);
+  pointer-events: none;
 }
 
 .choices.is-disabled[data-type*=select-one]::after {
@@ -300,6 +302,10 @@ input[type="email"]:focus {
 .input-icon-img {
   position: absolute;
   left: 18px;
+}
+
+.no-label-margin {
+  margin-top: 31px;
 }
 
 /* Buttons */

@@ -32,7 +32,6 @@
           method="post"
           enctype="multipart/form-data"
           target="preview-iframe"
-          onsubmit="handleFormSubmit()"
         >
           <div class="form-group">
             <label for="full_name">Name</label>
@@ -111,7 +110,11 @@
                 <div class="form-section">
                   <div class="form-group select-icon-picker">
                     <label for="sm-0-icon">Icon</label>
-                    <select class="js-choice" id="sm-0-icon" name="sm[0][icon]">
+                    <select
+                      class="js-sm-choice"
+                      id="sm-0-icon"
+                      name="sm[0][icon]"
+                    >
                       <option
                         value="linkedin"
                         data-custom-properties="/static/li-logo.png"
@@ -125,19 +128,22 @@
                         X
                       </option>
                     </select>
-                    <div id="sm-icon-error" class="error"></div>
                   </div>
                   <div class="form-group w-100">
                     <label for="sm-0-link">Link to personal profile</label>
                     <input
                       type="text"
+                      class="js-sm-link"
                       id="sm-0-link"
                       name="sm[0][link]"
                       placeholder="https://www.linkedin.com/in/username/"
                     />
-                    <div id="sm-link-error" class="error"></div>
+                    <div
+                      id="sm-link-error"
+                      class="error js-sm-link-error"
+                    ></div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group no-label-margin">
                     <button
                       class="btn btn-primary btn-trash btn-md js-form-clone-remove"
                     >
@@ -177,13 +183,16 @@
                         <input
                           type="text"
                           id="cta-0-desc"
-                          class="js-input-maxlen"
+                          class="js-input-maxlen js-cta-desc"
                           name="cta[0][desc]"
                           maxlength="40"
                           placeholder="Read our latest insights"
                         />
                       </div>
-                      <div id="cta-desc-error" class="error"></div>
+                      <div
+                        id="cta-desc-error"
+                        class="error js-cta-desc-error"
+                      ></div>
                     </div>
                   </div>
                   <div class="form-section">
@@ -228,14 +237,17 @@
                           alt="Icon Watch"
                         />
                         <input
-                          class="input-icon"
+                          class="input-icon js-cta-link"
                           type="text"
                           id="cta-0-link"
                           name="cta[0][link]"
                           placeholder="https://www.xebia.com/news"
                         />
                       </div>
-                      <div id="cta-link-error" class="error"></div>
+                      <div
+                        id="cta-link-error"
+                        class="error js-cta-link-error"
+                      ></div>
                     </div>
                     <div class="form-group mb-0">
                       <button
