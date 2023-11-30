@@ -52,7 +52,13 @@ function validateForm() {
   let ctaLinkEls = document.querySelectorAll('.js-cta-link');
   ctaLinkEls.forEach((linkEl) => {
     let ctaDescEl = linkEl.closest('.form-wrapper')?.querySelector('.js-cta-desc');
-    if ((ctaDescEl.value.length + linkEl.value.length !== 0) && !validateUrl(linkEl.value)) {
+    if (ctaDescEl.value.length !== 0 && linkEl.value.length === 0) {
+      errors.push({
+        target: linkEl.closest('.form-group').querySelector('.js-cta-link-error'),
+        msg: `Please enter link URL.`,
+        input: linkEl
+      })
+    } else if (linkEl.value.length !== 0 && !validateUrl(linkEl.value)) {
       errors.push({
         target: linkEl.closest('.form-group').querySelector('.js-cta-link-error'),
         msg: `Link have to be valid URL.`,
@@ -115,7 +121,7 @@ function validatePhoneNumber(phone) {
 
 function validateUrl(url) {
   const re =
-    /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
+    /^((http(s):\/\/.)|www\.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
   return re.test(String(url));
 }
 
@@ -483,7 +489,7 @@ function setSmPlaceholder(smSelect) {
   if (smSelect.value === 'linkedin') {
     linkField.placeholder = 'https://www.linkedin.com/in/username/';
   } else if (smSelect.value === 'x') {
-    linkField.placeholder = 'https://x.com/profil';
+    linkField.placeholder = 'https://x.com/profile';
   }
 }
 
