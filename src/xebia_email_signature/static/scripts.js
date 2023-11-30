@@ -110,16 +110,28 @@ function validateEmail(email) {
 
 function validatePhoneNumber(phone) {
   const re = /^\+[0-9]{10,15}$|^$/;
-  return re.test(String(phone).toLowerCase());
+  return re.test(String(phone));
 }
 
-function cloneFormGroup(cloneTarget) {
+function validateUrl(url) {
+  const re =
+    /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
+  return re.test(String(url));
+}
+
+function cloneFormGroup(cloneTarget, options = {}) {
   let targetEl = document.querySelector(cloneTarget);
 
   if (!targetEl) return;
 
   let cloneEl = targetEl.initialNode.cloneNode(true);
   let cloneCount = parseInt(targetEl.dataset.cloneCount ?? 0) + 1;
+
+  if (!!options.remove && Array.isArray(options.remove)) {
+    options.remove.forEach((selector) =>
+      cloneEl.querySelector(selector)?.remove()
+    );
+  }
 
   cloneEl.classList.remove(cloneTarget.replace(/^\./, ''));
   cloneEl.classList.add('form-clone');
@@ -135,9 +147,11 @@ function cloneFormGroup(cloneTarget) {
     cloneRemoveBtnInit(removeBtn);
   }
 
-  onSmSelectChangeInit();
   allMaxCharsCounterInit();
   allSelectInit();
+  onSmSelectChangeInit();
+
+  return cloneEl;
 }
 
 function prepareCloneFields(number, wrapperNode) {
@@ -157,6 +171,11 @@ function prepareCloneFields(number, wrapperNode) {
     el.setAttribute('name', nameVal.replace(/\[\d*\]/, `[${number}]`));
     el.id = el.id.replace(/-\d*-/, `-${number}-`);
   });
+
+  let smSelect = wrapperNode.querySelector('.js-sm-choice');
+  if (smSelect) {
+    prepareSmSelect(smSelect);
+  }
 
   return wrapperNode;
 }
@@ -244,17 +263,49 @@ function selectInit(el) {
   });
 
   if (choicesCount < 2) {
-    el.choices.disable();
+    el.closest('.choices').classList.add('is-disabled');
   }
 }
 
 function allSelectInit() {
   let selectEls = document.querySelectorAll('.js-choice');
-  selectEls.forEach((el) => {
-    if (!el.choices) {
-      selectInit(el);
+  selectEls.forEach((select) => {
+    if (!select.choices) {
+      selectInit(select);
     }
   });
+
+  prepareSmSelects();
+  let smSelectEls = document.querySelectorAll('.js-sm-choice');
+  smSelectEls.forEach(select => {
+    selectInit(select);
+  })
+}
+
+function prepareSmSelects() {
+  let smSelectEls = document.querySelectorAll('.js-sm-choice');
+  smSelectEls.forEach(prepareSmSelect)
+}
+
+function prepareSmSelect(select) {
+  let smSelectEls = document.querySelectorAll('.js-sm-choice');
+  let selectedSms = getSelectedSms();
+  let selectedVal = select.value;
+  let originalSelect = document.querySelector('.js-form-sm').initialNode.querySelector('.js-sm-choice');
+
+  if (select.choices) {
+    select.choices.destroy();
+  }
+
+  select.innerHTML = originalSelect.innerHTML;
+  select.value = selectedVal;
+
+  selectedSms?.forEach(selectedSm => {
+    let isUnique = [...smSelectEls].find(select => select.value === selectedSm) === select;
+    let selectedOptionEl = select.querySelector(`option[value="${selectedSm}"]`);
+    if (!selectedOptionEl || isUnique) return;
+    selectedOptionEl.remove();
+  })
 }
 
 function allCloneInit() {
@@ -263,6 +314,10 @@ function allCloneInit() {
   formCloneBtn?.forEach((el) => {
     let { cloneTarget, cloneRemoveOriginal } = el.dataset;
     let targetEl = document.querySelector(cloneTarget);
+
+    let cloneOptions = {
+      remove: [],
+    };
 
     if (!targetEl?.initalNode) {
       targetEl.initialNode = targetEl.cloneNode(true);
@@ -275,8 +330,9 @@ function allCloneInit() {
 
     el.addEventListener('click', (e) => {
       e.preventDefault();
-      cloneFormGroup(cloneTarget);
+      cloneFormGroup(cloneTarget, cloneOptions);
       updateCloneBtn(el);
+      setSmsPlaceholders();
     });
   });
 
@@ -284,6 +340,20 @@ function allCloneInit() {
     '.js-form-clone-remove'
   );
   formCloneRemoveBtn?.forEach(cloneRemoveBtnInit);
+}
+
+function getSelectedSms() {
+  let form = document.querySelector('form');
+  let formDataEntries = new FormData(form).entries();
+
+  let selectedSms = [];
+  for (const [key, value] of formDataEntries) {
+    if (/sm\[\d\]\[icon\]/.test(key)) {
+      selectedSms.push(value);
+    }
+  }
+
+  return selectedSms;
 }
 
 function updateCloneBtn(cloneBtn) {
@@ -307,17 +377,19 @@ function cloneRemoveBtnInit(btn) {
     let cloneBtn =
       formClone.parentNode.parentNode.querySelector('.js-form-clone-btn');
     formClone.innerHTML = '';
+
+    allSelectInit();
     updateCloneBtn(cloneBtn);
   });
 }
 
 function handleFormSubmit(e) {
   let previewContainer = document.querySelector('.preview-container');
-  let previewIframe = previewContainer.querySelector('iframe');
 
   if (validateForm()) {
     previewContainer?.classList.remove('hidden');
   } else {
+    e.preventDefault();
     previewContainer?.classList.add('hidden');
   }
 }
@@ -390,16 +462,21 @@ function handleChangePhoneNumber(phoneEl) {
   phoneEl.value = phoneVal.replace(/[^\d\+]/g, '');
 }
 
-function onSmSelectChangeInit() {
-  let smSelects = document.querySelectorAll('select[name^=sm]');
-  smSelects.forEach((smSelect) => {
-    smSelect.addEventListener('change', (e) =>
-      handleSmSelectChange(smSelect)
-    );
-  });
+function formInit() {
+  let formEl = document.querySelector('form');
+  formEl.addEventListener('submit', handleFormSubmit);
 }
 
-function handleSmSelectChange(smSelect) {
+function onSmSelectChangeInit() {
+  let smSelects = document.querySelectorAll('select[name^=sm]');
+  smSelects.forEach((smSelect) =>
+    smSelect.addEventListener('change', (e) =>
+      setSmPlaceholder(smSelect)
+    )
+  );
+}
+
+function setSmPlaceholder(smSelect) {
   let linkFieldName = smSelect.name.replace('icon', 'link');
   let linkField = document.querySelector(`[name="${linkFieldName}"]`);
 
@@ -410,11 +487,17 @@ function handleSmSelectChange(smSelect) {
   }
 }
 
+function setSmsPlaceholders() {
+  let smSelects = document.querySelectorAll('select[name^=sm]');
+  smSelects?.forEach(smSelect => setSmPlaceholder(smSelect))
+}
+
 (() => {
   allCloneInit();
   allSelectInit();
   allMaxCharsCounterInit();
   signatureCopyInit();
   iframePrepareInit();
+  formInit();
   onSmSelectChangeInit();
 })();
