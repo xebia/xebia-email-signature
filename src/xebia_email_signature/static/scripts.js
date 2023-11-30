@@ -64,7 +64,7 @@ function validateForm() {
   let ctaDescEls = document.querySelectorAll('.js-cta-desc');
   ctaDescEls.forEach((descEl) => {
     let ctaLinkEl = descEl.closest('.form-wrapper')?.querySelector('.js-cta-link');
-    if ((ctaLinkEl.value.length + descEl.value.length !== 0) && !validateUrl(descEl.value)) {
+    if (ctaLinkEl.value.length !== 0 && descEl.value.length === 0) {
       errors.push({
         target: descEl.closest('.form-group').querySelector('.js-cta-desc-error'),
         msg: `Please enter CTA description.`,
