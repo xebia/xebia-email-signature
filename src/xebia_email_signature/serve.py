@@ -3,7 +3,7 @@ import os
 from flask import Flask, request, render_template
 
 from xebia_email_signature.inline_images import inline_images
-from xebia_email_signature.signature import (
+from xebia_email_signature.old_signature import (
     get_theme,
     add_profile_picture,
     add_weekday_availability,
@@ -33,13 +33,13 @@ def create_new_signature():
     return response
 
 
-@app.route("/")
-def generate_signature():
-    return render_template("form.html")
+@app.route("/old")
+def generate_old_signature():
+    return render_template("old_form.html")
 
 
-@app.route("/signature", methods=["POST"])
-def create_signature():
+@app.route("/old/signature", methods=["POST"])
+def create_old_signature():
     try:
         data = add_profile_picture(
             request.form, (90, 90), request.files.get("profile_picture")
@@ -52,9 +52,9 @@ def create_signature():
     data = add_formatted_phone(data)
 
     jinjafile = (
-        "signature.xpirit.html.jinja"
+        "old_signature.xpirit.html.jinja"
         if data["office"].__contains__("Xpirit")
-        else "signature.html.jinja"
+        else "old_signature.html.jinja"
     )
 
     response = render_template(jinjafile, data=data, theme=get_theme(data))
