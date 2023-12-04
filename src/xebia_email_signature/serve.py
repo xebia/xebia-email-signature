@@ -10,25 +10,25 @@ from xebia_email_signature.old_signature import (
     add_formatted_phone,
     add_office_details,
 )
-from xebia_email_signature.new_signature import add_call_to_actions, \
+from xebia_email_signature.signature import add_call_to_actions, \
     add_social_media, get_new_theme
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
 
-@app.route("/new")
-def generate_new_signature():
-    return render_template("new_form.html")
+@app.route("/")
+def generate_signature():
+    return render_template("form.html")
 
 
-@app.route("/new/signature", methods=["POST"])
-def create_new_signature():
+@app.route("/signature", methods=["POST"])
+def create_signature():
     data = add_formatted_phone(request.form)
     data = add_call_to_actions(data)
     data = add_social_media(data)
     data['scheme'] = request.headers.get('X-Forwarded-Proto', 'http')
 
-    jinjafile = "new_signature.html.jinja"
+    jinjafile = "signature.html.jinja"
     response = render_template(jinjafile, data=data, theme=get_new_theme(data))
     return response
 
