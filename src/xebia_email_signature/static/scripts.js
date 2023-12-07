@@ -401,14 +401,11 @@ function handleFormSubmit(e) {
 }
 
 function copyIframeContent(iframe) {
-  let doc = iframe.contentWindow.document;
-  let range = doc.createRange();
-  range.selectNodeContents(iframe.contentWindow.document);
-  let select = iframe.contentWindow.getSelection();
-  select.removeAllRanges();
-  select.addRange(range);
-  iframe.contentWindow.document.execCommand('copy');
-  select.removeAllRanges();
+  const iframeHtmlEl = iframe.contentWindow.document.querySelector('html');
+  navigator.clipboard.write([new ClipboardItem({
+    'text/plain': new Blob([iframeHtmlEl.innerText], { type: 'text/plain' }),
+    'text/html': new Blob([iframeHtmlEl.outerHTML], { type: 'text/html' })
+  })])
 }
 
 function signatureCopyInit() {
@@ -497,6 +494,7 @@ function setSmsPlaceholders() {
   let smSelects = document.querySelectorAll('select[name^=sm]');
   smSelects?.forEach(smSelect => setSmPlaceholder(smSelect))
 }
+
 
 (() => {
   allCloneInit();
