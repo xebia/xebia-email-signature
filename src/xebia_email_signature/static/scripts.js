@@ -4,15 +4,16 @@ function validateForm() {
   errorsEls.forEach((error) => (error.innerHTML = ''));
 
   let nameEl = document.getElementById('full_name');
-  if (nameEl.value.trim() === '') {
+  if (nameEl?.value.trim() === '') {
     errors.push({
       target: document.getElementById('full_name-error'),
       msg: 'Please enter your name',
       input: nameEl
     })
   }
+
   let emailEl = document.getElementById('email');
-  if (!validateEmail(emailEl.value)) {
+  if (emailEl && !validateEmail(emailEl.value)) {
     errors.push({
       target: document.getElementById('email-error'),
       msg: 'Please enter a valid email address',
@@ -21,7 +22,7 @@ function validateForm() {
   }
 
   let jobRoleEl = document.getElementById('job_role');
-  if (jobRoleEl.value.trim() === '') {
+  if (jobRoleEl?.value.trim() === '') {
     errors.push({
       target: document.getElementById('job_role-error'),
       msg: 'Please enter your role',
@@ -30,7 +31,7 @@ function validateForm() {
   }
 
   let phoneEl = document.getElementById('phone');
-  if (!validatePhoneNumber(phoneEl.value)) {
+  if (phoneEl && !validatePhoneNumber(phoneEl.value)) {
     errors.push({
       target: document.getElementById('phone-error'),
       msg: `Phone number (${phoneEl.value} should start with a + followed by 10 to 15 digits without any other characters`,
@@ -52,7 +53,7 @@ function validateForm() {
   let ctaLinkEls = document.querySelectorAll('.js-cta-link');
   ctaLinkEls.forEach((linkEl) => {
     let ctaDescEl = linkEl.closest('.form-wrapper')?.querySelector('.js-cta-desc');
-    if (ctaDescEl.value.length !== 0 && linkEl.value.length === 0) {
+    if (ctaDescEl?.value.length !== 0 && linkEl.value.length === 0) {
       errors.push({
         target: linkEl.closest('.form-group').querySelector('.js-cta-link-error'),
         msg: `Please enter link URL.`,
@@ -70,7 +71,7 @@ function validateForm() {
   let ctaDescEls = document.querySelectorAll('.js-cta-desc');
   ctaDescEls.forEach((descEl) => {
     let ctaLinkEl = descEl.closest('.form-wrapper')?.querySelector('.js-cta-link');
-    if (ctaLinkEl.value.length !== 0 && descEl.value.length === 0) {
+    if (ctaLinkEl?.value.length !== 0 && descEl.value.length === 0) {
       errors.push({
         target: descEl.closest('.form-group').querySelector('.js-cta-desc-error'),
         msg: `Please enter CTA description.`,
