@@ -402,6 +402,10 @@ function handleFormSubmit(e) {
 }
 
 function copyIframeContent(iframe) {
+  iframePrepare({
+    base64Img: !isMobile(),
+  });
+
   const iframeHtmlEl = iframe.contentWindow.document.querySelector('html');
   navigator.clipboard.write([new ClipboardItem({
     'text/plain': new Blob([iframeHtmlEl.innerText], { type: 'text/plain' }),
@@ -442,19 +446,22 @@ async function toDataURL(url, callback) {
   xhr.send();
 }
 
-function iframePrepareInit() {
+function iframePrepare(options = {}) {
   let iframe = document.querySelector('.preview-iframe');
   iframe.addEventListener('load', () => {
     let iframeDoc = iframe.contentWindow.document;
-    let anchors = iframeDoc.querySelectorAll('a');
-    let images = iframeDoc.querySelectorAll('img');
 
+    let anchors = iframeDoc.querySelectorAll('a');
     anchors?.forEach((anchor) => anchor.setAttribute('target', '_blank'));
-    images?.forEach((img) => {
-      toDataURL(img.src, (imageBase64) =>
-        img.setAttribute('src', imageBase64)
-      );
-    });
+
+    if (options.base64Img) {
+      let images = iframeDoc.querySelectorAll('img');
+      images?.forEach((img) => {
+        toDataURL(img.src, (imageBase64) =>
+          img.setAttribute('src', imageBase64)
+        );
+      });
+    }
 
     iframe.style.height =
       (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
@@ -496,13 +503,16 @@ function setSmsPlaceholders() {
   smSelects?.forEach(smSelect => setSmPlaceholder(smSelect))
 }
 
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 
 (() => {
   allCloneInit();
   allSelectInit();
   allMaxCharsCounterInit();
   signatureCopyInit();
-  iframePrepareInit();
   formInit();
   onSmSelectChangeInit();
 })();
