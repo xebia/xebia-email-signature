@@ -1,3 +1,4 @@
+// Form validation
 function validateForm() {
   let errors = [];
   let errorsEls = document.querySelectorAll('.error');
@@ -93,22 +94,6 @@ function validateForm() {
   return true;
 }
 
-function scrollTo(el) {
-  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function prefillEmail(full_name) {
-  let email = document.getElementById('email');
-  if (email && full_name && !email.value) {
-    let parts = full_name.split(/[ \t]+/);
-    email.value =
-      (parts.length > 1
-        ? [parts[0], parts.slice(1).join('')].join('.')
-        : parts[0]
-      ).toLowerCase() + '@xebia.com';
-  }
-}
-
 function validateEmail(email) {
   const re =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -126,6 +111,20 @@ function validateUrl(url) {
   return re.test(String(url));
 }
 
+function prefillEmail(full_name) {
+  let email = document.getElementById('email');
+  if (email && full_name && !email.value) {
+    let parts = full_name.split(/[ \t]+/);
+    email.value =
+      (parts.length > 1
+        ? [parts[0], parts.slice(1).join('')].join('.')
+        : parts[0]
+      ).toLowerCase() + '@xebia.com';
+  }
+}
+
+
+// Clone mechanism
 function cloneFormGroup(cloneTarget, options = {}) {
   let targetEl = document.querySelector(cloneTarget);
 
@@ -187,6 +186,80 @@ function prepareCloneFields(number, wrapperNode) {
   return wrapperNode;
 }
 
+function allCloneInit() {
+  let formCloneBtn = document.querySelectorAll('.js-form-clone-btn');
+
+  formCloneBtn?.forEach((el) => {
+    let { cloneTarget, cloneRemoveOriginal } = el.dataset;
+    let targetEl = document.querySelector(cloneTarget);
+
+    let cloneOptions = {
+      remove: [],
+    };
+
+    if (!targetEl?.initalNode) {
+      targetEl.initialNode = targetEl.cloneNode(true);
+      targetEl.classList.add('form-clone');
+    }
+
+    if (cloneRemoveOriginal) {
+      targetEl.innerHTML = '';
+    }
+
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      cloneFormGroup(cloneTarget, cloneOptions);
+      updateCloneBtn(el);
+      setSmsPlaceholders();
+    });
+  });
+
+  let formCloneRemoveBtn = document.querySelectorAll(
+    '.js-form-clone-remove'
+  );
+  formCloneRemoveBtn?.forEach(cloneRemoveBtnInit);
+}
+
+function updateCloneBtn(cloneBtn) {
+  let { cloneTarget, cloneMaxItems = Infinity } = cloneBtn.dataset;
+  let targetEl = document.querySelector(cloneTarget);
+
+  if (
+    Number(cloneMaxItems) <=
+    targetEl.parentElement.querySelectorAll('.form-clone > *:first-child')
+      .length
+  ) {
+    cloneBtn.setAttribute('disabled', true);
+  } else {
+    cloneBtn.removeAttribute('disabled');
+  }
+}
+
+function cloneRemoveBtnInit(btn) {
+  btn.addEventListener('click', (e) => {
+    let formClone = btn.closest('.form-clone');
+    let cloneBtn =
+      formClone.parentNode.parentNode.querySelector('.js-form-clone-btn');
+    formClone.innerHTML = '';
+
+    allSelectInit();
+    updateCloneBtn(cloneBtn);
+  });
+}
+
+function handleFormSubmit(e) {
+  let previewContainer = document.querySelector('.preview-container');
+
+  if (validateForm()) {
+    previewContainer?.classList.remove('hidden');
+  } else {
+    e.preventDefault();
+    previewContainer?.classList.add('hidden');
+  }
+}
+
+
+// Chars counter
 function allMaxCharsCounterInit() {
   document.querySelectorAll('.js-input-maxlen')?.forEach((el) => {
     let charsCounterClass = 'input-chars-counter';
@@ -209,6 +282,8 @@ function allMaxCharsCounterInit() {
   });
 }
 
+
+// ChoicesJS
 function selectInit(el) {
   let choicesCount = el.options.length;
 
@@ -315,40 +390,6 @@ function prepareSmSelect(select) {
   })
 }
 
-function allCloneInit() {
-  let formCloneBtn = document.querySelectorAll('.js-form-clone-btn');
-
-  formCloneBtn?.forEach((el) => {
-    let { cloneTarget, cloneRemoveOriginal } = el.dataset;
-    let targetEl = document.querySelector(cloneTarget);
-
-    let cloneOptions = {
-      remove: [],
-    };
-
-    if (!targetEl?.initalNode) {
-      targetEl.initialNode = targetEl.cloneNode(true);
-      targetEl.classList.add('form-clone');
-    }
-
-    if (cloneRemoveOriginal) {
-      targetEl.innerHTML = '';
-    }
-
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      cloneFormGroup(cloneTarget, cloneOptions);
-      updateCloneBtn(el);
-      setSmsPlaceholders();
-    });
-  });
-
-  let formCloneRemoveBtn = document.querySelectorAll(
-    '.js-form-clone-remove'
-  );
-  formCloneRemoveBtn?.forEach(cloneRemoveBtnInit);
-}
-
 function getSelectedSms() {
   let form = document.querySelector('form');
   let formDataEntries = new FormData(form).entries();
@@ -363,44 +404,8 @@ function getSelectedSms() {
   return selectedSms;
 }
 
-function updateCloneBtn(cloneBtn) {
-  let { cloneTarget, cloneMaxItems = Infinity } = cloneBtn.dataset;
-  let targetEl = document.querySelector(cloneTarget);
 
-  if (
-    Number(cloneMaxItems) <=
-    targetEl.parentElement.querySelectorAll('.form-clone > *:first-child')
-      .length
-  ) {
-    cloneBtn.setAttribute('disabled', true);
-  } else {
-    cloneBtn.removeAttribute('disabled');
-  }
-}
-
-function cloneRemoveBtnInit(btn) {
-  btn.addEventListener('click', (e) => {
-    let formClone = btn.closest('.form-clone');
-    let cloneBtn =
-      formClone.parentNode.parentNode.querySelector('.js-form-clone-btn');
-    formClone.innerHTML = '';
-
-    allSelectInit();
-    updateCloneBtn(cloneBtn);
-  });
-}
-
-function handleFormSubmit(e) {
-  let previewContainer = document.querySelector('.preview-container');
-
-  if (validateForm()) {
-    previewContainer?.classList.remove('hidden');
-  } else {
-    e.preventDefault();
-    previewContainer?.classList.add('hidden');
-  }
-}
-
+// Copy button
 function copyIframeContent(iframe) {
   iframePrepare({
     base64Img: !isMobile(),
@@ -430,20 +435,6 @@ function signatureCopyInit() {
       }, 3000);
     }
   });
-}
-
-async function toDataURL(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      callback(reader.result);
-    };
-    reader.readAsDataURL(xhr.response);
-  };
-  xhr.open('GET', url);
-  xhr.responseType = 'blob';
-  xhr.send();
 }
 
 function iframePrepare(options = {}) {
@@ -503,8 +494,28 @@ function setSmsPlaceholders() {
   smSelects?.forEach(smSelect => setSmPlaceholder(smSelect))
 }
 
+
+// Utilities
 function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function scrollTo(el) {
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function toDataURL(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    var reader = new FileReader();
+    reader.onloadend = function () {
+      callback(reader.result);
+    };
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open('GET', url);
+  xhr.responseType = 'blob';
+  xhr.send();
 }
 
 
