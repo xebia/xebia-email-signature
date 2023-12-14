@@ -1,71 +1,279 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head><title></title></head>
-    <body style="font-size: 11pt; font-family: Calibri, sans-serif; ">
-    <table summary="contact details">
-        <tr style="line-height: 1;">
-        {% if data.get('profile_picture') %}
-        <td>
-        <img src="data:image/png;base64,{{ data['profile_picture'] }}" />
-        </td>
-        <td style="padding-left: 5px; vertical-align:top; padding-top: 10px;">
-        {% else %}
-        <td colspan="2" style="vertical-align:top; padding-top: 10px;">
-        {% endif %}
-            <span style="line-height: 1.25; font-family: Calibri, sans-serif; font-size: 12pt; font-weight: 600; color: {{ theme['full_name'] }};">
-            {{ data['full_name'] | e }}
-            </span>
-            <br>
-            <span style="font-family: Calibri, sans-serif;font-size: 10pt; font-weight: 600; color: {{ theme['unit'] }};">
-                {{ data["job_role"] | e }}
-            </span>
-            <br>
-            {% if 'unit' in data and data['unit'] %}
-            <span style="font-family: Calibri, sans-serif; font-size: 8pt;  color: {{ theme['unit'] }};">
-                {{data['unit'] | e}}
-            </span>
-            <br>
-            {% endif %}
-                <a style="text-decoration: none;  color: {{ theme['unit'] }};" href="tel:{{data['formatted_phone'].replace(' ', '') | e }}">
-                <span style="font-family: Calibri, sans-serif;font-size: 8pt; ">{{ data["formatted_phone"] | e}}</span>
-                </a>
-            <br>
-            {% if data['weekday_availability'] %}
-                <span style=" font-family: Calibri, sans-serif;font-size: 8pt; color: {{ theme['unit'] }};">
-                   {{ data['weekday_availability'] |e }}
-                </span>
-            {% endif %}
-        </td>
-        </tr>
-        <tr>
-        <td style="width: 60px; text-align: center;">
-            <img width="58" height="22" id="Xebia" style="position: relative; top: 2px; vertical-align: middle;" alt="Xebia" name="Xebia"
-                 src="{{theme['logo_url']}}"/>
-        </td>
-        <td style="border-left: solid #6C1D5F; padding-left: 5px;">
 
-            <a style="font-family: Calibri, sans-serif; font-size: 8pt; color: {{ theme["link"] }};" href="{{theme['url']}}" title="Xebia website">{{theme['url'][8:]}}</a>
-            <br>
-            <a href="https://www.facebook.com/xebianl/" title="Facebook" ><img border="0" width="10" height="10" id="Facebook" src="https://assets.oblcc.com/xebia/facebook-dark.png" alt="Facebook" name="Facebook" /></a>
-            <a href="https://twitter.com/xebia" title="Twitter"><img border="0" width="10" height="10" id="Twitter" src="https://assets.oblcc.com/xebia/twitter-dark.png" alt="Twitter" name="Twitter" /></a>
-            <a href="https://www.instagram.com/xebianl/" title="Instagram" ><img border="0" width="10" height="10" id="Instagram" src="https://assets.oblcc.com/xebia/instagram-dark.png" alt="Instagram" name="Instagram" /></a>
-            <a href="https://www.youtube.com/user/XebiaNL" title="YouTube"><img border="0" width="10" height="10" id="YouTube" src="https://assets.oblcc.com/xebia/youtube-dark.png" alt="YouTube" name="YouTube" /></a>
-            {% if 'linkedin_url' in data and data['linkedin_url'] %}
-            <a href="{{ data['linkedin_url'] | e }}" ><img border="0" width="10" height="10" id="LinkedIn" src="https://assets.oblcc.com/xebia/linkedin-dark.png" alt="LinkedIn" name="LinkedIn" /></a>
-            {% endif %}
-            {% if 'github_url' in data and data['github_url'] %}
-            <a href="{{ data['github_url'] | e }}" ><img border="0" width="10" height="10" id="Github" src="https://assets.oblcc.com/xebia/github-dark.png" alt="Github" name="Github" /></a>
-            {% endif %}
-        </td>
-        </tr>
+<body style="font-size: 11pt; font-family: Arial, sans-serif; ">
+  <table summary="contact details" style="width: 100%;">
+    <tr>
+      <td style="padding-right: 10px; width: 75px;">
+        <a href="https://xebia.com/" title="Website" style="text-decoration: none;">
+          <span style="text-decoration: none;">
+            <img width="75" height="70" alt="Xebia logo bulb"
+              src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='xebia-bulb.png') }}" />
+          </span>
+        </a>
+      </td>
+      <td style="
+        vertical-align: top;
+        border-left: 1px solid #6c1d5f;
+        padding-left: 12px;
+      ">
+        <table style="border-collapse: collapse; width: 100%;">
+          <tr style="
+              line-height: 1; 
+              vertical-align: baseline;
+            ">
+            <td style="
+                padding: 0 0 2px;
+              ">
+              <table style="border-collapse: collapse;">
+                <tr style="line-height: 1">
+                  <td>
+                    <p class="MsoNormal" style="
+                      font-family: Arial;
+                      font-size: 12pt;
+                      font-style: normal;
+                      font-weight: 700;
+                      line-height: 14pt;
+                      text-decoration: none;
+                      color: #6c1d5f;
+                      margin: 0.1px;
+                    ">
+                      {{ data['full_name'] | e }}
+                    </p>
+                  </td>
+                  {% if 'social_media' in data and data['social_media'] %}
+                  <td style="color: #dddddd; font-size: 10pt; font-weight: 200; padding: 0 4px 2px;">
+                    |
+                  </td>
+                  {% for media in data['social_media'] %}
+                  {% if media and media['icon'] and media['link'] %}
+                  <td style="
+                      padding: 0 2px 2px 0;
+                    ">
+                    <p style="text-decoration: none; margin: 0.1px; line-height: 13pt">
+                      <a href="{{ media['link'] }}" style="text-decoration: none; ">
+                        {% if media['icon'] == 'linkedin' %}
+                        <img width="18" height="18"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}" />
+                        {% endif %}
+                        {% if media['icon'] == 'x' %}
+                        <img width="18" height="18"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}" />
+                        {% endif %}
+                      </a>
+                    </p>
+                  </td>
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 2px;
+              ">
+              <p style="
+                  color: #5a5a5a;
+                  font-family: Arial;
+                  font-size: 10pt;
+                  font-weight: 700;
+                  line-height: 12pt;
+                  font-style: normal;
+                  margin: 0.1px;
+                ">
+                {{ data["job_role"] | e }}
+              </p>
+            </td>
+          </tr>
+          {% if 'unit' in data and data['unit'] %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 2px;
+              ">
+              <p style="
+                  color: #5a5a5a;
+                  font-family: Arial;
+                  font-size: 10pt;
+                  line-height: 12pt;
+                  font-style: normal;
+                  margin: 0.1px;
+                ">
+                {{ data["unit"] | e }}
+              </p>
+            </td>
+          </tr>
+          {% endif %}
+          {% if 'formatted_phone' in data and data['formatted_phone'] %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 2px;
+              ">
+              <p style="
+                  color: #5a5a5a;
+                  font-family: Arial;
+                  font-size: 10pt;
+                  line-height: 12pt;
+                  font-style: normal;
+                  margin: 0.1px;
+                ">
+                {{ data["formatted_phone"] | e}}
+              </p>
+            </td>
+          </tr>
+          {% endif %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 4px;
+                padding-bottom: 2px;
+              ">
+
+              <p style="
+                  color: #6c1d5f;
+                  font-family: Arial;
+                  font-size: 9pt;
+                  line-height: 11pt;
+                  font-style: normal;
+                  font-weight: 400;
+                  margin: 0.1px;
+                ">
+                Find Xebia on:
+              </p>
+            </td>
+          </tr>
+          <tr style="line-height: 1">
+            <td style="
+                padding: 0 0 5px;
+              ">
+              <table style="border-collapse: collapse;">
+                <tr style="line-height: 1">
+                  <td>
+                    <p style="
+                      font-size: 9pt;
+                      line-height: 11pt;
+                      text-decoration: none;
+                      margin:0;
+                    ">
+                      <a href="https://xebia.com/" title="Website" style="text-decoration: none;">
+                        <img border="0" width="18" height="18" id="Website"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-web.png') }}"
+                          alt="Website" name="Website" />
+                      </a>
+                    </p>
+                  </td>
+                  <td>
+                    <p style="
+                      font-size: 9pt;
+                      line-height: 11pt;
+                      text-decoration: none;
+                      margin:0;
+                    ">
+                      <a href="https://www.linkedin.com/company/xebia" title="Linkedin" style="text-decoration: none;">
+                        <img border="0" width="18" height="18" id="Linkedin"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-li.png') }}"
+                          alt="Linkedin" name="Linkedin" />
+                      </a>
+                    </p>
+                  </td>
+                  <td>
+                    <p style="
+                      font-size: 9pt;
+                      line-height: 11pt;
+                      text-decoration: none;
+                      margin:0;
+                    ">
+                      <a href="https://x.com/xebia" title="X" style="text-decoration: none;">
+                        <img border="0" width="18" height="18" id="X"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-x.png') }}"
+                          alt="X" name="X" />
+                      </a>
+                    </p>
+                  </td>
+                  <td>
+                    <p style="
+                      font-size: 9pt;
+                      line-height: 11pt;
+                      text-decoration: none;
+                      margin:0;
+                    ">
+                      <a href="https://www.youtube.com/@XebiaNL" title="YouTube" style="text-decoration: none;">
+                        <img border="0" width="18" height="18" id="YouTube"
+                          src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-logo-yt.png') }}"
+                          alt="YouTube" name="YouTube" />
+                      </a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% for call in data['call_to_action'] %}
+          {% if call and call['icon'] and call['desc'] and call['link'] %}
+          <tr style="line-height: 1">
+            <td style="
+                padding-top: 0;
+                padding-bottom: 1.25pt;
+              ">
+              <table style="border-collapse: collapse;">
+                <tr>
+                  <td style="line-height: 8pt;">
+                    <p class="MsoNormal" style="
+                      vertical-align: middle;
+                      margin: 0;
+                      line-height: 10pt;
+                    ">
+                      {% if call['icon'] == 'blog' %}
+                      <img width="12" height="13" style="display: block; vertical-align: middle;"
+                        src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-blog.png') }}" />
+                      {% endif %}
+                      {% if call['icon'] == 'meeting' %}
+                      <img width="12" height="13" style="display: block; vertical-align: middle;"
+                        src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-meeting.png') }}" />
+                      {% endif %}
+                      {% if call['icon'] == 'event' %}
+                      <img width="12" height="13" style="display: block; vertical-align: middle;"
+                        src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-event.png') }}" />
+                      {% endif %}
+                      {% if call['icon'] == 'award' %}
+                      <img width="12" height="13" style="display: block; vertical-align: middle;"
+                        src="{{ url_for('static', _external=True, _scheme=data['scheme'], filename='email-cta-icon-award.png') }}" />
+                      {% endif %}
+                    </p>
+                  </td>
+                  <td style="padding: 0 0 0 2px; line-height: 8pt;">
+                    <p class="MsoNormal" style="
+                      font-family: Arial;
+                      font-size: 8pt;
+                      font-style: normal;
+                      font-weight: 400;
+                      line-height: 10pt;
+                      color: #5a5a5a;
+                      vertical-align: middle;
+                      margin: 0;
+                    ">
+                      <a href="{{call['link']}}" style="color: #5a5a5a;">
+                        <span style="color: #5a5a5a; text-decoration: underline;">
+                          {{call['desc']}}
+                        </span>
+                      </a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
         </table>
-        {% if data.get('office_address') %}
-        <span style="font-family: Calibri, sans-serif; font-size: 8pt; padding:left: 5px; color: {{ theme['unit'] }};">
-            {% for line in data['office_address'] %}
-                {{line| e}} <br>
-            {% endfor %}
-        </span>
-        {% endif %}
-    </body>
+      </td>
+    </tr>
+  </table>
+</body>
+
 </html>

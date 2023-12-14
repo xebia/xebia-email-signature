@@ -1,0 +1,410 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+    <title>Xebia's Email Signature Generator</title>
+    <style>
+        body {
+            font-family: Helvetica,sans-serif;
+        }
+        .form-container {
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #6C1D5F;
+            border-radius: 5px;
+        }
+
+        select {
+            width: 98%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #6C1D5F;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #6C1D5F;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: white;
+            color: #6C1D5F;
+            border: 1px solid #ddd;
+        }
+
+        .weekdays {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .weekdays label {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: normal;
+            width: calc(100% / 6);
+        }
+        input:focus {
+            outline: #6C1D5F solid 1px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+    <script>
+        function validateForm() {
+            let errors = document.getElementsByClassName('error');
+            for(let i = 0;i < errors.length; i++) {
+                errors[i].innerHTML = '';
+            }
+            let name = document.getElementById('full_name').value;
+            if  (name.trim() === '') {
+                document.getElementById('full_name-error').innerHTML = 'Please enter your name';
+                return false;
+            }
+            let email = document.getElementById('email').value;
+            if (!validateEmail(email)) {
+                document.getElementById('email-error').innerHTML = 'Please enter a valid email address';
+                return false;
+            }
+
+            let job_role = document.getElementById('job_role').value;
+            if  (job_role.trim() === '') {
+                document.getElementById('job_role-error').innerHTML = 'Please enter your role';
+                return false;
+            }
+            if (!validatePhoneNumber()) {
+                return false;
+            }
+
+            let linkedin_url = document.getElementById('linkedin_url').value;
+            if   (linkedin_url && !/https:\/\/([^\.]*\.)?linkedin\.com/.test(linkedin_url)) {
+                document.getElementById('linkedin_url-error').innerHTML = 'Please enter your LinkedIn URL';
+                return false;
+            }
+
+            let github_url = document.getElementById('github_url').value;
+            if   (github_url && !/https:\/\/github.*/.test(github_url)) {
+                document.getElementById('github_url-error').innerHTML = 'Please enter your github URL';
+                return false;
+            }
+
+            return true;
+        }
+
+        function prefillEmail(full_name) {
+            let email = document.getElementById('email');
+            if (email && full_name && !email.value) {
+                let parts = full_name.split(/[ \t]+/);
+                email.value = (parts.length > 1 ?
+                        [parts[0], parts.slice(1).join("")].join(".") :
+                        parts[0]
+                ).toLowerCase() + "@xebia.com";
+            }
+       }
+
+       function prefillTimezone() {
+           let tz = document.getElementById('timezone');
+           let currentTimezone =  Intl.DateTimeFormat().resolvedOptions().timeZone;
+           for(let i = 0; i < tz.length; i++){
+               if(tz.options[i].value == currentTimezone ){
+                   tz.options[i].selected = true;
+               }
+           }
+       }
+
+        function toggleUseGravatar(email) {
+            let from_gravatar = document.getElementById('profile_image_from_gravatar');
+
+
+            const hash = CryptoJS.MD5(email).toString();
+            let url = `https://www.gravatar.com/avatar/${hash}?d=404&s=100`;
+            fetch(url).then(function(response) {
+                from_gravatar.checked = response.ok;
+                from_gravatar.disabled = !response.ok;
+            })
+        }
+
+        function clearProfileImage(event) {
+            console.log(event);
+            if (event.target.checked) {
+                let profile_image = document.getElementById('profile_picture');
+                profile_image.value = '';
+            }
+        }
+
+        function validateProfileImage() {
+            let profile_image = document.getElementById('profile_picture');
+            let profileImageError = document.getElementById('profile_picture-error');
+            profileImageError.innerHTML = '';
+
+            if (profile_image) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        if (img.naturalHeight != img.naturalWidth) {
+                            msg = 'Please provide a square profile image instead of ' + img.naturalWidth + 'x' + img.naturalHeight;
+                            profile_image.setCustomValidity(msg);
+                            profileImageError.innerHTML = msg;
+                        } else {
+                            profile_image.setCustomValidity('');
+                        }
+                    }
+
+                    img.onerror = function() {
+                        msg = 'failed to read profile picture. try another.'
+                        profile_image.setCustomValidity(msg)
+                        profileImageError.innerHTML = msg
+                    }
+                }
+
+                reader.onerror = function() {
+                    msg = 'failed to read profile picture file. try another.'
+                    profile_image.setCustomValidity(msg)
+                    profileImageError.innerHTML = msg
+                }
+                reader.readAsDataURL(profile_image.files[0]);
+            }
+        }
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function validatePhoneNumber() {
+            let phone = document.getElementById('phone').value;
+            document.getElementById('phone-error').innerHTML = '';
+
+            const re = /^\+[0-9]{10,15}$/;
+            if (!re.test(String(phone).toLowerCase())) {
+                document.getElementById('phone-error').innerHTML = 'phone number (' + encodeURI(phone) + ') should start with a + followed by 10 to 15 digits without any other characters';
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body onload="prefillTimezone();">
+<div class="form-container">
+    <h1>Email Signature Generator</h1>
+    <form action="/old/signature" method="post"  enctype="multipart/form-data" onsubmit="return validateForm()">
+        <div class="form-group">
+            <label for="full_name">Name</label>
+            <input type="text" id="full_name" name="full_name" onblur="prefillEmail(this.value)">
+            <div id="full_name-error" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" onblur="toggleUseGravatar(this.value)" onchange="return validateEmail()">
+            <div id="email-error" class="error"></div>
+        </div>
+        <div class="form-group" >
+            <label for="profile_picture">Profile picture</label>
+            <input type="file" style="display: inline;  font-size: 18px; font-weight: normal;"
+                   id="profile_picture" name="profile_picture"
+                   accept="image/png,image/jpeg" onchange="validateProfileImage();">
+            <label style= "display: inline;  font-size: 18px; font-weight: normal;">use gravatar.com
+                <input type="checkbox" id="profile_image_from_gravatar" value="1" onchange="clearProfileImage(event);" name="profile_image_from_gravatar" disabled>
+            </label>
+            <div id="profile_picture-error" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="job_role">Role</label>
+            <input type="text" id="job_role" name="job_role">
+            <div id="job_role-error" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="unit">Service line</label>
+            <input type="text" id="unit" name="unit">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input placeholder="+14043434832" type="text" id="phone" name="phone" onchange="return validatePhoneNumber();">
+            <div id="phone-error" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="office">Office</label>
+            <select id="office" name="office">
+            </select>
+            <script>
+                fetch('/static/offices.json')
+                    .then(response => response.json())
+                    .then(values => {
+                        const office = document.getElementById('office');
+                        for (const [key, value] of Object.entries(values)) {
+                            const option = document.createElement('option');
+                            option.value = key;
+                            option.text = key;
+                            office.appendChild(option);
+                        }
+                    })
+                    .catch(error => console.error(error));
+            </script>
+        </div>
+        <div class="form-group weekdays">
+            <div style="margin-bottom: 10px;">Weekday availability</div>
+            <div>
+            <label><input type="checkbox" name="Mon" value="1"> Mon</label>
+            <label><input type="checkbox" name="Tue" value="1"> Tue</label>
+            <label><input type="checkbox" name="Wed" value="1"> Wed</label>
+            <label><input type="checkbox" name="Thu" value="1"> Thu</label>
+            <label><input type="checkbox" name="Fri" value="1"> Fri</label>
+            </div>
+            <label><input type="checkbox" name="Sat" value="1" > Sat</label>
+            <label><input type="checkbox" name="Sun" value="1" > Sun</label>
+        </div>
+        <div class="form-group">
+            <label for="timezone">Availability timezone</label>
+            <select name="timezone" id="timezone">
+                <option value="Etc/GMT+12">(GMT-12:00) International Date Line West</option>
+                <option value="Pacific/Midway">(GMT-11:00) Midway Island, Samoa</option>
+                <option value="Pacific/Honolulu">(GMT-10:00) Hawaii</option>
+                <option value="US/Alaska">(GMT-09:00) Alaska</option>
+                <option value="America/Los_Angeles">(GMT-08:00) Pacific Time (US & Canada)</option>
+                <option value="America/Tijuana">(GMT-08:00) Tijuana, Baja California</option>
+                <option value="US/Arizona">(GMT-07:00) Arizona</option>
+                <option value="America/Chihuahua">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
+                <option value="US/Mountain">(GMT-07:00) Mountain Time (US & Canada)</option>
+                <option value="America/Managua">(GMT-06:00) Central America</option>
+                <option value="US/Central">(GMT-06:00) Central Time (US & Canada)</option>
+                <option value="America/Mexico_City">(GMT-06:00) Guadalajara, Mexico City, Monterrey</option>
+                <option value="Canada/Saskatchewan">(GMT-06:00) Saskatchewan</option>
+                <option value="America/Bogota">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</option>
+                <option value="US/Eastern">(GMT-05:00) Eastern Time (US & Canada)</option>
+                <option value="US/East-Indiana">(GMT-05:00) Indiana (East)</option>
+                <option value="Canada/Atlantic">(GMT-04:00) Atlantic Time (Canada)</option>
+                <option value="America/Caracas">(GMT-04:00) Caracas, La Paz</option>
+                <option value="America/Manaus">(GMT-04:00) Manaus</option>
+                <option value="America/Santiago">(GMT-04:00) Santiago</option>
+                <option value="Canada/Newfoundland">(GMT-03:30) Newfoundland</option>
+                <option value="America/Sao_Paulo">(GMT-03:00) Brasilia</option>
+                <option value="America/Argentina/Buenos_Aires">(GMT-03:00) Buenos Aires, Georgetown</option>
+                <option value="America/Godthab">(GMT-03:00) Greenland</option>
+                <option value="America/Montevideo">(GMT-03:00) Montevideo</option>
+                <option value="America/Noronha">(GMT-02:00) Mid-Atlantic</option>
+                <option value="Atlantic/Cape_Verde">(GMT-01:00) Cape Verde Is.</option>
+                <option value="Atlantic/Azores">(GMT-01:00) Azores</option>
+                <option value="Africa/Casablanca">(GMT+00:00) Casablanca, Monrovia, Reykjavik</option>
+                <option value="Etc/Greenwich">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
+                <option value="Europe/Amsterdam">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+                <option value="Europe/Belgrade">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+                <option value="Europe/Brussels">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+                <option value="Europe/Sarajevo">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
+                <option value="Africa/Lagos">(GMT+01:00) West Central Africa</option>
+                <option value="Asia/Amman">(GMT+02:00) Amman</option>
+                <option value="Europe/Athens">(GMT+02:00) Athens, Bucharest, Istanbul</option>
+                <option value="Asia/Beirut">(GMT+02:00) Beirut</option>
+                <option value="Africa/Cairo">(GMT+02:00) Cairo</option>
+                <option value="Africa/Harare">(GMT+02:00) Harare, Pretoria</option>
+                <option value="Europe/Helsinki">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
+                <option value="Asia/Jerusalem">(GMT+02:00) Jerusalem</option>
+                <option value="Europe/Minsk">(GMT+02:00) Minsk</option>
+                <option value="Africa/Windhoek">(GMT+02:00) Windhoek</option>
+                <option value="Asia/Kuwait">(GMT+03:00) Kuwait, Riyadh, Baghdad</option>
+                <option value="Europe/Moscow">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
+                <option value="Africa/Nairobi">(GMT+03:00) Nairobi</option>
+                <option value="Asia/Tbilisi">(GMT+03:00) Tbilisi</option>
+                <option value="Asia/Tehran">(GMT+03:30) Tehran</option>
+                <option value="Asia/Muscat">(GMT+04:00) Abu Dhabi, Muscat</option>
+                <option value="Asia/Baku">(GMT+04:00) Baku</option>
+                <option value="Asia/Yerevan">(GMT+04:00) Yerevan</option>
+                <option value="Asia/Kabul">(GMT+04:30) Kabul</option>
+                <option value="Asia/Yekaterinburg">(GMT+05:00) Yekaterinburg</option>
+                <option value="Asia/Karachi">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+                <option value="Asia/Calcutta">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                <option value="Asia/Calcutta">(GMT+05:30) Sri Jayawardenapura</option>
+                <option value="Asia/Katmandu">(GMT+05:45) Kathmandu</option>
+                <option value="Asia/Almaty">(GMT+06:00) Almaty, Novosibirsk</option>
+                <option value="Asia/Dhaka">(GMT+06:00) Astana, Dhaka</option>
+                <option value="Asia/Rangoon">(GMT+06:30) Yangon (Rangoon)</option>
+                <option value="Asia/Bangkok">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                <option value="Asia/Krasnoyarsk">(GMT+07:00) Krasnoyarsk</option>
+                <option value="Asia/Hong_Kong">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
+                <option value="Asia/Kuala_Lumpur">(GMT+08:00) Kuala Lumpur, Singapore</option>
+                <option value="Asia/Irkutsk">(GMT+08:00) Irkutsk, Ulaan Bataar</option>
+                <option value="Australia/Perth">(GMT+08:00) Perth</option>
+                <option value="Asia/Taipei">(GMT+08:00) Taipei</option>
+                <option value="Asia/Tokyo">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
+                <option value="Asia/Seoul">(GMT+09:00) Seoul</option>
+                <option value="Asia/Yakutsk">(GMT+09:00) Yakutsk</option>
+                <option value="Australia/Adelaide">(GMT+09:30) Adelaide</option>
+                <option value="Australia/Darwin">(GMT+09:30) Darwin</option>
+                <option value="Australia/Brisbane">(GMT+10:00) Brisbane</option>
+                <option value="Australia/Canberra">(GMT+10:00) Canberra, Melbourne, Sydney</option>
+                <option value="Australia/Hobart">(GMT+10:00) Hobart</option>
+                <option value="Pacific/Guam">(GMT+10:00) Guam, Port Moresby</option>
+                <option value="Asia/Vladivostok">(GMT+10:00) Vladivostok</option>
+                <option value="Asia/Magadan">(GMT+11:00) Magadan, Solomon Is., New Caledonia</option>
+                <option value="Pacific/Auckland">(GMT+12:00) Auckland, Wellington</option>
+                <option value="Pacific/Fiji">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option>
+                <option value="Pacific/Tongatapu">(GMT+13:00) Nuku'alofa</option>
+            </select>
+            <div id="timezone-error" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="linkedin_url">LinkedIn URL</label>
+            <input placeholder="https://www.linkedin.com/in/..." value="https://www.linkedin.com/company/xebia", type="text" id="linkedin_url" name="linkedin_url">
+            <div id="linkedin_url-error" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="github_url">Github URL</label>
+            <input placeholder="https://github.com/..." type="text" id="github_url" name="github_url">
+            <div id="github_url-error" class="error"></div>
+        </div>
+
+        <div style="float: left;">
+            <label style= "display: inline;  font-size: 18px; font-weight: normal;">inline images
+            <input type="checkbox" id="with_inline_images" name="with_inline_images" checked>
+            </label>
+        </div>
+
+        <div style="float: right;">
+            <label style= "display: inline;  font-size: 18px; font-weight: normal;">dark theme
+            <input type="checkbox" id="dark_theme" name="dark_theme">
+            </label>
+        </div>
+
+
+        <div style="clear: both; padding: 12px 20px;"></div>
+
+        <div class="form-group">
+            <input style="float: right;" type="submit" name="type" value="Official signature">
+        </div>
+        <div style="clear: both; padding: 12px 20px;"></div>
+
+        <div>
+            <a style="float: right;" href="static/design.pdf">design reference</a>
+        </div>
+        <div style="clear: both;"></div>
+    </form>
+</div>
+</body>
+</html>

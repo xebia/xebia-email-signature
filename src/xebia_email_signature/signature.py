@@ -22,7 +22,7 @@ from xebia_email_signature.inline_images import inline_images
 
 
 def add_profile_picture(
-    contact_details: dict, size: tuple, file: Optional[FileStorage]
+        contact_details: dict, size: tuple, file: Optional[FileStorage]
 ) -> dict:
     """
     add the profile picture of the user, base64 encoded
@@ -34,7 +34,8 @@ def add_profile_picture(
             raise ValueError("only png and jpeg images allowed")
 
         if contact_details.get("profile_image_from_gravatar"):
-            raise ValueError("Either the profile image or use gravatar should be used")
+            raise ValueError(
+                "Either the profile image or use gravatar should be used")
 
         try:
             image = Image.open(BytesIO(file.stream.read()))
@@ -43,13 +44,15 @@ def add_profile_picture(
 
         x, y = image.size
         if x != y:
-            raise ValueError(f"profile image should be square, this one is {x}x{y}")
+            raise ValueError(
+                f"profile image should be square, this one is {x}x{y}")
         image = mask_profile_picture(image)
 
     elif contact_details.get("profile_image_from_gravatar"):
         image = load_profile_from_gravatar(contact_details.get("email"))
         if not image:
-            raise ValueError("no profile image found for email on gravatar.com")
+            raise ValueError(
+                "no profile image found for email on gravatar.com")
         image = mask_profile_picture(image)
     else:
         # no image to add
@@ -58,7 +61,8 @@ def add_profile_picture(
     if image:
         buffer = BytesIO()
         image.resize(size).save(buffer, format="png")
-        result["profile_picture"] = base64.b64encode(buffer.getvalue()).decode("ascii")
+        result["profile_picture"] = base64.b64encode(buffer.getvalue()).decode(
+            "ascii")
 
     return result
 
@@ -119,8 +123,10 @@ def add_formatted_phone(contact_details: dict) -> dict:
 def add_office_details(contact_details: dict) -> dict:
     result = {k: v for k, v in contact_details.items()}
     office = get_office_by_name(result.get("office", ""))
-    result["office_address"] = result.get("office_address", office.address_lines)
-    result["office_phone"] = result.get("office_phone", office.telephone_formatted)
+    result["office_address"] = result.get("office_address",
+                                          office.address_lines)
+    result["office_phone"] = result.get("office_phone",
+                                        office.telephone_formatted)
     return result
 
 
@@ -153,7 +159,8 @@ def _get_readable_weekdays(availability: [int]) -> str:
         groups = []
         temp = [available_days[0]]
         for i in range(1, len(available_days)):
-            if weekdays.index(available_days[i]) == weekdays.index(temp[-1]) + 1:
+            if weekdays.index(available_days[i]) == weekdays.index(
+                    temp[-1]) + 1:
                 temp.append(available_days[i])
             else:
                 groups.append(temp)
@@ -166,6 +173,38 @@ def _get_readable_weekdays(availability: [int]) -> str:
             else:
                 result += group[0] + "-" + group[-1] + ", "
         return result[:-2]
+
+
+def add_call_to_actions(contact_details: dict) -> dict:
+    result = {k: v for k, v in contact_details.items()}
+    calls_to_action = {k: v for k, v in contact_details.items() if "cta" in k}
+    formatted_calls = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in calls_to_action.keys()], default=0)) + 1)]
+    for k, v in calls_to_action.items():
+        split_key = k.split('[')
+        if split_key[2][:-1] == 'link':
+            if v and v[:8] != 'https://':
+                v = 'https://' + v
+        formatted_calls[int(split_key[1][:-1])][split_key[2][:-1]] = v
+    result["call_to_action"] = formatted_calls
+    return result
+
+
+def add_social_media(contact_details: dict) -> dict:
+    result = {k: v for k, v in contact_details.items()}
+    social_media = {k: v for k, v in contact_details.items() if "sm" in k}
+    formatted_social_media = [{} for x in range((max([int(k.split('[')[1][:-1]) for k in social_media.keys()], default=0)) + 1)]
+    for k, v in social_media.items():
+        split_key = k.split('[')
+        if split_key[2][:-1] == 'link':
+            if v and v[:8] != 'https://':
+                v = 'https://' + v
+        formatted_social_media[int(split_key[1][:-1])][split_key[2][:-1]] = v
+    formatted_social_media = [
+        sm for sm in formatted_social_media 
+        if any(sm.values()) and sm.get('icon') and sm.get('link')
+    ]
+    result["social_media"] = formatted_social_media
+    return result
 
 
 _themes = {
@@ -196,27 +235,38 @@ _themes = {
 }
 
 
-def get_theme(data: dict) -> dict:
+def get_new_theme(data: dict) -> dict:
     """
-    returns the correct theme for the data['unit']. If data['dark_theme'] == "on",
+    returns the correct theme for the data['unit']. If data['dark_theme'] ==
+    "on",
     than all colors will be black.
 
     >>> get_theme({"unit": "Xebia Cloud", "dark_theme": "on"})
-    {'default': 'black', 'full_name': 'black', 'unit': 'black', 'link': 'black', 'logo_url': 'https://assets.oblcc.com/xebia/xebia.png', 'url': 'https://xebia.com'}
+    {'default': 'black', 'full_name': 'black', 'unit': 'black', 'link':
+    'black', 'logo_url': 'https://assets.oblcc.com/xebia/xebia.png', 'url':
+    'https://xebia.com'}
     >>> get_theme({"unit": "Xebia Cloud", "dark_theme": "off"})
-    {'default': '#222222', 'full_name': '#6C1D5F', 'unit': '#5A5A5A', 'link': '#6C1D5F', 'logo_url': 'https://assets.oblcc.com/xebia/xebia.png', 'url': 'https://xebia.com'}
+    {'default': '#222222', 'full_name': '#6C1D5F', 'unit': '#5A5A5A',
+    'link': '#6C1D5F', 'logo_url':
+    'https://assets.oblcc.com/xebia/xebia.png', 'url': 'https://xebia.com'}
     >>> get_theme({"unit": "Xebia Academy", "dark_theme": "on"})
-    {'default': 'black', 'full_name': 'black', 'unit': 'black', 'link': 'black', 'logo_url': 'https://cdn.xebia.com/assets/logos/academy.png', 'url': 'https://xebia.com/training'}
+    {'default': 'black', 'full_name': 'black', 'unit': 'black', 'link':
+    'black', 'logo_url': 'https://cdn.xebia.com/assets/logos/academy.png',
+    'url': 'https://xebia.com/training'}
     >>> get_theme({"unit": "Xebia Academy", "dark_theme": "off"})
-    {'default': '#222222', 'full_name': '#6C1D5F', 'unit': '#5A5A5A', 'link': '#06A99C', 'logo_url': 'https://cdn.xebia.com/assets/logos/academy.png', 'url': 'https://xebia.com/training'}
+    {'default': '#222222', 'full_name': '#6C1D5F', 'unit': '#5A5A5A',
+    'link': '#06A99C', 'logo_url':
+    'https://cdn.xebia.com/assets/logos/academy.png', 'url':
+    'https://xebia.com/training'}
     >>> get_theme({"unit": "Xebia | Xpirit", "dark_theme": "off"})
-    {'default': '#222222', 'full_name': '#FF6200', 'unit': '#5A5A5A', 'link': '#FF6200', 'logo_url': 'https://assets.oblcc.com/xebia/xebia_xpirit_logo.png', 'url': 'https://www.xpirit.com'}
+    {'default': '#222222', 'full_name': '#FF6200', 'unit': '#5A5A5A',
+    'link': '#FF6200', 'logo_url':
+    'https://assets.oblcc.com/xebia/xebia_xpirit_logo.png', 'url':
+    'https://www.xpirit.com'}
     """
 
-    if data["office"].__contains__("Xpirit"):
-        result = copy(_themes.get("Xebia | Xpirit"))
-    else:
-        result = copy(_themes.get(data.get("unit", "default"), _themes["default"]))
+    result = copy(
+        _themes.get(data.get("unit", "default"), _themes["default"]))
 
     if data.get("dark_theme", "off") == "on":
         for k, v in result.items():
@@ -235,7 +285,8 @@ def render_template(contact_details, template_name):
     Returns:
         str: Rendered version of the template
     """
-    template_loader = jinja2.PackageLoader(package_name="xebia_email_signature")
+    template_loader = jinja2.PackageLoader(
+        package_name="xebia_email_signature")
     template_env = jinja2.Environment(loader=template_loader)
     template = template_env.get_template(template_name)
     output_text = template.render(
@@ -277,11 +328,13 @@ def ask_details():
     contact_details.update({"unit": unit})
 
     linkedin_url = input(
-        "link to your LinkedIn profile (https://www.linkedin.com/in/johndoe/): "
+        "link to your LinkedIn profile ("
+        "https://www.linkedin.com/in/johndoe/): "
     )
     contact_details.update({"linkedin_url": linkedin_url})
 
-    github_url = input("link to your github account (https://github.com/johndoe): ")
+    github_url = input(
+        "link to your github account (https://github.com/johndoe): ")
     contact_details.update({"github_url": github_url})
 
     data = add_profile_picture(contact_details, (64, 64), None)
@@ -349,7 +402,8 @@ def main():
     """
     argParser = argparse.ArgumentParser()
     argParser.add_argument(
-        "-d", "--debug", help="Enable debug mode", action=argparse.BooleanOptionalAction
+        "-d", "--debug", help="Enable debug mode",
+        action=argparse.BooleanOptionalAction
     )
 
     args = argParser.parse_args()
