@@ -114,6 +114,7 @@ def add_formatted_phone(contact_details: dict) -> dict:
                 phonenumbers.parse(phone),
                 phonenumbers.PhoneNumberFormat.INTERNATIONAL,
             )
+            result["phone_uri"] = "tel:" + result["formatted_phone"].replace(" ", "")
         except phonenumbers.phonenumberutil.NumberParseException as error:
             logging.error("%s is not a valid phone number, %s", phone, error)
             result["formatted_phone"] = phone
@@ -200,7 +201,7 @@ def add_social_media(contact_details: dict) -> dict:
                 v = 'https://' + v
         formatted_social_media[int(split_key[1][:-1])][split_key[2][:-1]] = v
     formatted_social_media = [
-        sm for sm in formatted_social_media 
+        sm for sm in formatted_social_media
         if any(sm.values()) and sm.get('icon') and sm.get('link')
     ]
     result["social_media"] = formatted_social_media

@@ -21,7 +21,7 @@
       ">
         <table style="border-collapse: collapse; width: 100%;">
           <tr style="
-              line-height: 1; 
+              line-height: 1;
               vertical-align: baseline;
             ">
             <td style="
@@ -123,7 +123,9 @@
                   font-style: normal;
                   margin: 0.1px;
                 ">
-                {{ data["formatted_phone"] | e}}
+                <a href="tel:{{ data['phone_uri'] | e }}" style="text-decoration: none; color: #5a5a5a;">
+                  {{ data["formatted_phone"] | e}}
+                </a>
               </p>
             </td>
           </tr>
