@@ -418,12 +418,35 @@ function copyIframeContent(iframe) {
   })])
 }
 
+function copyIframeContentLegacy(iframe) {
+  let docHtml = iframe.contentWindow.document.body.innerHTML;
+  let tempEl = document.createElement('div');
+
+  tempEl.innerHTML = docHtml;
+  iframe.parentNode.appendChild(tempEl)
+
+  let range = document.createRange();
+  range.selectNodeContents(tempEl);
+
+  let selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  document.execCommand('copy');
+  tempEl.remove();
+}
+
 function signatureCopyInit() {
   let btn = document.querySelector('.js-signature-copy');
   let iframe = document.querySelector('.preview-iframe');
 
   btn.addEventListener('click', (e) => {
-    copyIframeContent(iframe);
+    let isFirefox = getUserAgent().includes('firefox');
+
+    if (isFirefox) {
+      copyIframeContentLegacy(iframe);
+    } else {
+      copyIframeContent(iframe);
+    }
 
     let btnTextEl = btn.querySelector('span');
     let btnOriginalText = btnTextEl.innerText;
@@ -498,6 +521,10 @@ function setSmsPlaceholders() {
 // Utilities
 function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function getUserAgent() {
+  return navigator.userAgent.toLowerCase();
 }
 
 function scrollTo(el) {
