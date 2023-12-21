@@ -435,6 +435,11 @@ function copyIframeContentLegacy(iframe) {
   tempEl.remove();
 }
 
+function copyIframeHtml(iframe) {
+  let iframeHtml = iframe.contentWindow.document.querySelector('html')?.innerHTML;
+  navigator.clipboard.writeText(iframeHtml);
+}
+
 function signatureCopyInit() {
   let btn = document.querySelector('.js-signature-copy');
   let iframe = document.querySelector('.preview-iframe');
@@ -448,16 +453,30 @@ function signatureCopyInit() {
       copyIframeContent(iframe);
     }
 
-    let btnTextEl = btn.querySelector('span');
-    let btnOriginalText = btnTextEl.innerText;
-
-    btnTextEl.innerText = 'Copied!';
-    if (!btnTextEl.textTimeout) {
-      btnTextEl.textTimeout = setTimeout(() => {
-        btnTextEl.innerText = btnOriginalText;
-      }, 3000);
-    }
+    setBtnActionText(btn, 'Copied!');
   });
+}
+
+function signatureCopyHtmlInit() {
+  let btn = document.querySelector('.js-signature-copy-html');
+  let iframe = document.querySelector('.preview-iframe');
+
+  btn.addEventListener('click', (e) => {
+    copyIframeHtml(iframe);
+    setBtnActionText(btn, 'Copied!');
+  });
+}
+
+function setBtnActionText(btn, text) {
+  let btnTextEl = btn.querySelector('span');
+  let btnOriginalText = btnTextEl.innerText;
+
+  btnTextEl.innerText = text;
+  if (!btnTextEl.textTimeout) {
+    btnTextEl.textTimeout = setTimeout(() => {
+      btnTextEl.innerText = btnOriginalText;
+    }, 3000);
+  }
 }
 
 function iframePrepare(options = {}) {
@@ -551,6 +570,7 @@ async function toDataURL(url, callback) {
   allSelectInit();
   allMaxCharsCounterInit();
   signatureCopyInit();
+  signatureCopyHtmlInit();
   formInit();
   onSmSelectChangeInit();
 })();

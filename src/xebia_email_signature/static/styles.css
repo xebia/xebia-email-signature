@@ -338,7 +338,6 @@ input[type="email"]:focus {
 }
 
 .btn-dawn {
-  width: 100%;
   background: var(--xebia-dawn, "#9D92B2");
   color: #fff;
 }
@@ -450,6 +449,10 @@ input[type="email"]:focus {
 }
 
 /* Padding */
+.p-2 {
+  padding: 0.5rem;
+}
+
 .pb-0 {
   padding-bottom: 0;
 }
@@ -481,10 +484,30 @@ input[type="email"]:focus {
 }
 
 /* Gap */
-.gap-1 {
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
   gap: 1rem;
 }
 
 .flex-column {
   flex-direction: column;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.right-0 {
+  right: 0;
 }
