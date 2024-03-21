@@ -407,8 +407,10 @@ function getSelectedSms() {
 
 // Copy button
 function copyIframeContent(iframe) {
+  let inlineImg = getQueryParam('inline-img') === 'true';
+
   iframePrepare({
-    base64Img: !isMobile(),
+    base64Img: inlineImg, // || !isMobile(),
   });
 
   const iframeHtmlEl = iframe.contentWindow.document.querySelector('html');
@@ -481,24 +483,22 @@ function setBtnActionText(btn, text) {
 
 function iframePrepare(options = {}) {
   let iframe = document.querySelector('.preview-iframe');
-  iframe.addEventListener('load', () => {
-    let iframeDoc = iframe.contentWindow.document;
+  let iframeDoc = iframe.contentWindow.document;
 
-    let anchors = iframeDoc.querySelectorAll('a');
-    anchors?.forEach((anchor) => anchor.setAttribute('target', '_blank'));
+  let anchors = iframeDoc.querySelectorAll('a');
+  anchors?.forEach((anchor) => anchor.setAttribute('target', '_blank'));
 
-    if (options.base64Img) {
-      let images = iframeDoc.querySelectorAll('img');
-      images?.forEach((img) => {
-        toDataURL(img.src, (imageBase64) =>
-          img.setAttribute('src', imageBase64)
-        );
-      });
-    }
+  if (options.base64Img) {
+    let images = iframeDoc.querySelectorAll('img');
+    images?.forEach((img) => {
+      toDataURL(img.src, (imageBase64) =>
+        img.setAttribute('src', imageBase64)
+      );
+    });
+  }
 
-    iframe.style.height =
-      (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
-  });
+  iframe.style.height =
+    (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
 }
 
 function handleChangePhoneNumber(phoneEl) {
@@ -548,6 +548,12 @@ function getUserAgent() {
 
 function scrollTo(el) {
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function getQueryParam(name) {
+  let queryString = window.location.search;
+  let urlParams = new URLSearchParams(queryString);
+  return urlParams.get(name);
 }
 
 async function toDataURL(url, callback) {
