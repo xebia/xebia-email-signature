@@ -407,12 +407,6 @@ function getSelectedSms() {
 
 // Copy button
 function copyIframeContent(iframe) {
-  let inlineImg = getQueryParam('inline-img') === 'true';
-
-  iframePrepare({
-    base64Img: inlineImg, // || !isMobile(),
-  });
-
   const iframeHtmlEl = iframe.contentWindow.document.querySelector('html');
   navigator.clipboard.write([new ClipboardItem({
     'text/plain': new Blob([iframeHtmlEl.innerText], { type: 'text/plain' }),
@@ -447,7 +441,12 @@ function signatureCopyInit() {
   let iframe = document.querySelector('.preview-iframe');
 
   btn.addEventListener('click', (e) => {
+    let inlineImg = getQueryParam('inline-img') === 'true';
     let isFirefox = getUserAgent().includes('firefox');
+
+    iframePrepare({
+      base64Img: inlineImg, // || !isMobile(),
+    });
 
     if (isFirefox) {
       copyIframeContentLegacy(iframe);
