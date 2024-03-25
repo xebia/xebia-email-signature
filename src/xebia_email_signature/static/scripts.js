@@ -440,11 +440,11 @@ function signatureCopyInit() {
   let btn = document.querySelector('.js-signature-copy');
   let iframe = document.querySelector('.preview-iframe');
 
-  btn.addEventListener('click', (e) => {
+  btn.addEventListener('click', async (e) => {
     let inlineImg = getQueryParam('inline-img') === 'true';
     let isFirefox = getUserAgent().includes('firefox');
 
-    iframePrepare({
+    await iframePrepare({
       base64Img: inlineImg, // || !isMobile(),
     });
 
@@ -480,7 +480,7 @@ function setBtnActionText(btn, text) {
   }
 }
 
-function iframePrepare(options = {}) {
+async function iframePrepare(options = {}) {
   let iframe = document.querySelector('.preview-iframe');
   let iframeDoc = iframe.contentWindow.document;
 
@@ -489,11 +489,10 @@ function iframePrepare(options = {}) {
 
   if (options.base64Img) {
     let images = iframeDoc.querySelectorAll('img');
-    images?.forEach((img) => {
-      toDataURL(img.src, (imageBase64) =>
-        img.setAttribute('src', imageBase64)
-      );
-    });
+    await Promise.all([...images]?.map(async (img) => {
+      const imageBase64 = await toDataURL(img.src);
+      img.setAttribute('src', imageBase64);
+    }));
   }
 
   iframe.style.height =
@@ -555,18 +554,22 @@ function getQueryParam(name) {
   return urlParams.get(name);
 }
 
-async function toDataURL(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      callback(reader.result);
+async function toDataURL(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (this.status >= 200 && this.status < 300) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+        reader.readAsDataURL(xhr.response);
+      }
     };
-    reader.readAsDataURL(xhr.response);
-  };
-  xhr.open('GET', url);
-  xhr.responseType = 'blob';
-  xhr.send();
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+  });
 }
 
 
