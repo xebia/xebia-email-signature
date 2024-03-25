@@ -557,10 +557,10 @@ function getQueryParam(name) {
 async function toDataURL(url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.onload = () => {
+    xhr.onload = function () {
       if (this.status >= 200 && this.status < 300) {
         const reader = new FileReader();
-        reader.onloadend = () => {
+        reader.onloadend = function () {
           resolve(reader.result);
         };
         reader.readAsDataURL(xhr.response);
