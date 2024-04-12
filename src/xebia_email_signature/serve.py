@@ -22,7 +22,7 @@ def prepare_response(response):
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Content-Security-Policy"] = "script-src 'self'"
-    response.headers["Permission-Policy"] = "geolocation=(self 'https://signature.xebia.com'), microphone=(), "
+    response.headers["Permissions-Policy"] = "geolocation=(self 'https://signature.xebia.com'), microphone=(), "
     response.headers["Referrer-Policy"] = "no-referrer-when-downgrade"
     response.headers["X-XSS-Protection"] = "1"
     return response
