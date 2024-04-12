@@ -16,6 +16,17 @@ from xebia_email_signature.signature import add_call_to_actions, \
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
 
+@app.after_request
+def prepare_response(response):
+    response.headers["Strict-Transport-Security"] = "max-age=2592000"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Content-Security-Policy"] = "script-src 'self'"
+    response.headers["Permission-Policy"] = "geolocation=(self 'https://signature.xebia.com'), microphone=(), "
+    response.headers["Referrer-Policy"] = "no-referrer-when-downgrade"
+    response.headers["X-XSS-Protection"] = "1"
+    return response
+
 @app.route("/")
 def generate_signature():
     return render_template("form.html")
