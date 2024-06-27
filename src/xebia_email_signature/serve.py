@@ -21,8 +21,8 @@ def prepare_response(response):
     response.headers["Strict-Transport-Security"] = "max-age=2592000"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["Content-Security-Policy"] = "script-src 'self'"
-    response.headers["Permissions-Policy"] = "geolocation=(self 'https://signature.xebia.com'), microphone=(), "
+    response.headers["Content-Security-Policy"] = "script-src 'self' https://www.googletagmanager.com 'sha384-9r5e85TmdjVjyjYzZAV3TG5A6tcrmD7JjNBGfT2r1wp9txUPttent/DMiMuOwRNG'; object-src 'none'"
+    response.headers["Permissions-Policy"] = "clipboard-read=(self \"https://signature.xebia.com\"), clipboard-write=(self \"https://signature.xebia.com\")"
     response.headers["Referrer-Policy"] = "no-referrer-when-downgrade"
     response.headers["X-XSS-Protection"] = "1"
     return response
