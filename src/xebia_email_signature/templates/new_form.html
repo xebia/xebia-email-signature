@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/static/favicon.png"
+    />
+    <title>Xebia's Email Signature Generator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/base.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css"
+    />
+    <link href="/static/styles-new.css" rel="stylesheet" />
+    <!-- <script src="/static/scripts-analytics.js"></script> -->
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <!-- <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-5QJN9XVJ "
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript> -->
+    <!-- End Google Tag Manager (noscript) -->
+
+    <main class="main">
+      <img class="logo" src="/static/xebia-logo.svg" alt="Xebia logo" />
+
+      <h1 class="site-title">Email Signature Generator</h1>
+
+      <div class="form-container">
+        <form
+          class="js-form"
+          action="/signature"
+          method="post"
+          enctype="multipart/form-data"
+          target="preview-iframe"
+        >
+          <div class="form-group">
+            <label for="full_name">Name</label>
+            <input
+              type="text"
+              id="full_name"
+              name="full_name"
+              placeholder="John Doe"
+              onblur="//prefillEmail(this.value)"
+            />
+            <div id="full_name-error" class="error"></div>
+          </div>
+          <!-- <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="john.doe@xebia.com"
+              onchange="validateEmail()"
+            />
+            <div id="email-error" class="error"></div>
+          </div> -->
+
+          <div class="form-group">
+            <label for="job_role">Role</label>
+            <input
+              type="text"
+              id="job_role"
+              name="job_role"
+              placeholder="Senior Designer | Netherlands"
+            />
+            <div id="job_role-error" class="error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="unit">
+              Unit
+              <span>
+                Optional: If you leave this blank, this field is not going to
+                appear
+              </span>
+            </label>
+            <input
+              type="text"
+              id="unit"
+              name="unit"
+              placeholder="Software Technology"
+            />
+            <div id="unit-error" class="error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">
+              Phone
+              <span>
+                Optional: If you leave this blank, this field is not going to
+                appear
+              </span>
+            </label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              placeholder="+00000000000"
+              oninput="handleChangePhoneNumber(this)"
+              minlength="11"
+              maxlength="16"
+            />
+            <div id="phone-error" class="error"></div>
+          </div>
+
+          <div>
+            <div>
+              <div class="js-form-sm" data-clone-count="0">
+                <div class="form-section">
+                  <div class="form-group select-icon-picker">
+                    <label for="sm-0-icon">Icon</label>
+                    <select
+                      class="js-sm-choice"
+                      id="sm-0-icon"
+                      name="sm[0][icon]"
+                    >
+                      <option
+                        value="linkedin"
+                        data-custom-properties="/static/li-logo.png"
+                      >
+                        LinkedIn
+                      </option>
+                      <option
+                        value="x"
+                        data-custom-properties="/static/x-logo.png"
+                      >
+                        X
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group w-100">
+                    <label for="sm-0-link">Link to personal profile</label>
+                    <input
+                      type="text"
+                      class="js-sm-link"
+                      id="sm-0-link"
+                      name="sm[0][link]"
+                      placeholder="https://www.linkedin.com/in/username/"
+                    />
+                    <div
+                      id="sm-link-error"
+                      class="error js-sm-link-error"
+                    ></div>
+                  </div>
+                  <div class="form-group no-label-margin">
+                    <button
+                      class="btn btn-primary btn-trash btn-md js-form-clone-remove"
+                    >
+                      <img
+                        width="16"
+                        height="18"
+                        src="static/icon-btn-trash.svg"
+                        alt="Icon trash"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button
+                class="btn btn-md btn-dawn w-100 text-left font-semibold js-form-clone-btn"
+                data-clone-target=".js-form-sm"
+                data-clone-remove-original="true"
+                data-clone-max-items="2"
+              >
+                <img src="static/icon-btn-add.svg" alt="Icon add" />
+                Add Social Media
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <label for="cta-0-desc">Call to action</label>
+              <div class="js-form-cta" data-clone-count="0">
+                <div class="form-wrapper flex flex-column mb-4">
+                  <div class="form-section">
+                    <div class="form-group w-100">
+                      <div class="relative flex items-center">
+                        <input
+                          type="text"
+                          id="cta-0-desc"
+                          class="js-input-maxlen js-cta-desc"
+                          name="cta[0][desc]"
+                          maxlength="40"
+                          placeholder="Read our latest insights"
+                        />
+                      </div>
+                      <div
+                        id="cta-desc-error"
+                        class="error js-cta-desc-error"
+                      ></div>
+                    </div>
+                  </div>
+                  <div class="form-section">
+                    <div class="form-group select-icon-picker mb-0">
+                      <select
+                        class="js-choice"
+                        id="cta-0-icon"
+                        name="cta[0][icon]"
+                      >
+                        <option
+                          data-custom-properties="/static/cta-icon-blog.png"
+                          value="blog"
+                        >
+                          My articles in the blog
+                        </option>
+                        <!-- <option
+                          data-custom-properties="/static/cta-icon-meeting.png"
+                          value="meeting"
+                        >
+                          Schedule a meeting
+                        </option> -->
+                        <option
+                          data-custom-properties="/static/cta-icon-event.png"
+                          value="event"
+                        >
+                          Find me in the event
+                        </option>
+                        <option
+                          data-custom-properties="/static/cta-icon-award.png"
+                          value="award"
+                        >
+                          Special / Award
+                        </option>
+                      </select>
+                      <div id="cta-icon-error" class="error"></div>
+                    </div>
+                    <div class="form-group w-100 mb-0">
+                      <div class="relative flex items-center">
+                        <img
+                          class="input-icon-img"
+                          src="/static/icon-link.svg"
+                          alt="Icon Watch"
+                        />
+                        <input
+                          class="input-icon js-cta-link"
+                          type="text"
+                          id="cta-0-link"
+                          name="cta[0][link]"
+                          placeholder="https://www.xebia.com/news"
+                        />
+                      </div>
+                      <div
+                        id="cta-link-error"
+                        class="error js-cta-link-error"
+                      ></div>
+                    </div>
+                    <div class="form-group mb-0">
+                      <button
+                        class="btn btn-primary btn-trash btn-md js-form-clone-remove"
+                      >
+                        <img
+                          width="16"
+                          height="18"
+                          src="static/icon-btn-trash.svg"
+                          alt="Icon trash"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button
+                class="btn btn-dawn w-100 btn-md w-100 text-left font-semibold js-form-clone-btn"
+                data-clone-target=".js-form-cta"
+                data-clone-remove-original="true"
+                data-clone-max-items="2"
+              >
+                <img src="static/icon-btn-add.svg" alt="Icon add" />
+                Add Call to Action
+              </button>
+            </div>
+          </div>
+
+          <div class="form-bottom">
+            <a
+              class="btn btn-outline btn-small"
+              href="https://xebiagroup.sharepoint.com/sites/XebiaCreativeService/SitePages/Signature.aspx"
+              target="_blank"
+            >
+              <img src="/static/icon-watch.svg" alt="Icon Watch" />
+              Design Guidelines
+            </a>
+
+            <input
+              class="btn btn-primary ml-auto"
+              type="submit"
+              value="Create"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="preview-container hidden">
+        <h2 class="preview-header">Preview:</h2>
+        <iframe
+          class="preview-iframe"
+          name="preview-iframe"
+          src="/signature"
+          height="100%"
+          width="100%"
+          allow="clipboard-write"
+        ></iframe>
+        <div class="flex justify-end gap-2 absolute top-0 right-0 w-100 p-2">
+          <button class="btn btn-tiny btn-dawn js-signature-copy-html">
+            <img
+              width="14"
+              height="16"
+              src="/static/icon-copy.png"
+              alt="Copy icon"
+            />
+            <span>Copy signature HTML</span>
+          </button>
+          <button class="btn btn-tiny btn-primary js-signature-copy">
+            <img
+              width="14"
+              height="16"
+              src="/static/icon-copy.png"
+              alt="Copy icon"
+            />
+            <span>Copy signature</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"
+      integrity="sha384-9r5e85TmdjVjyjYzZAV3TG5A6tcrmD7JjNBGfT2r1wp9txUPttent/DMiMuOwRNG"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/static/scripts-new.js"></script>
+  </body>
+</html>

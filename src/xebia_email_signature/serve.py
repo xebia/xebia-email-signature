@@ -76,6 +76,10 @@ def create_old_signature():
         else response
     )
 
+@app.route("/new")
+def generate_new_signature():
+    return render_template("new_form.html")
+
 
 def main():
     app.run(port=int(os.getenv("PORT", 8080)))
