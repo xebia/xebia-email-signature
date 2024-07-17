@@ -407,10 +407,6 @@ function getSelectedSms() {
 
 // Copy button
 function copyIframeContent(iframe) {
-  iframePrepare({
-    base64Img: !isMobile(),
-  });
-
   const iframeHtmlEl = iframe.contentWindow.document.querySelector('html');
   navigator.clipboard.write([new ClipboardItem({
     'text/plain': new Blob([iframeHtmlEl.innerText], { type: 'text/plain' }),
@@ -418,45 +414,89 @@ function copyIframeContent(iframe) {
   })])
 }
 
+function copyIframeContentLegacy(iframe) {
+  let docHtml = iframe.contentWindow.document.body.innerHTML;
+  let tempEl = document.createElement('div');
+
+  tempEl.innerHTML = docHtml;
+  iframe.parentNode.appendChild(tempEl)
+
+  let range = document.createRange();
+  range.selectNodeContents(tempEl);
+
+  let selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  document.execCommand('copy');
+  tempEl.remove();
+}
+
+function copyIframeHtml(iframe) {
+  let iframeHtml = iframe.contentWindow.document.querySelector('html')?.innerHTML;
+  navigator.clipboard.writeText(iframeHtml);
+}
+
 function signatureCopyInit() {
   let btn = document.querySelector('.js-signature-copy');
   let iframe = document.querySelector('.preview-iframe');
 
-  btn.addEventListener('click', (e) => {
-    copyIframeContent(iframe);
+  btn.addEventListener('click', async (e) => {
+    let inlineImg = getQueryParam('inline-img') === 'true';
+    let isFirefox = getUserAgent().includes('firefox');
 
-    let btnTextEl = btn.querySelector('span');
-    let btnOriginalText = btnTextEl.innerText;
+    await iframePrepare({
+      base64Img: inlineImg, // || !isMobile(),
+    });
 
-    btnTextEl.innerText = 'Copied!';
-    if (!btnTextEl.textTimeout) {
-      btnTextEl.textTimeout = setTimeout(() => {
-        btnTextEl.innerText = btnOriginalText;
-      }, 3000);
+    if (isFirefox) {
+      copyIframeContentLegacy(iframe);
+    } else {
+      copyIframeContent(iframe);
     }
+
+    setBtnActionText(btn, 'Copied!');
   });
 }
 
-function iframePrepare(options = {}) {
+function signatureCopyHtmlInit() {
+  let btn = document.querySelector('.js-signature-copy-html');
   let iframe = document.querySelector('.preview-iframe');
-  iframe.addEventListener('load', () => {
-    let iframeDoc = iframe.contentWindow.document;
 
-    let anchors = iframeDoc.querySelectorAll('a');
-    anchors?.forEach((anchor) => anchor.setAttribute('target', '_blank'));
-
-    if (options.base64Img) {
-      let images = iframeDoc.querySelectorAll('img');
-      images?.forEach((img) => {
-        toDataURL(img.src, (imageBase64) =>
-          img.setAttribute('src', imageBase64)
-        );
-      });
-    }
-
-    iframe.style.height =
-      (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
+  btn.addEventListener('click', (e) => {
+    copyIframeHtml(iframe);
+    setBtnActionText(btn, 'Copied!');
   });
+}
+
+function setBtnActionText(btn, text) {
+  let btnTextEl = btn.querySelector('span');
+  let btnOriginalText = btnTextEl.innerText;
+
+  btnTextEl.innerText = text;
+  if (!btnTextEl.textTimeout) {
+    btnTextEl.textTimeout = setTimeout(() => {
+      btnTextEl.innerText = btnOriginalText;
+    }, 3000);
+  }
+}
+
+async function iframePrepare(options = {}) {
+  let iframe = document.querySelector('.preview-iframe');
+  let iframeDoc = iframe.contentWindow.document;
+
+  let anchors = iframeDoc.querySelectorAll('a');
+  anchors?.forEach((anchor) => anchor.setAttribute('target', '_blank'));
+
+  if (options.base64Img) {
+    let images = iframeDoc.querySelectorAll('img');
+    await Promise.all([...images]?.map(async (img) => {
+      const imageBase64 = await toDataURL(img.src);
+      img.setAttribute('src', imageBase64);
+    }));
+  }
+
+  iframe.style.height =
+    (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
 }
 
 function handleChangePhoneNumber(phoneEl) {
@@ -500,22 +540,36 @@ function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
+function getUserAgent() {
+  return navigator.userAgent.toLowerCase();
+}
+
 function scrollTo(el) {
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-async function toDataURL(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      callback(reader.result);
+function getQueryParam(name) {
+  let queryString = window.location.search;
+  let urlParams = new URLSearchParams(queryString);
+  return urlParams.get(name);
+}
+
+async function toDataURL(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          resolve(reader.result);
+        };
+        reader.readAsDataURL(xhr.response);
+      }
     };
-    reader.readAsDataURL(xhr.response);
-  };
-  xhr.open('GET', url);
-  xhr.responseType = 'blob';
-  xhr.send();
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+  });
 }
 
 
@@ -524,6 +578,7 @@ async function toDataURL(url, callback) {
   allSelectInit();
   allMaxCharsCounterInit();
   signatureCopyInit();
+  signatureCopyHtmlInit();
   formInit();
   onSmSelectChangeInit();
 })();

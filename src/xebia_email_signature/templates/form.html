@@ -1,21 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Google Tag Manager -->
-    <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-5QJN9XVJ');
-    </script>
-    <!-- End Google Tag Manager -->
-
     <meta charset="UTF-8" />
     <meta name="robots" content="noindex" />
     <link
@@ -34,6 +19,7 @@
       href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css"
     />
     <link href="/static/styles.css" rel="stylesheet" />
+    <script src="/static/scripts-analytics.js"></script>
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -188,7 +174,7 @@
 
             <div class="form-group">
               <button
-                class="btn btn-md btn-dawn text-left font-semibold js-form-clone-btn"
+                class="btn btn-md btn-dawn w-100 text-left font-semibold js-form-clone-btn"
                 data-clone-target=".js-form-sm"
                 data-clone-remove-original="true"
                 data-clone-max-items="2"
@@ -295,7 +281,7 @@
 
             <div class="form-group">
               <button
-                class="btn btn-dawn btn-md w-100 text-left font-semibold js-form-clone-btn"
+                class="btn btn-dawn w-100 btn-md w-100 text-left font-semibold js-form-clone-btn"
                 data-clone-target=".js-form-cta"
                 data-clone-remove-original="true"
                 data-clone-max-items="2"
@@ -334,21 +320,34 @@
           width="100%"
           allow="clipboard-write"
         ></iframe>
-        <button
-          class="preview-btn-copy btn btn-tiny btn-primary js-signature-copy"
-        >
-          <img
-            width="14"
-            height="16"
-            src="/static/icon-copy.png"
-            alt="Copy icon"
-          />
-          <span>Copy signature</span>
-        </button>
+        <div class="flex justify-end gap-2 absolute top-0 right-0 w-100 p-2">
+          <button class="btn btn-tiny btn-dawn js-signature-copy-html">
+            <img
+              width="14"
+              height="16"
+              src="/static/icon-copy.png"
+              alt="Copy icon"
+            />
+            <span>Copy signature HTML</span>
+          </button>
+          <button class="btn btn-tiny btn-primary js-signature-copy">
+            <img
+              width="14"
+              height="16"
+              src="/static/icon-copy.png"
+              alt="Copy icon"
+            />
+            <span>Copy signature</span>
+          </button>
+        </div>
       </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"
+      integrity="sha384-9r5e85TmdjVjyjYzZAV3TG5A6tcrmD7JjNBGfT2r1wp9txUPttent/DMiMuOwRNG"
+      crossorigin="anonymous"
+    ></script>
     <script src="/static/scripts.js"></script>
   </body>
 </html>

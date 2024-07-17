@@ -44,5 +44,13 @@ docker run -d -p 8080:8080 --rm xebia-signature
 open http://localhost:8080
 ```
 
+## Restart service locally
+```shell
+docker stop $(docker ps -a -q --filter ancestor=xebia-signature --format="{{.ID}}")
+docker build -txebia-signature .
+docker run -d -p 8080:8080 --rm xebia-signature
+open http://localhost:8080
+```
+
 Fill in the fields and press the button!
 
