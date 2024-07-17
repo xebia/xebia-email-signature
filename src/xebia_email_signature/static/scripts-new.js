@@ -211,6 +211,7 @@ function allCloneInit() {
       cloneFormGroup(cloneTarget, cloneOptions);
       updateCloneBtn(el);
       setSmsPlaceholders();
+      previewHide();
     });
   });
 
@@ -244,6 +245,7 @@ function cloneRemoveBtnInit(btn) {
 
     allSelectInit();
     updateCloneBtn(cloneBtn);
+    previewHide();
   });
 }
 
@@ -258,6 +260,10 @@ function handleFormSubmit(e) {
   }
 }
 
+function previewHide() {
+  let previewContainer = document.querySelector('.preview-container');
+  previewContainer?.classList.add('hidden');
+}
 
 // Chars counter
 function allMaxCharsCounterInit() {
@@ -512,9 +518,10 @@ function formInit() {
 function onSmSelectChangeInit() {
   let smSelects = document.querySelectorAll('select[name^=sm]');
   smSelects.forEach((smSelect) =>
-    smSelect.addEventListener('change', (e) =>
-      setSmPlaceholder(smSelect)
-    )
+    smSelect.addEventListener('change', (e) => {
+      setSmPlaceholder(smSelect);
+      previewHide();
+    })
   );
 }
 
@@ -532,6 +539,11 @@ function setSmPlaceholder(smSelect) {
 function setSmsPlaceholders() {
   let smSelects = document.querySelectorAll('select[name^=sm]');
   smSelects?.forEach(smSelect => setSmPlaceholder(smSelect))
+}
+
+function previewHideOnInputInit() {
+  let formEl = document.querySelector('form');
+  formEl.addEventListener('change', () => previewHide());
 }
 
 
@@ -581,4 +593,5 @@ async function toDataURL(url) {
   signatureCopyHtmlInit();
   formInit();
   onSmSelectChangeInit();
+  previewHideOnInputInit();
 })();
