@@ -197,7 +197,7 @@ def add_social_media(contact_details: dict) -> dict:
         split_key = k.split('[')
         if split_key[2][:-1] == 'link':
             if v and v[:8] != 'https://':
-                v = 'https://' + v                
+                v = 'https://' + v
         formatted_social_media[int(split_key[1][:-1])][split_key[2][:-1]] = v
     formatted_social_media = [
         sm for sm in formatted_social_media 
