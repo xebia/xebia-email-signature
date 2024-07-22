@@ -41,7 +41,7 @@
       <div class="form-container">
         <form
           class="js-form"
-          action="/new/signature"
+          action="/signature"
           method="post"
           enctype="multipart/form-data"
           target="preview-iframe"
@@ -290,6 +290,23 @@
                 Add Call to Action
               </button>
             </div>
+          </div>
+
+          <div
+            class="form-group select-icon-picker select-icon-picker__email-client"
+          >
+            <label for="email-client">
+              Email client
+              <span>
+                Choose your email client to generate signature properly
+              </span>
+            </label>
+            <select
+              class="js-ec-choice"
+              id="ec-0-icon"
+              name="ec[0][icon]"
+            ></select>
+            <div id="ec-icon-error" class="error"></div>
           </div>
 
           <div class="form-bottom">

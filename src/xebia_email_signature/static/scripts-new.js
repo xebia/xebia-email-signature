@@ -31,6 +31,15 @@ function validateForm() {
     })
   }
 
+  let emailClientEl = document.getElementById('ec-0-icon');
+  if (emailClientEl?.value.trim() === 'null') {
+    errors.push({
+      target: document.getElementById('ec-icon-error'),
+      msg: 'Please select your email client',
+      input: emailClientEl
+    })
+  }
+
   let phoneEl = document.getElementById('phone');
   if (phoneEl && !validatePhoneNumber(phoneEl.value)) {
     errors.push({
@@ -292,6 +301,7 @@ function allMaxCharsCounterInit() {
 // ChoicesJS
 function selectInit(el) {
   let choicesCount = el.options.length;
+  let elementId = el.id;
 
   el.originalInnerHTML = el.innerHTML;
   el.choices = new Choices(el, {
@@ -318,9 +328,10 @@ function selectInit(el) {
                 ${data.active ? 'aria-selected="true"' : ''}
                 ${data.disabled ? 'aria-disabled="true"' : ''}
               >
-            <img class="select-item-icon" width="24" height="24" src="${String(
+              ${iconData ? `<img class="select-item-icon" width="24" height="24" src="${String(
               iconData
-            )}" alt="Icon ${label}">
+            )}" alt="Icon ${label}" />` : ``}
+              ${elementId === 'ec-0-icon' ? `<span class='choices__item--label'>${label}</span>` : ''}
               </div>
             `);
         },
@@ -358,6 +369,13 @@ function selectInit(el) {
 function allSelectInit() {
   let selectEls = document.querySelectorAll('.js-choice');
   selectEls.forEach((select) => {
+    if (!select.choices) {
+      selectInit(select);
+    }
+  });
+
+  let ecSelectEls = document.querySelectorAll('.js-ec-choice');
+  ecSelectEls.forEach((select) => {
     if (!select.choices) {
       selectInit(select);
     }
@@ -546,6 +564,35 @@ function previewHideOnInputInit() {
   formEl.addEventListener('change', () => previewHide());
 }
 
+// Email client dropdown data init
+function emailClientDropdownDataInit() {
+  const emailClientSelector = document.querySelector('#ec-0-icon');
+
+  if (!emailClientSelector) { return };
+
+  emailClientSelector.options.length = 0
+
+  const options = [
+    { id: 0, value: null, img: null, label: '--- Please Select ---' },
+    { id: 1, value: 'outlook-mac', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Mac' },
+    { id: 2, value: 'outlook-mac-legacy', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Mac Legacy' },
+    { id: 3, value: 'outlook-win', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Windows' },
+    { id: 4, value: 'outlook-win-legacy', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Windows Legacy' },
+    { id: 5, value: 'native-win', img: '/static/windows-native-mail-icon.png', label: 'Windows native Email Client' },
+    { id: 6, value: 'native-mac', img: '/static/mac-native-mail-icon.png', label: 'Mac navite Mail App' },
+    { id: 7, value: 'mobile-outlook-ios', img: '/static/ms-outlook-icon.png', label: 'Mobile Outlook iOS' },
+    { id: 8, value: 'mobile-outlook-and', img: '/static/ms-outlook-icon.png', label: 'Mobile Outlook for Android' },
+    { id: 9, value: 'mobile-native-ios', img: '/static/mac-native-mail-icon.png', label: 'Mobile Mail (native) app for iOS' },
+  ]
+
+  options.map(({ value, img, label }) => {
+    let option = document.createElement("option");
+    option.value = value;
+    option.setAttribute('data-custom-properties', img);
+    option.append(label);
+    emailClientSelector.append(option);
+  })
+}
 
 // Utilities
 function isMobile() {
@@ -586,6 +633,7 @@ async function toDataURL(url) {
 
 
 (() => {
+  emailClientDropdownDataInit();
   allCloneInit();
   allSelectInit();
   allMaxCharsCounterInit();

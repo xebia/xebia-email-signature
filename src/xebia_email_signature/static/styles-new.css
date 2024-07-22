@@ -195,6 +195,14 @@ input[type="email"]:focus {
   flex-shrink: 0;
 }
 
+.select-icon-picker__email-client {
+  width: 100%;
+}
+
+.select-icon-picker__email-client .choices__list--dropdown {
+  width: 100% !important;
+}
+
 .error {
   color: red;
   font-size: 14px;
@@ -277,6 +285,10 @@ input[type="email"]:focus {
 .choices__item--selectable {
   display: flex;
   align-items: center;
+}
+
+.choices__item--label {
+  padding-left: 10px;
 }
 
 
