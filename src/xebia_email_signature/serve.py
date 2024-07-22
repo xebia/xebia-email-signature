@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Flask, request, render_template
 
@@ -15,6 +16,12 @@ from xebia_email_signature.signature import add_call_to_actions, \
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
+
+def load_json_file(json_path):
+    current_path = os.path.abspath(os.path.dirname(__file__))
+    path = os.path.join(current_path, json_path)
+    with open(path, 'r') as f:
+        return json.load(f)
 
 @app.after_request
 def prepare_response(response):
@@ -94,6 +101,7 @@ def create_new_signature():
     data = add_call_to_actions(data)
     data = add_social_media(data)
     data['scheme'] = request.headers.get('X-Forwarded-Proto', 'http')
+    data['base64_images'] = load_json_file('static/base64-images.json')
 
     email_client = request.form.get("email_client")
 
