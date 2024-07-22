@@ -291,7 +291,6 @@ input[type="email"]:focus {
   width: 264px !important;
   border-color: var(--xebia-tranquil-velvet, #6C1D5F) !important;
   border-radius: 5px;
-  padding: 0 12px;
 }
 
 .choices__list--single {
@@ -305,9 +304,13 @@ input[type="email"]:focus {
 
   font-size: 18px !important;
   line-height: 20px;
-  padding: 12px 0 !important;
+  padding: 12px !important;
 
   cursor: pointer;
+}
+
+.choices__item:hover {
+  background-color: #f6f4f6;
 }
 
 .choices__item:not(:last-child) {
@@ -324,7 +327,8 @@ input[type="email"]:focus {
 }
 
 
-.select-choice-icon {
+.select-choice-icon,
+.select-icon-picker__email-client img {
   width: 20px;
   height: 20px;
 }

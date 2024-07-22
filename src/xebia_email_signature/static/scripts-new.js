@@ -31,7 +31,7 @@ function validateForm() {
     })
   }
 
-  let emailClientEl = document.getElementById('ec-0-icon');
+  let emailClientEl = document.getElementById('email-client');
   if (emailClientEl?.value.trim() === 'null') {
     errors.push({
       target: document.getElementById('ec-icon-error'),
@@ -316,6 +316,7 @@ function selectInit(el) {
       return {
         item: ({ classNames }, data) => {
           const { customProperties: iconData, label } = data;
+          console.log(label, iconData);
           return template(`
               <div
                 class="
@@ -334,7 +335,7 @@ function selectInit(el) {
               ${iconData ? `<img class="select-item-icon" width="24" height="24" src="${String(
               iconData
             )}" alt="Icon ${label}" />` : ``}
-              ${elementId === 'ec-0-icon' ? `<span class='choices__item--label'>${label}</span>` : ''}
+              ${elementId === 'email-client' ? `<span class='choices__item--label'>${label}</span>` : ''}
               </div>
             `);
         },
@@ -353,9 +354,9 @@ function selectInit(el) {
             }
                 id="${data.elementId}"
               >
-                <img class="select-choice-icon" src="${String(
+                ${iconData ? `<img class="select-choice-icon" width="24" height="24" src="${String(
               iconData
-            )}" alt="Icon ${label}">
+            )}" alt="Icon ${label}">` : ``}
                 ${String(data.label)}
               </div>
             `);
@@ -364,10 +365,22 @@ function selectInit(el) {
     },
   });
 
+  removeAnyNullOption(el.choices.choiceList.element.children);
+
   if (choicesCount < 2) {
     el.closest('.choices').classList.add('is-disabled');
   }
+
 }
+
+function removeAnyNullOption(optionElements) {
+  for (const optionElement of optionElements) {
+    if (optionElement.dataset.value === 'null') {
+      optionElement.remove();
+    }
+  }
+}
+
 
 function allSelectInit() {
   let selectEls = document.querySelectorAll('.js-choice');
@@ -558,7 +571,7 @@ function previewHideOnInputInit() {
 
 // Email client dropdown data init
 function emailClientDropdownDataInit() {
-  const emailClientSelector = document.querySelector('#ec-0-icon');
+  const emailClientSelector = document.querySelector('.js-ec-choice');
 
   if (!emailClientSelector) { return };
 
