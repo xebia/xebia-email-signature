@@ -99,9 +99,9 @@ def create_new_signature():
 
     allowed_clients = [
         'outlook-mac',
-        'outlook-mac-legacy',
+        'outlook-new-mac',
         'outlook-win',
-        'outlook-win-legacy',
+        'outlook-new-win',
         'native-win',
         'native-mac',
         'mobile-outlook-ios',
