@@ -580,9 +580,9 @@ function emailClientDropdownDataInit() {
   const options = [
     { id: 0, value: null, img: null, label: '--- Please Select ---' },
     { id: 1, value: 'outlook-mac', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Mac' },
-    { id: 2, value: 'outlook-mac-legacy', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Mac Legacy' },
+    { id: 2, value: 'outlook-new-mac', img: '/static/ms-outlook-icon.png', label: 'MS Outlook New for Mac' },
     { id: 3, value: 'outlook-win', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Windows' },
-    { id: 4, value: 'outlook-win-legacy', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Windows Legacy' },
+    { id: 4, value: 'outlook-new-win', img: '/static/ms-outlook-icon.png', label: 'MS Outlook New for Windows' },
     { id: 5, value: 'native-win', img: '/static/windows-native-mail-icon.png', label: 'Windows native Email Client' },
     { id: 6, value: 'native-mac', img: '/static/mac-native-mail-icon.png', label: 'Mac navite Mail App' },
     { id: 7, value: 'mobile-outlook-ios', img: '/static/ms-outlook-icon.png', label: 'Mobile Outlook iOS' },
