@@ -93,19 +93,36 @@ body {
 }
 
 .main {
-  max-width: 601px;
+  display: flex;
+  flex-direction: column;
+
+  max-width: 633px;
   margin: 0 auto;
   padding: 62px 0 82px;
+
+  @media (max-width: 768px) {
+    padding-top: 32px 0 48px;
+  }
 }
 
 .logo {
   margin-bottom: 48px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 24px;
+    max-width: 200px;
+  }
 }
 
 .site-title {
   color: var(--xebia-light-blueish-gray, #F7F8FC);
   font-weight: 600;
   margin: 0 0 48px;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+    margin: 0 0 24px;
+  }
 }
 
 .form-section {
@@ -120,12 +137,22 @@ body {
   border-radius: 11px;
 }
 
+.header,
+.form-container,
+.preview-container {
+  margin: 0 16px;
+}
+
 .preview-container,
 .form-container {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 32px;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 }
 
 .form-bottom {
@@ -153,6 +180,11 @@ label {
   font-weight: 600;
 
   margin-bottom: 11px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    ;
+  }
 }
 
 label span {
@@ -400,8 +432,10 @@ input[type="email"]:focus {
 
 .preview-container {
   position: relative;
-  width: 420px;
-  margin: 48px auto 0;
+  align-self: center;
+
+  max-width: 420px;
+  margin-top: 48px;
   padding: 40px;
 }
 
