@@ -468,12 +468,9 @@ function signatureCopyInit() {
   let iframe = document.querySelector('.preview-iframe');
 
   btn.addEventListener('click', async (e) => {
-    let inlineImg = getQueryParam('inline-img') === 'true';
     let isFirefox = getUserAgent().includes('firefox');
 
-    await iframePrepare({
-      base64Img: inlineImg, // || !isMobile(),
-    });
+    await iframePrepare();
 
     if (isFirefox) {
       copyIframeContentLegacy(iframe);
@@ -513,14 +510,6 @@ async function iframePrepare(options = {}) {
 
   let anchors = iframeDoc.querySelectorAll('a');
   anchors?.forEach((anchor) => anchor.setAttribute('target', '_blank'));
-
-  if (options.base64Img) {
-    let images = iframeDoc.querySelectorAll('img');
-    await Promise.all([...images]?.map(async (img) => {
-      const imageBase64 = await toDataURL(img.src);
-      img.setAttribute('src', imageBase64);
-    }));
-  }
 
   iframe.style.height =
     (iframeDoc.body.scrollHeight || 150) + 16 + 'px';
