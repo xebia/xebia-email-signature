@@ -262,7 +262,10 @@ function handleFormSubmit(e) {
   let previewContainer = document.querySelector('.preview-container');
 
   if (validateForm()) {
-    previewContainer?.classList.remove('hidden');
+    setTimeout(() => {
+      previewContainer?.classList.remove('hidden');
+      scrollTo(previewContainer);
+    }, 300)
   } else {
     e.preventDefault();
     previewContainer?.classList.add('hidden');
