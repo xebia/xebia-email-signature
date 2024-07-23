@@ -76,6 +76,10 @@ def create_old_signature():
         else response
     )
 
+@app.route("/new")
+def generate_new_signature():
+    return render_template("new_form.html")
+
 
 def main():
     app.run(port=int(os.getenv("PORT", 8080)))
@@ -83,3 +87,32 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+@app.route("/new/signature", methods=["POST"])
+def create_new_signature():
+    data = add_formatted_phone(request.form)
+    data = add_call_to_actions(data)
+    data = add_social_media(data)
+    data['scheme'] = request.headers.get('X-Forwarded-Proto', 'http')
+
+    email_client = request.form.get("email_client")
+
+    allowed_clients = [
+        'outlook-mac',
+        'outlook-new-mac',
+        'outlook-win',
+        'outlook-new-win',
+        'native-win',
+        'native-mac',
+        'mobile-outlook-ios',
+        'mobile-outlook-and',
+        'mobile-native-ios'
+    ]
+
+    if email_client in allowed_clients:
+        jinjafile = "signature-" + email_client + ".html.jinja"
+    else:
+        jinjafile = "no_client.html"
+
+    response = render_template(jinjafile, data=data, theme=get_new_theme(data))
+    return response
