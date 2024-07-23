@@ -34,7 +34,7 @@ function validateForm() {
   let emailClientEl = document.getElementById('email-client');
   if (emailClientEl?.value.trim() === 'null') {
     errors.push({
-      target: document.getElementById('ec-icon-error'),
+      target: document.getElementById('email-client-error'),
       msg: 'Please select your email client',
       input: emailClientEl
     })
