@@ -380,7 +380,7 @@ function allMaxCharsCounterInit() {
 
 
 // ChoicesJS
-function selectInit(el) {
+function selectInit(el, customOptions = {}) {
   let choicesCount = el.options.length;
   let elementId = el.id;
 
@@ -440,6 +440,7 @@ function selectInit(el) {
         },
       };
     },
+    ...customOptions
   });
 
   removeAnyNullOption(el.choices.choiceList.element.children);
@@ -470,7 +471,9 @@ function allSelectInit() {
   let ecSelectEls = document.querySelectorAll('.js-ec-choice');
   ecSelectEls.forEach((select) => {
     if (!select.choices) {
-      selectInit(select);
+      selectInit(select, {
+        shouldSort: false
+      });
     }
   });
 
