@@ -124,3 +124,25 @@ def create_new_signature():
 
     response = render_template(jinjafile, data=data, theme=get_new_theme(data))
     return response
+
+@app.route("/new/signature-eml", methods=["GET"])
+def create_new_signature_eml():
+    data = add_formatted_phone(request.args)
+    data = add_call_to_actions(data)
+    data = add_social_media(data)
+    data['scheme'] = request.headers.get('X-Forwarded-Proto', 'http')
+    data['base64_images'] = load_json_file('static/base64-images.json')
+
+    email_client = request.args.get("email_client")
+
+    allowed_clients = [
+        'native-mac'
+    ]
+
+    if email_client in allowed_clients:
+        jinjafile = "signature-" + email_client + ".eml.jinja"
+    else:
+        jinjafile = "no_client.html"
+
+    response = render_template(jinjafile, data=data, theme=get_new_theme(data))
+    return response

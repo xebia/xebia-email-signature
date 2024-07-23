@@ -334,11 +334,25 @@ function applyPreviewOptions() {
     }
 
     if (clientOptions.showDownloadBtn) {
+      prepareDownloadBtn();
       downloadBtn.style.display = '';
     } else {
       copyBtn.style.display = 'none';
     }
   }
+}
+
+function prepareDownloadBtn() {
+  let form = document.querySelector('form');
+  let downloadBtn = document.querySelector('.js-signature-download');
+  let formDataEntries = new FormData(form).entries();
+
+  let params = new URLSearchParams();
+  for (const [name, value] of formDataEntries) {
+    params.append(name, value);
+  }
+
+  downloadBtn.href = `/new/signature-eml?${params.toString()}`;
 }
 
 // Chars counter
