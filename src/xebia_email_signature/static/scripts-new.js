@@ -273,7 +273,7 @@ function handleFormSubmit(e) {
 }
 
 function manualHide() {
-  let manualEls = document.querySelectorAll(`[class^=js-preview-manual]`);
+  let manualEls = document.querySelectorAll(`[class*=js-preview-manual]`);
   manualEls?.forEach(el => el.classList.add('hidden'));
 }
 
