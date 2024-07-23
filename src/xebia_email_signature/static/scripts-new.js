@@ -280,7 +280,6 @@ function manualHide() {
 function manualShow() {
   let emailClient = document.getElementById('email-client')?.value;
   let manualEl = document.querySelector(`.js-preview-manual-${emailClient}`);
-  console.log('manual show', emailClient, manualEl);
   manualEl?.classList.remove('hidden');
 }
 
@@ -443,6 +442,9 @@ function selectInit(el, customOptions = {}) {
     ...customOptions
   });
 
+  el.addEventListener('change', () => {
+    removeAnyNullOption(el.choices.choiceList.element.children);
+  });
   removeAnyNullOption(el.choices.choiceList.element.children);
 
   if (choicesCount < 2) {
