@@ -97,6 +97,8 @@ if __name__ == "__main__":
 
 @app.route("/new/signature", methods=["POST"])
 def create_new_signature():
+    current_path = os.path.abspath(os.path.dirname(__file__))
+    
     data = add_formatted_phone(request.form)
     data = add_call_to_actions(data)
     data = add_social_media(data)
@@ -120,7 +122,10 @@ def create_new_signature():
     if email_client in allowed_clients:
         jinjafile = "signature-" + email_client + ".html.jinja"
     else:
-        jinjafile = "no_client.html"
+        jinjafile = "wrong_client.html"
+
+    if not os.path.exists(os.path.join(current_path, 'templates', jinjafile)):
+        jinjafile = "signature.html.jinja"
 
     response = render_template(jinjafile, data=data, theme=get_new_theme(data))
     return response
