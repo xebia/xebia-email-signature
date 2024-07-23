@@ -330,9 +330,24 @@
         </form>
       </div>
       <div class="preview-container hidden">
-        <div class="js-preview-manual-native-mac">
+        <div class="preview-manual js-preview-manual-native-mac">
           <h2 class="preview-header">Installation guide:</h2>
-          <ol></ol>
+          <ol>
+            <li>
+              Click <strong>Download</strong> button above and save your
+              signature file.
+            </li>
+            <li>
+              Following
+              <a
+                href="https://www.hubspot.com/email-signature-generator/add-html-signature-mail-mac"
+                target="_blank"
+              >
+                this article
+              </a>
+              add and replace signature content using downloaded file.
+            </li>
+          </ol>
         </div>
 
         <h2 class="preview-header">Preview:</h2>
@@ -363,9 +378,13 @@
             />
             <span>Copy signature</span>
           </button>
-          <button class="btn btn-tiny btn-primary js-signature-download">
+          <a
+            href="#"
+            class="btn btn-tiny btn-primary js-signature-download"
+            download
+          >
             <span>Download</span>
-          </button>
+          </a>
         </div>
       </div>
     </main>

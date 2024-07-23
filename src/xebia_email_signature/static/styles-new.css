@@ -92,6 +92,18 @@ body {
   background: url('/static/main-bg.svg') no-repeat fixed 0 0/cover var(--xebia-tranquil-velvet, #6C1D5F);
 }
 
+a {
+  color: #6c1d5f;
+}
+
+a:focus {
+  color: #bb32a5;
+}
+
+a:visited {
+  color: #42113a;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -167,6 +179,11 @@ body {
   flex-direction: column;
   justify-content: flex-end;
   margin-bottom: 18px;
+}
+
+.preview-manual ol {
+  padding-left: 1rem;
+  font-size: .88rem;
 }
 
 label {
