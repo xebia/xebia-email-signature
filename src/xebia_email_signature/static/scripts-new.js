@@ -263,18 +263,82 @@ function handleFormSubmit(e) {
 
   if (validateForm()) {
     setTimeout(() => {
-      previewContainer?.classList.remove('hidden');
+      previewShow();
       scrollTo(previewContainer);
     }, 300)
   } else {
     e.preventDefault();
-    previewContainer?.classList.add('hidden');
+    previewHide();
   }
 }
 
+function manualHide() {
+  let manualEls = document.querySelectorAll(`[class^=js-preview-manual]`);
+  manualEls?.forEach(el => el.classList.add('hidden'));
+}
+
+function manualShow() {
+  let emailClient = document.getElementById('email-client')?.value;
+  let manualEl = document.querySelector(`.js-preview-manual-${emailClient}`);
+  console.log('manual show', emailClient, manualEl);
+  manualEl?.classList.remove('hidden');
+}
+
 function previewHide() {
+  manualHide();
   let previewContainer = document.querySelector('.preview-container');
   previewContainer?.classList.add('hidden');
+}
+
+function previewShow() {
+  applyPreviewOptions();
+  manualShow();
+
+  let previewContainer = document.querySelector('.preview-container');
+  previewContainer?.classList.remove('hidden');
+}
+
+function applyPreviewOptions() {
+  let copyBtn = document.querySelector('.js-signature-copy');
+  let copyHtmlBtn = document.querySelector('.js-signature-copy-html');
+  let downloadBtn = document.querySelector('.js-signature-download');
+
+  // Default settings
+  copyBtn.style.display = '';
+  copyHtmlBtn.style.display = '';
+  downloadBtn.style.display = 'none';
+
+  // Custom settings
+  let clientsOptions = {
+    'native-mac': {
+      hideCopyBtn: true,
+      hideCopyHtmlBtn: true,
+      showDownloadBtn: true
+    },
+  }
+
+  let emailClient = document.getElementById('email-client')?.value;
+  let clientOptions = clientsOptions[emailClient];
+
+  if (clientOptions) {
+    if (clientOptions.hideCopyBtn) {
+      copyBtn.style.display = 'none';
+    } else {
+      copyBtn.style.display = '';
+    }
+
+    if (clientOptions.hideCopyHtmlBtn) {
+      copyHtmlBtn.style.display = 'none';
+    } else {
+      copyBtn.style.display = '';
+    }
+
+    if (clientOptions.showDownloadBtn) {
+      downloadBtn.style.display = '';
+    } else {
+      copyBtn.style.display = 'none';
+    }
+  }
 }
 
 // Chars counter
@@ -316,7 +380,6 @@ function selectInit(el) {
       return {
         item: ({ classNames }, data) => {
           const { customProperties: iconData, label } = data;
-          console.log(label, iconData);
           return template(`
               <div
                 class="
