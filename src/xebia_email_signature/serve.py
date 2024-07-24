@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Flask, request, render_template
 
@@ -15,6 +16,12 @@ from xebia_email_signature.signature import add_call_to_actions, \
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
+
+def load_json_file(json_path):
+    current_path = os.path.abspath(os.path.dirname(__file__))
+    path = os.path.join(current_path, json_path)
+    with open(path, 'r') as f:
+        return json.load(f)
 
 @app.after_request
 def prepare_response(response):
@@ -90,10 +97,13 @@ if __name__ == "__main__":
 
 @app.route("/new/signature", methods=["POST"])
 def create_new_signature():
+    current_path = os.path.abspath(os.path.dirname(__file__))
+    
     data = add_formatted_phone(request.form)
     data = add_call_to_actions(data)
     data = add_social_media(data)
     data['scheme'] = request.headers.get('X-Forwarded-Proto', 'http')
+    data['base64_images'] = load_json_file('static/base64-images.json')
 
     email_client = request.form.get("email_client")
 
@@ -111,6 +121,31 @@ def create_new_signature():
 
     if email_client in allowed_clients:
         jinjafile = "signature-" + email_client + ".html.jinja"
+    else:
+        jinjafile = "wrong_client.html"
+
+    if not os.path.exists(os.path.join(current_path, 'templates', jinjafile)):
+        jinjafile = "signature.html.jinja"
+
+    response = render_template(jinjafile, data=data, theme=get_new_theme(data))
+    return response
+
+@app.route("/new/signature-eml", methods=["GET"])
+def create_new_signature_eml():
+    data = add_formatted_phone(request.args)
+    data = add_call_to_actions(data)
+    data = add_social_media(data)
+    data['scheme'] = request.headers.get('X-Forwarded-Proto', 'http')
+    data['base64_images'] = load_json_file('static/base64-images.json')
+
+    email_client = request.args.get("email_client")
+
+    allowed_clients = [
+        'native-mac'
+    ]
+
+    if email_client in allowed_clients:
+        jinjafile = "signature-" + email_client + ".eml.jinja"
     else:
         jinjafile = "no_client.html"
 

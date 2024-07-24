@@ -34,7 +34,7 @@ function validateForm() {
   let emailClientEl = document.getElementById('email-client');
   if (emailClientEl?.value.trim() === 'null') {
     errors.push({
-      target: document.getElementById('ec-icon-error'),
+      target: document.getElementById('email-client-error'),
       msg: 'Please select your email client',
       input: emailClientEl
     })
@@ -263,18 +263,95 @@ function handleFormSubmit(e) {
 
   if (validateForm()) {
     setTimeout(() => {
-      previewContainer?.classList.remove('hidden');
+      previewShow();
       scrollTo(previewContainer);
     }, 300)
   } else {
     e.preventDefault();
-    previewContainer?.classList.add('hidden');
+    previewHide();
   }
 }
 
+function manualHide() {
+  let manualEls = document.querySelectorAll(`[class*=js-preview-manual]`);
+  manualEls?.forEach(el => el.classList.add('hidden'));
+}
+
+function manualShow() {
+  let emailClient = document.getElementById('email-client')?.value;
+  let manualEl = document.querySelector(`.js-preview-manual-${emailClient}`);
+  manualEl?.classList.remove('hidden');
+}
+
 function previewHide() {
+  manualHide();
   let previewContainer = document.querySelector('.preview-container');
   previewContainer?.classList.add('hidden');
+}
+
+function previewShow() {
+  applyPreviewOptions();
+  manualShow();
+
+  let previewContainer = document.querySelector('.preview-container');
+  previewContainer?.classList.remove('hidden');
+}
+
+function applyPreviewOptions() {
+  let copyBtn = document.querySelector('.js-signature-copy');
+  let copyHtmlBtn = document.querySelector('.js-signature-copy-html');
+  let downloadBtn = document.querySelector('.js-signature-download');
+
+  // Default settings
+  copyBtn.style.display = '';
+  copyHtmlBtn.style.display = '';
+  downloadBtn.style.display = 'none';
+
+  // Custom settings
+  let clientsOptions = {
+    'native-mac': {
+      hideCopyBtn: true,
+      hideCopyHtmlBtn: true,
+      showDownloadBtn: true
+    },
+  }
+
+  let emailClient = document.getElementById('email-client')?.value;
+  let clientOptions = clientsOptions[emailClient];
+
+  if (clientOptions) {
+    if (clientOptions.hideCopyBtn) {
+      copyBtn.style.display = 'none';
+    } else {
+      copyBtn.style.display = '';
+    }
+
+    if (clientOptions.hideCopyHtmlBtn) {
+      copyHtmlBtn.style.display = 'none';
+    } else {
+      copyBtn.style.display = '';
+    }
+
+    if (clientOptions.showDownloadBtn) {
+      prepareDownloadBtn();
+      downloadBtn.style.display = '';
+    } else {
+      copyBtn.style.display = 'none';
+    }
+  }
+}
+
+function prepareDownloadBtn() {
+  let form = document.querySelector('form');
+  let downloadBtn = document.querySelector('.js-signature-download');
+  let formDataEntries = new FormData(form).entries();
+
+  let params = new URLSearchParams();
+  for (const [name, value] of formDataEntries) {
+    params.append(name, value);
+  }
+
+  downloadBtn.href = `/new/signature-eml?${params.toString()}`;
 }
 
 // Chars counter
@@ -302,7 +379,7 @@ function allMaxCharsCounterInit() {
 
 
 // ChoicesJS
-function selectInit(el) {
+function selectInit(el, customOptions = {}) {
   let choicesCount = el.options.length;
   let elementId = el.id;
 
@@ -316,7 +393,6 @@ function selectInit(el) {
       return {
         item: ({ classNames }, data) => {
           const { customProperties: iconData, label } = data;
-          console.log(label, iconData);
           return template(`
               <div
                 class="
@@ -363,8 +439,12 @@ function selectInit(el) {
         },
       };
     },
+    ...customOptions
   });
 
+  el.addEventListener('change', () => {
+    removeAnyNullOption(el.choices.choiceList.element.children);
+  });
   removeAnyNullOption(el.choices.choiceList.element.children);
 
   if (choicesCount < 2) {
@@ -393,7 +473,9 @@ function allSelectInit() {
   let ecSelectEls = document.querySelectorAll('.js-ec-choice');
   ecSelectEls.forEach((select) => {
     if (!select.choices) {
-      selectInit(select);
+      selectInit(select, {
+        shouldSort: false
+      });
     }
   });
 
@@ -579,15 +661,15 @@ function emailClientDropdownDataInit() {
 
   const options = [
     { id: 0, value: null, img: null, label: '--- Please Select ---' },
-    { id: 1, value: 'outlook-mac', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Mac' },
-    { id: 2, value: 'outlook-new-mac', img: '/static/ms-outlook-icon.png', label: 'MS Outlook New for Mac' },
-    { id: 3, value: 'outlook-win', img: '/static/ms-outlook-icon.png', label: 'MS Outlook for Windows' },
-    { id: 4, value: 'outlook-new-win', img: '/static/ms-outlook-icon.png', label: 'MS Outlook New for Windows' },
-    { id: 5, value: 'native-win', img: '/static/windows-native-mail-icon.png', label: 'Windows native Email Client' },
-    { id: 6, value: 'native-mac', img: '/static/mac-native-mail-icon.png', label: 'Mac navite Mail App' },
-    { id: 7, value: 'mobile-outlook-ios', img: '/static/ms-outlook-icon.png', label: 'Mobile Outlook iOS' },
-    { id: 8, value: 'mobile-outlook-and', img: '/static/ms-outlook-icon.png', label: 'Mobile Outlook for Android' },
-    { id: 9, value: 'mobile-native-ios', img: '/static/mac-native-mail-icon.png', label: 'Mobile Mail (native) app for iOS' },
+    { id: 1, value: 'outlook-new-win', img: '/static/ms-outlook-icon.png', label: 'Microsoft Outlook (new) for Windows' },
+    { id: 2, value: 'outlook-win', img: '/static/ms-outlook-icon.png', label: 'Microsoft Outlook (old) for Windows' },
+    { id: 3, value: 'outlook-new-mac', img: '/static/ms-outlook-icon.png', label: 'Microsoft Outlook (new) for MacOS' },
+    { id: 4, value: 'outlook-mac', img: '/static/ms-outlook-icon.png', label: 'Microsoft Outlook (old) for MacOS' },
+    { id: 5, value: 'mobile-outlook-ios', img: '/static/ms-outlook-icon.png', label: 'Microsoft Outlook for iOS' },
+    { id: 6, value: 'mobile-outlook-and', img: '/static/ms-outlook-icon.png', label: 'Microsoft Outlook for Android' },
+    { id: 7, value: 'native-win', img: '/static/windows-native-mail-icon.png', label: 'Mail for Windows' },
+    { id: 8, value: 'native-mac', img: '/static/mac-native-mail-icon.png', label: 'Mail for MacOS' },
+    { id: 9, value: 'mobile-native-ios', img: '/static/mac-native-mail-icon.png', label: 'Mail for iOS' },
   ]
 
   options.map(({ value, img, label }) => {
