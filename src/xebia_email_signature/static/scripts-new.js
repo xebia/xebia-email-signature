@@ -589,14 +589,16 @@ function signatureCopyHtmlInit() {
 
 function setBtnActionText(btn, text) {
   let btnTextEl = btn.querySelector('span');
-  let btnOriginalText = btnTextEl.innerText;
+  let btnOriginalText = btn.dataset.originalText || btnTextEl.innerText;
 
+  btn.disabled = true;
+  btn.dataset.originalText = btnOriginalText;
   btnTextEl.innerText = text;
-  if (!btnTextEl.textTimeout) {
-    btnTextEl.textTimeout = setTimeout(() => {
-      btnTextEl.innerText = btnOriginalText;
-    }, 3000);
-  }
+
+  btnTextEl.textTimeout = setTimeout(() => {
+    btnTextEl.innerText = btnOriginalText;
+    btn.disabled = false;
+  }, 1000);
 }
 
 async function iframePrepare(options = {}) {
