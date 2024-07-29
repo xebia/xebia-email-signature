@@ -4,7 +4,7 @@ import json
 from flask import Flask, request, render_template
 
 from xebia_email_signature.inline_images import inline_images
-from xebia_email_signature.old_signature import (
+from xebia_email_signature.signature_v1 import (
     get_theme,
     add_profile_picture,
     add_weekday_availability,
@@ -34,13 +34,13 @@ def prepare_response(response):
     response.headers["X-XSS-Protection"] = "1"
     return response
 
-@app.route("/")
-def generate_signature():
-    return render_template("form.html")
+@app.route("/v2")
+def generate_v2_signature():
+    return render_template("form_v2.html")
 
 
-@app.route("/signature", methods=["POST"])
-def create_signature():
+@app.route("/v2/signature", methods=["POST"])
+def create_v2_signature():
     data = add_formatted_phone(request.form)
     data = add_call_to_actions(data)
     data = add_social_media(data)
@@ -51,13 +51,13 @@ def create_signature():
     return response
 
 
-@app.route("/old")
-def generate_old_signature():
-    return render_template("old_form.html")
+@app.route("/v1")
+def generate_v1_signature():
+    return render_template("form_v1.html")
 
 
-@app.route("/old/signature", methods=["POST"])
-def create_old_signature():
+@app.route("/v1/signature", methods=["POST"])
+def create_v1_signature():
     try:
         data = add_profile_picture(
             request.form, (90, 90), request.files.get("profile_picture")
@@ -70,9 +70,9 @@ def create_old_signature():
     data = add_formatted_phone(data)
 
     jinjafile = (
-        "old_signature.xpirit.html.jinja"
+        "signature_v1.xpirit.html.jinja"
         if data["office"].__contains__("Xpirit")
-        else "old_signature.html.jinja"
+        else "signature_v1.html.jinja"
     )
 
     response = render_template(jinjafile, data=data, theme=get_theme(data))
@@ -83,9 +83,9 @@ def create_old_signature():
         else response
     )
 
-@app.route("/new")
-def generate_new_signature():
-    return render_template("new_form.html")
+@app.route("/")
+def generate_v3_signature():
+    return render_template("form_v3.html")
 
 
 def main():
@@ -95,8 +95,8 @@ def main():
 if __name__ == "__main__":
     main()
 
-@app.route("/new/signature", methods=["POST"])
-def create_new_signature():
+@app.route("/v3/signature", methods=["POST"])
+def create_v3_signature():
     current_path = os.path.abspath(os.path.dirname(__file__))
     
     data = add_formatted_phone(request.form)
@@ -130,8 +130,8 @@ def create_new_signature():
     response = render_template(jinjafile, data=data, theme=get_new_theme(data))
     return response
 
-@app.route("/new/signature-eml", methods=["GET"])
-def create_new_signature_eml():
+@app.route("/v3/signature-eml", methods=["GET"])
+def create_v3_signature_eml():
     data = add_formatted_phone(request.args)
     data = add_call_to_actions(data)
     data = add_social_media(data)

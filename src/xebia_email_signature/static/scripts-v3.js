@@ -351,7 +351,7 @@ function prepareDownloadBtn() {
     params.append(name, value);
   }
 
-  downloadBtn.href = `/new/signature-eml?${params.toString()}`;
+  downloadBtn.href = `/v3/signature-eml?${params.toString()}`;
 }
 
 // Chars counter
