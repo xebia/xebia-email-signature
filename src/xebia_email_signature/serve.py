@@ -147,7 +147,7 @@ def create_new_signature_eml():
     if email_client in allowed_clients:
         jinjafile = "signature-" + email_client + ".eml.jinja"
     else:
-        jinjafile = "no_client.html"
+        jinjafile = "wrong_client.html"
 
     response = render_template(jinjafile, data=data, theme=get_new_theme(data))
     return response
