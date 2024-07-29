@@ -667,11 +667,11 @@ function emailClientDropdownDataInit() {
     { id: 2, value: 'outlook-win', img: '/static/win-ms-outlook-icon.png', label: 'Microsoft Outlook (old) for Windows' },
     { id: 3, value: 'outlook-new-mac', img: '/static/mac-ms-outlook-icon.png', label: 'Microsoft Outlook (new) for MacOS' },
     { id: 4, value: 'outlook-mac', img: '/static/mac-ms-outlook-icon.png', label: 'Microsoft Outlook (old) for MacOS' },
-    { id: 5, value: 'mobile-outlook-ios', img: '/static/ios-ms-outlook-icon.png', label: 'Microsoft Outlook for iOS' },
+    // { id: 5, value: 'mobile-outlook-ios', img: '/static/ios-ms-outlook-icon.png', label: 'Microsoft Outlook for iOS' },
     { id: 6, value: 'mobile-outlook-and', img: '/static/and-ms-outlook-icon.png', label: 'Microsoft Outlook for Android' },
     { id: 7, value: 'native-win', img: '/static/win-native-mail-icon.png', label: 'Mail for Windows' },
     { id: 8, value: 'native-mac', img: '/static/mac-native-mail-icon.png', label: 'Mail for MacOS' },
-    { id: 9, value: 'mobile-native-ios', img: '/static/ios-native-mail-icon.png', label: 'Mail for iOS' },
+    // { id: 9, value: 'mobile-native-ios', img: '/static/ios-native-mail-icon.png', label: 'Mail for iOS' },
   ]
 
   options.map(({ value, img, label }) => {
