@@ -34,7 +34,7 @@ def prepare_response(response):
     response.headers["X-XSS-Protection"] = "1"
     return response
 
-@app.route("/")
+@app.route("/v2")
 def generate_v2_signature():
     return render_template("form_v2.html")
 
@@ -83,7 +83,7 @@ def create_v1_signature():
         else response
     )
 
-@app.route("/v3")
+@app.route("/")
 def generate_v3_signature():
     return render_template("form_v3.html")
 
