@@ -647,6 +647,8 @@ function setSmPlaceholder(smSelect) {
     linkField.placeholder = 'https://www.linkedin.com/in/username/';
   } else if (smSelect.value === 'x') {
     linkField.placeholder = 'https://x.com/profile';
+  } else if (smSelect.value === 'github') {
+    linkField.placeholder = 'https://github.com/username';
   }
 }
 
