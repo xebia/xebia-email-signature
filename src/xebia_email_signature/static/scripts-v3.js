@@ -1,3 +1,126 @@
+// Data
+const ecDropdownData = [
+  {
+    id: 0,
+    value: null,
+    img: null,
+    label: '--- Please Select ---',
+    manual: []
+  },
+  {
+    id: 1,
+    value: 'outlook-new-win',
+    img: '/static/win-ms-outlook-icon.png',
+    label: 'Microsoft Outlook (new) for Windows',
+    manual: [
+      'Open Outlook.',
+      'Click on File in the top menu.',
+      'Select Options.',
+      'In the Mail category, click on Signatures.',
+      'Click the New button to create a new signature.',
+      'Enter a name for the signature.',
+      'In the Edit signature field, paste your new signature from the generator.',
+      'Click OK to save the signature.',
+      'To use the new signature, compose a new email and select the signature from the Signature dropdown menu.'
+    ]
+  },
+  {
+    id: 2,
+    value: 'outlook-win',
+    img: '/static/win-ms-outlook-icon.png',
+    label: 'Microsoft Outlook (old) for Windows',
+    manual: [
+      'Open Outlook.',
+      'Click on File in the top menu.',
+      'Select Options.',
+      'In the Mail category, click on Signatures.',
+      'Click the New button to create a new signature.',
+      'Enter a name for the signature.',
+      'In the Edit signature field, paste your new signature from the generator.',
+      'Click OK to save the signature.',
+      'To use the new signature, compose a new email and select the signature from the Signature dropdown menu.'
+    ]
+  },
+  {
+    id: 3,
+    value: 'outlook-new-mac',
+    img: '/static/mac-ms-outlook-icon.png',
+    label: 'Microsoft Outlook (new) for MacOS',
+    manual: [
+      'Select New Email.',
+      'Select Signature > Manage Signatures.',
+      'Select + and type a name for the signature',
+      'Under Signature, paste your new signature from the generator and click save.',
+      'Select Signature > Pick your new Signature.'
+    ]
+  },
+  {
+    id: 4,
+    value: 'outlook-mac',
+    img: '/static/mac-ms-outlook-icon.png',
+    label: 'Microsoft Outlook (old) for MacOS',
+    manual: [
+      'Open Outlook.',
+      'Go to Outlook in the top menu and select Preferences.',
+      'Click on Signatures.',
+      'Click the + button to add a new signature.',
+      'Enter a name for the signature.',
+      'In the Signature field, paste your new signature from the generator.',
+      'Close the Signatures window to save the signature.',
+      'To use the new signature, go to New Email and select the signature from the Signature dropdown menu.'
+    ]
+  },
+  // { id: 5, value: 'mobile-outlook-ios', img: '/static/ios-ms-outlook-icon.png', label: 'Microsoft Outlook for iOS' },
+  {
+    id: 6,
+    value: 'mobile-outlook-and',
+    img: '/static/and-ms-outlook-icon.png',
+    label: 'Microsoft Outlook for Android',
+    manual: [
+      'Create the signature on your desktop Outlook.',
+      'Compose a new email with the new signature and send it to yourself.',
+      'Open the email in Outlook on your mobile device.',
+      'Tap and hold on the signature to copy it.',
+      'Go to Outlook settings on your mobile device, navigate to <strong>Signature</strong>, and paste the copied signature.'
+    ]
+  },
+  {
+    id: 7,
+    value: 'native-win',
+    img: '/static/win-native-mail-icon.png',
+    label: 'Mail for Windows',
+    manual: [
+      'Open the Mail app on your Windows device.',
+      'Click on the Settings gear icon at the bottom left.',
+      'Select Signature.',
+      'Toggle the Use an email signature switch to On.',
+      'Enter your desired signature in the text field.',
+      'Click Save to save your signature.'
+    ]
+  },
+  {
+    id: 8,
+    value: 'native-mac',
+    img: '/static/mac-native-mail-icon.png',
+    label: 'Mail for MacOS',
+    manual: [
+      'Click Download button above and save your signature file.',
+      'Open the Mail app on your Mac.',
+      'Click on Mail in the top menu and select Settings.',
+      'Go to the Signatures tab.',
+      'Click the + button to create a new signature.',
+      'Enter a name for the signature.',
+      'Close the pop-up window and close Mac Mail completely.',
+      'Open Finder, Select Go -> Go to Folder, type ~/Library/Mail and press enter',
+      'Open folder V10 (or with higher number if exist) and go to MailData > Signatures.',
+      'Find the latest file with .mailsignature extension. Copy its name and use it to rename the downloaded file (with extension).',
+      'Replace downloaded file with file in Signatures. Right-click on the file, select Get Info > Lock the file and close pop-up.',
+      'Open Mail app > Create a new email and select new signature from the dropdown menu.'
+    ]
+  },
+  // { id: 9, value: 'mobile-native-ios', img: '/static/ios-native-mail-icon.png', label: 'Mail for iOS' },
+]
+
 // Form validation
 function validateForm() {
   let errors = [];
@@ -132,7 +255,6 @@ function prefillEmail(full_name) {
   }
 }
 
-
 // Clone mechanism
 function cloneFormGroup(cloneTarget, options = {}) {
   let targetEl = document.querySelector(cloneTarget);
@@ -260,11 +382,6 @@ function cloneRemoveBtnInit(btn) {
 
 function handleFormSubmit(e) {
   let previewContainer = document.querySelector('.preview-container');
-  let emailClientSelector = document.querySelector('.js-ec-choice');
-  let installationGuideSelector = previewContainer.querySelector('.js-installation-guide');
-  let { manual } = ecDropdownData().find(o => o.value === emailClientSelector.value);
-
-  installationGuideSelector.replaceChildren(buildOlList(manual))
 
   if (validateForm()) {
     setTimeout(() => {
@@ -278,18 +395,26 @@ function handleFormSubmit(e) {
 }
 
 function manualHide() {
-  let manualEls = document.querySelectorAll(`[class*=js-preview-manual]`);
-  manualEls?.forEach(el => el.classList.add('hidden'));
+  let installationGuideEl = document.querySelector('.js-installation-guide');
+  installationGuideEl.classList.add('hidden');
 }
 
 function manualShow() {
-  let emailClient = document.getElementById('email-client')?.value;
-  let manualEl = document.querySelector(`.js-preview-manual-${emailClient}`);
-  manualEl?.classList.remove('hidden');
+  let installationGuideEl = document.querySelector('.js-installation-guide');
+  let emailClientEl = document.querySelector('.js-ec-choice');
+
+  let { manual } = ecDropdownData.find(o => o.value === emailClientEl.value) || {};
+  if (!manual) {
+    console.warn('Manual not found for email client', emailClientEl.value);
+    manualHide();
+    return;
+  }
+
+  installationGuideEl.replaceChildren(buildOlList(manual))
+  installationGuideEl.classList.remove('hidden');
 }
 
 function previewHide() {
-  manualHide();
   let previewContainer = document.querySelector('.preview-container');
   previewContainer?.classList.add('hidden');
 }
@@ -664,18 +789,18 @@ function previewHideOnInputInit() {
 
 // Email client dropdown data init
 function emailClientDropdownDataInit() {
-  const emailClientSelector = document.querySelector('.js-ec-choice');
+  const emailClientEl = document.querySelector('.js-ec-choice');
 
-  if (!emailClientSelector) { return };
+  if (!emailClientEl) { return };
 
-  emailClientSelector.options.length = 0
+  emailClientEl.options.length = 0
 
-  ecDropdownData().map(({ value, img, label }) => {
+  ecDropdownData.map(({ value, img, label }) => {
     let option = document.createElement("option");
     option.value = value;
     option.setAttribute('data-custom-properties', img);
     option.append(label);
-    emailClientSelector.append(option);
+    emailClientEl.append(option);
   })
 }
 
@@ -715,131 +840,6 @@ async function toDataURL(url) {
     xhr.send();
   });
 }
-
-function ecDropdownData() {
-  return [
-    { 
-      id: 0, 
-      value: null, 
-      img: null, 
-      label: '--- Please Select ---', 
-      manual: [] 
-    },
-    { 
-      id: 1,
-      value: 'outlook-new-win',
-      img: '/static/win-ms-outlook-icon.png',
-      label: 'Microsoft Outlook (new) for Windows',
-      manual: [
-        'Open Outlook.',
-        'Click on File in the top menu.',
-        'Select Options.',
-        'In the Mail category, click on Signatures.',
-        'Click the New button to create a new signature.',
-        'Enter a name for the signature.',
-        'In the Edit signature field, paste your new signature from the generator.',
-        'Click OK to save the signature.',
-        'To use the new signature, compose a new email and select the signature from the Signature dropdown menu.'
-      ]
-    },
-    { 
-      id: 2,
-      value: 'outlook-win',
-      img: '/static/win-ms-outlook-icon.png',
-      label: 'Microsoft Outlook (old) for Windows',
-      manual: [
-        'Open Outlook.',
-        'Click on File in the top menu.',
-        'Select Options.',
-        'In the Mail category, click on Signatures.',
-        'Click the New button to create a new signature.',
-        'Enter a name for the signature.',
-        'In the Edit signature field, paste your new signature from the generator.',
-        'Click OK to save the signature.',
-        'To use the new signature, compose a new email and select the signature from the Signature dropdown menu.'
-      ]
-    },
-    { 
-      id: 3,
-      value: 'outlook-new-mac',
-      img: '/static/mac-ms-outlook-icon.png',
-      label: 'Microsoft Outlook (new) for MacOS',
-      manual: [
-        'Select New Email.',
-        'Select Signature > Manage Signatures.',
-        'Select + and type a name for the signature',
-        'Under Signature, paste your new signature from the generator and click save.',
-        'Select Signature > Pick your new Signature.'
-      ]
-    },
-    { 
-      id: 4,
-      value: 'outlook-mac',
-      img: '/static/mac-ms-outlook-icon.png', 
-      label: 'Microsoft Outlook (old) for MacOS',
-      manual: [
-        'Open Outlook.',
-        'Go to Outlook in the top menu and select Preferences.',
-        'Click on Signatures.',
-        'Click the + button to add a new signature.',
-        'Enter a name for the signature.',
-        'In the Signature field, paste your new signature from the generator.',
-        'Close the Signatures window to save the signature.',
-        'To use the new signature, go to New Email and select the signature from the Signature dropdown menu.'
-      ]
-    },
-    // { id: 5, value: 'mobile-outlook-ios', img: '/static/ios-ms-outlook-icon.png', label: 'Microsoft Outlook for iOS' },
-    {
-      id: 6,
-      value: 'mobile-outlook-and',
-      img: '/static/and-ms-outlook-icon.png', 
-      label: 'Microsoft Outlook for Android',
-      manual: [
-        'Create the signature on your desktop Outlook.',
-        'Compose a new email with the new signature and send it to yourself.',
-        'Open the email in Outlook on your mobile device.',
-        'Tap and hold on the signature to copy it.',
-        'Go to Outlook settings on your mobile device, navigate to <strong>Signature</strong>, and paste the copied signature.'
-      ]
-    },
-    { 
-      id: 7,
-      value: 'native-win',
-      img: '/static/win-native-mail-icon.png',
-      label: 'Mail for Windows',
-      manual: [
-        'Open the Mail app on your Windows device.',
-        'Click on the Settings gear icon at the bottom left.',
-        'Select Signature.',
-        'Toggle the Use an email signature switch to On.',
-        'Enter your desired signature in the text field.',
-        'Click Save to save your signature.'
-      ]
-    },
-    {
-      id: 8,
-      value: 'native-mac',
-      img: '/static/mac-native-mail-icon.png',
-      label: 'Mail for MacOS',
-      manual: [
-        'Click Download button above and save your signature file.',
-        'Open the Mail app on your Mac.',
-        'Click on Mail in the top menu and select Settings.',
-        'Go to the Signatures tab.',
-        'Click the + button to create a new signature.',
-        'Enter a name for the signature.',
-        'Close the pop-up window and close Mac Mail completely.',
-        'Open Finder, Select Go -> Go to Folder, type ~/Library/Mail and press enter',
-        'Open folder V10 (or with higher number if exist) and go to MailData > Signatures.',
-        'Find the latest file with .mailsignature extension. Copy its name and use it to rename the downloaded file (with extension).',
-        'Replace downloaded file with file in Signatures. Right-click on the file, select Get Info > Lock the file and close pop-up.',
-        'Open Mail app > Create a new email and select new signature from the dropdown menu.'
-      ]
-    },
-    // { id: 9, value: 'mobile-native-ios', img: '/static/ios-native-mail-icon.png', label: 'Mail for iOS' },
-  ]
-}
-
 
 function buildOlList(arrayOfStrings) {
   const list = document.createElement('ol');
