@@ -14,14 +14,13 @@ const ecDropdownData = [
     label: 'Microsoft Outlook (new) for Windows',
     manual: [
       'Open Outlook.',
-      'Click on File in the top menu.',
-      'Select Options.',
-      'In the Mail category, click on Signatures.',
-      'Click the New button to create a new signature.',
+      'Click on Settings in top right corner.',
+      'In the Accounts category, click on Signatures.',
+      'Click the New signature to create a new signature.',
       'Enter a name for the signature.',
       'In the Edit signature field, paste your new signature from the generator.',
       'Click OK to save the signature.',
-      'To use the new signature, compose a new email and select the signature from the Signature dropdown menu.'
+      'To use the new signature, you can select your new signature as default or compose a new email, select Insert tab and new signature from the Signature dropdown menu.'
     ]
   },
   {
@@ -37,8 +36,9 @@ const ecDropdownData = [
       'Click the New button to create a new signature.',
       'Enter a name for the signature.',
       'In the Edit signature field, paste your new signature from the generator.',
+      'You can already make it as default and it will be ready to use.',
       'Click OK to save the signature.',
-      'To use the new signature, compose a new email and select the signature from the Signature dropdown menu.'
+      'To use the new signature, if you haven\'t set it as default already, you can compose a new email, select Insert tab and new signature from the Signature dropdown menu.',
     ]
   },
   {
