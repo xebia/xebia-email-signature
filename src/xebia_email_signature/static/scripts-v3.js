@@ -47,11 +47,11 @@ const ecDropdownData = [
     img: '/static/mac-ms-outlook-icon.png',
     label: 'Microsoft Outlook (new) for MacOS',
     manual: [
-      'Select New Email.',
-      'Select Signature > Manage Signatures.',
-      'Select + and type a name for the signature',
-      'Under Signature, paste your new signature from the generator and click save.',
-      'Select Signature > Pick your new Signature.'
+      'Copy signature with the button above.',
+      'Go to Outlook and find via top menu bar: Settings > Signatures.',
+      'Click “+” to add new signature.',
+      'Paste the copied signature, provide any name and save the signature.',
+      'In the “Choose default signature” section select your new signature.'
     ]
   },
   {
@@ -60,14 +60,11 @@ const ecDropdownData = [
     img: '/static/mac-ms-outlook-icon.png',
     label: 'Microsoft Outlook (old) for MacOS',
     manual: [
-      'Open Outlook.',
-      'Go to Outlook in the top menu and select Preferences.',
-      'Click on Signatures.',
-      'Click the + button to add a new signature.',
-      'Enter a name for the signature.',
-      'In the Signature field, paste your new signature from the generator.',
-      'Close the Signatures window to save the signature.',
-      'To use the new signature, go to New Email and select the signature from the Signature dropdown menu.'
+      'Copy signature with the button above.',
+      'Go to Outlook and find via top menu bar: Settings > Signatures.',
+      'Click “+” to add new signature.',
+      'Paste the copied signature, provide any name and save the signature.',
+      'In the “Choose default signature” section select your new signature.'
     ]
   },
   // { id: 5, value: 'mobile-outlook-ios', img: '/static/ios-ms-outlook-icon.png', label: 'Microsoft Outlook for iOS' },
