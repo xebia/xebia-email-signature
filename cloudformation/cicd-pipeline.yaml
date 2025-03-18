@@ -24,7 +24,7 @@ Resources:
 
       Source:
         Type: GITHUB
-        Location: https://github.com/OblivionCloudControl/xebia-email-signature.git
+        Location: https://github.com/xebia/xebia-email-signature.git
         BuildSpec: .buildspec.yaml
         GitCloneDepth: 0
 
